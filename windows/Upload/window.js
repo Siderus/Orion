@@ -5,7 +5,7 @@ const url = require('url')
 
 module.exports = {}
 
-module.exports.create = function uploadWindowCreate(app) {
+module.exports.create = function uploadWindowCreate() {
     // Create the browser window.
     theWindow = new BrowserWindow({ width: 400, height: 300, frame: true })
 
@@ -26,6 +26,5 @@ module.exports.create = function uploadWindowCreate(app) {
         // when you should delete the corresponding element.
         theWindow = null
     })
-    app.windows.push(theWindow)
     return theWindow
 }

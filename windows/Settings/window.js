@@ -5,7 +5,7 @@ const url = require('url')
 
 module.exports = {}
 
-module.exports.create = function uploadWindowCreate(app) {
+module.exports.create = function uploadWindowCreate() {
     // Create the browser window.
     theWindow = new BrowserWindow({ width: 400, height: 300, frame: true, show: false })
 
@@ -31,7 +31,7 @@ module.exports.create = function uploadWindowCreate(app) {
     return theWindow
 }
 
-module.exports.createModal = function settindsWindowModalCreate(app, parentWindow) {
+module.exports.createModal = function settindsWindowModalCreate(parentWindow) {
     let theWindow = new BrowserWindow({ parent: parentWindow, modal: true, show: false })
 
     theWindow.loadURL(url.format({
@@ -43,7 +43,5 @@ module.exports.createModal = function settindsWindowModalCreate(app, parentWindo
     theWindow.once('ready-to-show', () => {
         theWindow.show()
     })
-
-    app.windows.push(theWindow)
     return theWindow
 }

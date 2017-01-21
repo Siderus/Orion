@@ -1,28 +1,29 @@
 {
-    "name": "siderus-wire-client",
-    "version": "1.0.0",
-    "description": "IPFS client",
-    "main": "main.js",
-    "scripts": {
-        "start": "electron .",
-        "build": "mkdir -p ./builds/ ; cd ./builds/ ; electron-packager .. siderus.wire.client",
-        "build-all": "mkdir -p ./builds/ ; cd ./builds/ ; electron-packager .. siderus.wire.client --all"
-    },
-    "repository": "",
-    "keywords": [
-        "electron",
-        "ipfs",
-        "file",
-        "p2p",
-        "upload"
-    ],
-    "author": "GitHub",
-    "license": "CC0-1.0",
-    "devDependencies": {
-        "electron": "^1.4.1",
-        "electron-packager": "^8.5.0"
-    },
-    "dependencies": {
-        "photon": "git+https://github.com/connors/photon.git"
-    }
+  "name": "siderus-wire-client",
+  "version": "1.0.0",
+  "description": "IPFS client",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "build": "mkdir -p ./builds/ ; cd ./builds/ ; electron-packager .. siderus.wire.client",
+    "build-all": "mkdir -p ./builds/ ; cd ./builds/ ; electron-packager .. siderus.wire.client --all"
+  },
+  "repository": "",
+  "keywords": [
+    "electron",
+    "ipfs",
+    "file",
+    "p2p",
+    "upload"
+  ],
+  "author": "GitHub",
+  "license": "CC0-1.0",
+  "devDependencies": {
+    "electron": "^1.4.1",
+    "electron-packager": "^8.5.0"
+  },
+  "dependencies": {
+    "ipfs": "git+https://github.com/ipfs/js-ipfs.git",
+    "photon": "git+https://github.com/connors/photon.git"
+  }
 }

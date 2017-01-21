@@ -4,10 +4,11 @@ const SettingsWindow = require('./windows/Settings/window.js')
 
 // Let's create the main window
 app.mainWindow = null;
-app.windws = [];
+app.windows = [];
 
 app.on('ready', function() {
     app.mainWindow = UploadWinow.create(app)
+    app.windows.push(app.mainWindow)
 })
 
 // Quit when all windows are closed.
@@ -24,5 +25,6 @@ app.on('activate', function() {
     // dock icon is clicked and there are no other windows open.
     if (app.mainWindow === null) {
         app.mainWindow = UploadWinow.create(app)
+        app.windows.push(app.mainWindow)
     }
 })
