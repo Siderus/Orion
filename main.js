@@ -1,30 +1,42 @@
 const { app } = require('electron')
-const UploadWinow = require('./windows/Upload/window.js')
-const SettingsWindow = require('./windows/Settings/window.js')
+
+const { startIPFSCommand } = require('./daemon.js')
+
+const ListWinow = require('./windows/List/window.js')
+// const SettingsWindow = require('./windows/Settings/window.js')
 
 // Let's create the main window
-app.mainWindow = null;
-app.windows = [];
+app.mainWindow = null
 
-app.on('ready', function() {
-    app.mainWindow = UploadWinow.create(app)
-    app.windows.push(app.mainWindow)
+// const IPFS_PROCESS = startIPFSCommand()
+
+app.on('ready', () => {
+  app.mainWindow = ListWinow.create(app)
 })
 
 // Quit when all windows are closed.
-app.on('window-all-closed', function() {
-    // On OS X it is common for applications and their menu bar
-    // to stay active until the user quits explicitly with Cmd + Q
-    if (process.platform !== 'darwin') {
-        app.quit()
-    }
+app.on('window-all-closed', () => {
+  // On OS X it is common for applications and their menu bar
+  // to stay active until the user quits explicitly with Cmd + Q
+  if (process.platform !== 'darwin') {
+    app.quit()
+  }
 })
 
-app.on('activate', function() {
-    // On OS X it's common to re-create a window in the app when the
-    // dock icon is clicked and there are no other windows open.
-    if (app.mainWindow === null) {
-        app.mainWindow = UploadWinow.create(app)
-        app.windows.push(app.mainWindow)
-    }
+app.on('activate', () => {
+  // On OS X it's common to re-create a window in the app when the
+  // dock icon is clicked and there are no other windows open.
+  if (app.mainWindow) {
+    app.mainWindow.show()
+  }else{
+    app.mainWindow = ListWinow.create(app)
+  }
+})
+
+app.on('will-quit', () => {
+  // Kill IPFS process after the windows have been closed and before the app is
+  // fully terminated
+  if(IPFS_PROCESS){
+    IPFS_PROCESS.kill()
+  }
 })
