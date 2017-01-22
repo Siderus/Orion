@@ -1,17 +1,22 @@
 const { app } = require('electron')
 
-const { startIPFSCommand } = require('./daemon.js')
+const { startIPFSCommand } = require('./app/daemon.js')
 
 const ListWinow = require('./windows/List/window.js')
 // const SettingsWindow = require('./windows/Settings/window.js')
 
 // Let's create the main window
 app.mainWindow = null
+// A little space for IPFS
+let IPFS_PROCESS = null
 
-const IPFS_PROCESS = startIPFSCommand()
 
 // Setup the menu
-require('./menu.js')
+require('./app/menu.js')
+// Make sure we have a single instance
+require('./app/singleInstance.js')
+
+
 
 app.on('ready', () => {
   app.mainWindow = ListWinow.create(app)
@@ -43,3 +48,7 @@ app.on('will-quit', () => {
     IPFS_PROCESS.kill()
   }
 })
+
+
+
+IPFS_PROCESS = startIPFSCommand()
