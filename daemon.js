@@ -1,21 +1,19 @@
-const { app } = require('electron')
-const path = require('path')
-const ipfs = require('ipfs')
+/* eslint no-console:0 */
 
-const IPFSRepoPath = path.join(app.getPath("userData"), "./ipfs/");
+const { spawn } = require("child_process")
 
-const startAndGetIPFS = function startAndGetIPFS() {
-    const node = new IPFS(IPFSRepoPath)
+module.exports = {}
 
-    // Init the repo if not there
-    node.init({ emptyRepo: !fs.existsSync(IPFSRepoPath), bits: 2048 }, (err) => {
-        console.log(err);
-    })
+/**
+ * startIPFSCommand will start IPFS go daemon, if installed.
+ * return child process with IPFS daemon
+ */
+module.exports.startIPFSCommand = function startIPFSCommand() {
+  const ipfs_process = spawn("ipfs", ["daemon"])
 
-    return node
-}
+  ipfs_process.stdout.on("data", (data) => console.log(`IPFS: ${data}`))
+  ipfs_process.stderr.on("data", (data) => console.log(`IPFS Error: ${data}`))
+  ipfs_process.on("close", (exit) => console.log(`IPFS Closed: ${exit}`))
 
-module.exports = {
-    startAndGetIPFS,
-    IPFSRepoPath
+  return ipfs_process
 }
