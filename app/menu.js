@@ -1,3 +1,7 @@
+/**
+ * Import/require this file to set up the Menu of the windows
+ */
+
 const electron = require('electron')
 const BrowserWindow = electron.BrowserWindow
 const Menu = electron.Menu
