@@ -16,8 +16,8 @@
     "p2p",
     "upload"
   ],
-  "author": "GitHub",
-  "license": "CC0-1.0",
+  "author": "Lorenzo Setale",
+  "license": "GPL-3.0",
   "devDependencies": {
     "electron": "^1.4.1",
     "electron-packager": "^8.5.0",
