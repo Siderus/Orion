@@ -5,6 +5,20 @@
 const { dialog, app } = require('electron').remote
 let ipfsAPI = require('ipfs-api')
 
-let ipfs = ipfsAPI('/ip4/127.0.0.1/tcp/5001')
+const { getMultiAddrIPFSDaemon } = require('../../app/daemon.js')
 
-console.log(ipfs);
+
+let ipfs_local_multiAddr, ipfs
+
+function startEverything(){
+  ipfs_local_multiAddr = getMultiAddrIPFSDaemon() || "/ip4/127.0.0.1/tcp/5001"
+  ipfs = ipfsAPI(ipfs_local_multiAddr)
+
+  ipfs.repo.stat().then(console.log)
+}
+
+// Temporary solution, ToDo: configure to show this only when the IPFS daemon
+// is ready. Check the lock?
+setTimeout(startEverything, 5000)
+
+
