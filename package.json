@@ -20,10 +20,11 @@
   "license": "CC0-1.0",
   "devDependencies": {
     "electron": "^1.4.1",
-    "electron-packager": "^8.5.0"
+    "electron-packager": "^8.5.0",
+    "eslint": "^3.14.0"
   },
   "dependencies": {
-    "ipfs": "git+https://github.com/ipfs/js-ipfs.git",
+    "ipfs-api": "git+https://github.com/ipfs/js-ipfs-api.git",
     "photon": "git+https://github.com/connors/photon.git"
   }
 }
