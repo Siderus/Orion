@@ -8,7 +8,10 @@ const ListWinow = require('./windows/List/window.js')
 // Let's create the main window
 app.mainWindow = null
 
-// const IPFS_PROCESS = startIPFSCommand()
+const IPFS_PROCESS = startIPFSCommand()
+
+// Setup the menu
+require('./menu.js')
 
 app.on('ready', () => {
   app.mainWindow = ListWinow.create(app)

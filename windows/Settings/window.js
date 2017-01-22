@@ -9,7 +9,7 @@ module.exports = {}
 
 module.exports.create = function uploadWindowCreate() {
   // Create the browser window.
-  theWindow = new BrowserWindow({
+  let theWindow = new BrowserWindow({
     width: 400,
     height: 300,
     frame: true,
