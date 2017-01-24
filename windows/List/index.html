@@ -2,28 +2,58 @@
 <html>
 
 <head>
-    <meta charset="UTF-8">
-    <title>Hello World!</title>
+  <title>Storage</title>
+
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="../../node_modules/photon/dist/css/photon.css">
+
+  <!-- Electron Javascript -->
+  <script src="renderer.js" charset="utf-8"></script>
 </head>
 
 <body>
-    <h1>Hello World!</h1>
-    <!-- All of the Node.js APIs are available in this renderer process. -->
-    We are using Node.js
-    <script>
-        document.write(process.versions.node)
-    </script>, Chromium
-    <script>
-        document.write(process.versions.chrome)
-    </script>, and Electron
-    <script>
-        document.write(process.versions.electron)
-    </script>.
-</body>
+  <!-- Wrap your entire app inside .window -->
+  <div class="window">
 
-<script>
-    // You can also require other files to run in this process
-    require('./renderer.js');
-</script>
+      <header class="toolbar toolbar-header" style="-webkit-app-region: drag">
+        <h1 class="title">Storage</h1>
+
+        <div class="toolbar-actions">
+
+          <div class="btn-group">
+            <button class="btn btn-default">
+              <span class="icon icon-plus-circled"></span>
+            </button>
+            <button class="btn btn-default">
+              <span class="icon icon-minus-circled"></span>
+            </button>
+            <button class="btn btn-default active">
+              <span class="icon icon-download"></span>
+            </button>
+          </div>
+
+            <!--<button class="btn btn-default">
+              <span class="icon icon-info"></span>
+            </button>-->
+
+          <!-- Settings button -->
+          <button class="btn btn-default pull-right">
+            <span class="icon icon-cog"></span>
+          </button>
+
+          <!-- Connection Status -->
+          <div class="btn-group pull-right">
+            <span class="icon icon-dot"></span>
+          </div>
+        </div>
+      </header>
+
+
+    <div class="window-content">
+
+
+    </div>
+  </div>
+</body>
 
 </html>

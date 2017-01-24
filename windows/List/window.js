@@ -7,19 +7,25 @@ const {
   BrowserWindow
 } = require('electron')
 
-const { settindsWindowModalCreate } = require('../Settings/window.js')
-
 const path = require('path')
 const url = require('url')
 
 module.exports = {}
 
-module.exports.create = function uploadWindowCreate(app) {
+module.exports.create = function createStorageWindow(app) {
   // Create the browser window.
   let theWindow = new BrowserWindow({
     width: 600,
     height: 400,
-    frame: true
+    minWidth: 400,
+    minHeight: 300,
+    titleBarStyle: 'hidden',
+    fullscreenable: false,
+    show: false
+  })
+
+  theWindow.once('ready-to-show', () => {
+    theWindow.show()
   })
 
   // and load the index.html of the app.
@@ -29,9 +35,6 @@ module.exports.create = function uploadWindowCreate(app) {
     slashes: true
   }))
 
-  // Open the DevTools.
-  theWindow.webContents.openDevTools()
-
   // Emitted when the window is closed.
   theWindow.on('closed', function() {
     // Dereference the window object, usually you would store windows
@@ -40,8 +43,6 @@ module.exports.create = function uploadWindowCreate(app) {
     app.mainWindow = null
     theWindow = null
   })
-
-  settindsWindowModalCreate(theWindow)
 
   return theWindow
 }
