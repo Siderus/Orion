@@ -1,6 +1,7 @@
 const { app } = require('electron')
 
-const { startIPFSCommand } = require('./app/daemon.js')
+const { startIPFSCommand, setMultiAddrIPFSDaemon } = require('./app/daemon.js')
+const { initDB } = require('./app/database.js')
 
 const ListWinow = require('./windows/List/window.js')
 // const SettingsWindow = require('./windows/Settings/window.js')
@@ -50,5 +51,6 @@ app.on('will-quit', () => {
 })
 
 
-
+initDB()
+setMultiAddrIPFSDaemon()
 IPFS_PROCESS = startIPFSCommand()
