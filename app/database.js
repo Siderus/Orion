@@ -1,28 +1,17 @@
 const { app } = require('electron')
-const sqlite = require('q-sqlite3')
+const Datastore = require('nedb')
 const { join } = require('path')
-const { stat } = require('fs')
 
-const DATABASE_PATH = join(app.getPath('userData'), "./database.sql")
+const DATABASE_PATH = join(app.getPath('userData'), "./Database/")
 
 /**
- * initDB will return promises with the db initialized.
+ * initDB will start a db instance
  */
 function initDB (){
-  let db
-  return stat(DATABASE_PATH)
-    .then((err, stat) => {
-      if(err) console.log(err)
-
-      if(!stat.isFile()){
-        db = new sqlite.createDatabase(DATABASE_PATH)
-        db.run("CREATE TABLE storage (hash TEXT PRIMARY KEY ASC, filename TEXT)")
-        return db
-      }
-      db = new sqlite.Database(DATABASE_PATH)
-      return db
-    }
-  )
+  const db = {};
+  db.storage = new Datastore({filename: join(DATABASE_PATH, "./storage") })
+  db.settings = new Datastore({filename: join(DATABASE_PATH, "./settings")})
+  return db
 }
 
 module.exports = {
