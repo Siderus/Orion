@@ -67,29 +67,23 @@ function refreshStorageList(){
         // Now we have pins, we have to filter out the ones that were added
         // outside the app (We don't have the filename for them).
 
-        // From Object to Array
-        let pins = []
-        for(let hash in pinsObj) {
-          var obj = pinsObj[hash]
-          obj.hash = obj.hash || hash
-          pins.push(obj)
-        }
-
-        pins = pins.filter( (el) => el.Type !== "indirect")
         // ToDo: Should we use React here? :) Just doing things quickly for now
 
         let tableBody = document.getElementById('obj-list')
-        // Clean everything
         tableBody.innerHTML = ""
-        pins.forEach((el)=>{
+
+        let pins = []
+        for(let hash in pinsObj) {
+          if(pinsObj[hash].Type !== "indirect") continue
           let row = document.createElement("tr")
           let hashColumn = document.createElement("td")
           let sizeColumn = document.createElement("td")
-          hashColumn.innerText = el.hash
+          hashColumn.innerText = hash
           row.appendChild(hashColumn)
           row.appendChild(sizeColumn)
           tableBody.appendChild(row)
-        })
+        }
+
         return success(pins)
       }, failure)
   })
