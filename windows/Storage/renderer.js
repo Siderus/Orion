@@ -31,7 +31,7 @@ function refreshRepoInfo(){
       .then((stats)=> {
         let text = document.getElementById("stats-repo")
         let repo_size = byteSize(stats.RepoSize)
-        text.innerHTML = `Obj: ${stats.NumObjects} - Space: ${repo_size.value} ${repo_size.unit}`
+        text.innerHTML = `Space: ${repo_size.value} ${repo_size.unit}`
         return success(stats)
       }, failure)
   })
@@ -55,6 +55,9 @@ function refreshPeersInfo(){
   })
 }
 
+/**
+ * This will refresh the UI with the list of Pinned Objects
+ */
 function refreshStorageList(){
   return new Promise((success, failure)=>{
     if(ipfs === undefined) return failure()
@@ -100,6 +103,7 @@ function waitForIPFS(max_waiting=500){
 }
 
 function refresh(){
+  if(!app.mainWindow.isFocused()) return
   return waitForIPFS()
     .then(refreshStorageList)
     .then(refreshRepoInfo)
