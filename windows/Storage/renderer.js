@@ -3,6 +3,7 @@
 // All of the Node.js APIs are available in this process.
 
 const { dialog, app } = require('electron').remote
+const _ = require('underscore')
 const byteSize = require('byte-size')
 
 let ipfsAPI = require('ipfs-api')
@@ -58,6 +59,7 @@ function refreshPeersInfo(){
 /**
  * This will refresh the UI with the list of Pinned Objects
  */
+let pinsStorage = {};
 function refreshStorageList(){
   return new Promise((success, failure)=>{
     if(ipfs === undefined) return failure()
@@ -68,13 +70,17 @@ function refreshStorageList(){
         // outside the app (We don't have the filename for them).
 
         // ToDo: Should we use React here? :) Just doing things quickly for now
+        if(_.isEqual(pinsStorage, pinsObj)){
+          return success()
+        }
 
+        pinsStorage = pinsObj
         let tableBody = document.getElementById('obj-list')
         tableBody.innerHTML = ""
 
         let pins = []
         for(let hash in pinsObj) {
-          if(pinsObj[hash].Type !== "indirect") continue
+          if(pinsObj[hash].Type === "indirect") continue
           let row = document.createElement("tr")
           let hashColumn = document.createElement("td")
           let sizeColumn = document.createElement("td")
