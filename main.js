@@ -3,7 +3,7 @@ const { app } = require('electron')
 const { startIPFSCommand, setMultiAddrIPFSDaemon } = require('./app/daemon.js')
 const { initDB } = require('./app/database.js')
 
-const ListWinow = require('./windows/List/window.js')
+const StorageWindow = require('./windows/Storage/window.js')
 // const SettingsWindow = require('./windows/Settings/window.js')
 
 // Let's create the main window
@@ -20,7 +20,7 @@ require('./app/singleInstance.js')
 
 
 app.on('ready', () => {
-  app.mainWindow = ListWinow.create(app)
+  app.mainWindow = StorageWindow.create(app)
 })
 
 // Quit when all windows are closed.
@@ -38,7 +38,7 @@ app.on('activate', () => {
   if (app.mainWindow) {
     app.mainWindow.show()
   }else{
-    app.mainWindow = ListWinow.create(app)
+    app.mainWindow = StorageWindow.create(app)
   }
 })
 

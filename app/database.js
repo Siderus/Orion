@@ -8,7 +8,7 @@ const DATABASE_PATH = join(app.getPath('userData'), "./Database/")
  * initDB will start a db instance
  */
 function initDB (){
-  const db = {};
+  const db = {}
   db.storage = new Datastore({filename: join(DATABASE_PATH, "./storage") })
   db.settings = new Datastore({filename: join(DATABASE_PATH, "./settings")})
   return db
