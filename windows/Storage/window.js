@@ -26,6 +26,7 @@ module.exports.create = function createStorageWindow(app) {
 
   theWindow.once('ready-to-show', () => {
     theWindow.show()
+    theWindow.toggleDevTools()
   })
 
   // and load the index.html of the app.
