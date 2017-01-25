@@ -24,6 +24,7 @@
     "eslint": "^3.14.0"
   },
   "dependencies": {
+    "byte-size": "^3.0.0",
     "ipfs-api": "git+https://github.com/ipfs/js-ipfs-api.git",
     "nedb": "^1.8.0",
     "photon": "git+https://github.com/connors/photon.git",
