@@ -119,7 +119,6 @@ function waitForIPFS(max_waiting=500){
 }
 
 function refresh(){
-  if(!app.mainWindow.isFocused()) return
   return waitForIPFS()
     .then(refreshStorageList)
     .then(refreshRepoInfo)
@@ -149,4 +148,8 @@ connectionCheckInterval = setInterval(()=>{
 }, 0.1*1000)
 
 // Set the refresh interval to 1 sec
-setInterval(refresh, 1*1000)
+setInterval(()=>{
+  // If the app is not focused, refresh only every 3 seconds
+  if(!app.mainWindow.isFocused() && +new Date() % 3 !== 0) return
+  refresh()
+}, 1*1000)
