@@ -3,70 +3,13 @@
 
 <head>
   <title>Storage</title>
-
-  <!-- Stylesheets -->
-  <link rel="stylesheet" href="../../node_modules/photon/dist/css/photon.css">
-
-  <!-- Electron Javascript -->
-  <script src="renderer.js" charset="utf-8"></script>
 </head>
 
 <body>
-  <!-- Wrap your entire app inside .window -->
-  <div class="window">
-
-      <header class="toolbar toolbar-header" style="-webkit-app-region: drag">
-        <h1 class="title">Storage</h1>
-
-        <div class="toolbar-actions">
-
-          <div class="btn-group">
-            <button class="btn btn-default">
-              <span class="icon icon-plus-circled"></span>
-            </button>
-            <button class="btn btn-default">
-              <span class="icon icon-minus-circled"></span>
-            </button>
-            <button class="btn btn-default active">
-              <span class="icon icon-download"></span>
-            </button>
-          </div>
-
-            <!--<button class="btn btn-default">
-              <span class="icon icon-info"></span>
-            </button>-->
-
-          <!-- Settings button -->
-          <button class="btn btn-default pull-right">
-            <span class="icon icon-cog"></span>
-          </button>
-        </div>
-      </header>
-
-
-    <div class="window-content">
-
-      <table class="table-striped">
-        <thead>
-          <tr>
-            <th>Hash</th>
-            <th>Size</th>
-          </tr>
-        </thead>
-        <tbody id="obj-list">
-        </tbody>
-      </table>
-
-    </div>
-    <footer class="toolbar toolbar-footer">
-      <h1 class="title">
-         <!-- Connection Status -->
-        <span id="stats-peers"></span> -
-         <!-- Repository Status -->
-        <span id="stats-repo"></span>
-      </h1>
-    </footer>
-  </div>
+  <div id="host"></div>
 </body>
+
+<!-- Electron Javascript -->
+<script src="renderer.jsx" charset="utf-8"></script>
 
 </html>

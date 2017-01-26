@@ -5,6 +5,7 @@ module.exports = {
         "node": true
     },
     "extends": "eslint:recommended",
+    "plugins": ["react"],
     "parserOptions": {
         "sourceType": "module"
     },

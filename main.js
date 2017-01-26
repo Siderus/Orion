@@ -51,6 +51,6 @@ app.on('will-quit', () => {
 })
 
 
-initDB()
-setMultiAddrIPFSDaemon()
-IPFS_PROCESS = startIPFSCommand()
+// initDB()
+// setMultiAddrIPFSDaemon()
+// IPFS_PROCESS = startIPFSCommand()

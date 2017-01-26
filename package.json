@@ -21,15 +21,20 @@
   "devDependencies": {
     "electron": "^1.4.1",
     "electron-packager": "^8.5.0",
+    "electron-prebuilt-compile": "^1.4.15",
     "eslint": "^3.14.0"
   },
   "dependencies": {
     "byte-size": "^3.0.0",
+    "eslint-plugin-react": "^6.9.0",
     "ipfs-api": "git+https://github.com/ipfs/js-ipfs-api.git",
     "nedb": "^1.8.0",
     "photon": "git+https://github.com/connors/photon.git",
     "q-sqlite3": "^0.1.3",
-    "sqlite3": "^3.1.8",
+    "react": "^15.4.2",
+    "react-desktop": "^0.2.17",
+    "react-dom": "^15.4.2",
+    "react-photonkit": "git+https://github.com/react-photonkit/react-photonkit.git",
     "underscore": "^1.8.3"
   }
 }
