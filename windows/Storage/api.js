@@ -19,7 +19,8 @@ export function startIPFS(){
 }
 
 /**
- * get the Repository Statistics and provides the sizes
+ * Provide a promise to get the Repository information. Its RepoSize is actually
+ * a byteSize (ex: {value, unit}) to make it human readable
  */
 export function getRepoInfo(){
   return new Promise((success, failure)=>{
@@ -35,7 +36,8 @@ export function getRepoInfo(){
 }
 
 /**
- * This will get the UI about the connections stats (peers)
+ * Provides a Promise that will resolve the peers list (in the future that can
+ * be manipualted)
  */
 export function getPeersInfo(){
   return new Promise((success, failure)=>{
@@ -49,7 +51,8 @@ export function getPeersInfo(){
 }
 
 /**
- * This will get the UI with the list of Pinned Objects
+ * Provide a Promise that will resolve into the Pin's object, with an hash key
+ * containing its hash.
  */
 export function getObjectList(){
   return new Promise((success, failure)=>{
@@ -61,6 +64,7 @@ export function getObjectList(){
         let pins = []
         for(let hash in pinsObj) {
           let new_obj = pinsObj[hash]
+          // Add the hash key
           new_obj.hash = new_obj.hash || hash
           pins.push(new_obj)
         }
@@ -71,7 +75,8 @@ export function getObjectList(){
 }
 
 /**
- * Return a promise containing the stats of an object
+ * Provides using a Promise the stat of an IPFS object. Note: All the Size
+ * values are a byteSize object (ex: {value, unit}) to make it human readable
  */
 export function getObjectStat(objectMultiHash){
   return new Promise((success, failure)=>{
@@ -88,24 +93,34 @@ export function getObjectStat(objectMultiHash){
   })
 }
 
-// PRovide the actual data combined (SIZE, STATS etc) as list of objects
+/**
+ * Returns a Promise that resolves a fully featured StorageList with more
+ * details, ex: Sizes, Links, Hash. Used by the Interface to render the table
+ */
 export function getStorageList(){
   return new Promise((success, failure)=>{
     return getObjectList()
       // Now obtain the object data
       .then(pins => {
+
         // Get a list of promises that will return the pin object with the
         // stat injected
         let promises = pins.map(pin => {
           return new Promise( (pin_success) => {
-            getObjectStat(pin.hash).then( stat => {
-              pin.stat = pin.stat || stat
-              pin_success(pin)
-            })
+            // Use the promises to perform multiple injections, so always
+            // resolve with the pin object
+            getObjectStat(pin.hash)
+              .then( stat => {
+                pin.stat = pin.stat || stat
+                return Promise.resolve(pin)
+              })
+              // Now let the pin's promise have a successfull life:
+              .then(pin => pin_success(pin))
           })
         })
+
         // Return a promise that will complete when all the data will be
-        // available.
+        // available. When done, it will run the main promise success()
         Promise.all(promises).then(success, failure)
       })
   })
