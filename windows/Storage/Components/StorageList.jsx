@@ -19,6 +19,7 @@ class StorageList extends Table {
       <table className="table-striped">
         <thead>
           <tr>
+            <th></th>
             <th>Hash</th>
             <th>Size</th>
           </tr>
@@ -28,6 +29,7 @@ class StorageList extends Table {
           {
             elements.map((el)=> (
               <tr key={el.hash}>
+                <td><input type="checkbox"/></td>
                 <td>{el.hash}</td>
                 <td>{el.stat.CumulativeSize.value || ""} {el.stat.CumulativeSize.unit || ""}</td>
               </tr>
