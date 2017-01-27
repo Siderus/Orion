@@ -2,7 +2,7 @@ import React from "react"
 import ReactDom from "react-dom"
 
 // Load API
-import {startIPFS, getPeersInfo, getRepoInfo, getStorageList} from "./api.js"
+import { startIPFS, getPeersInfo, getRepoInfo, getStorageList } from "./api.js"
 
 // Load Components
 import { Window, Content, PaneGroup, Pane } from "react-photonkit"

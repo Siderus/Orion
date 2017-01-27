@@ -4,6 +4,7 @@ import { Table } from "react-photonkit"
 
 @observer
 class StorageList extends Table {
+
   render() {
     if(!this.props.store) return <table className="table-striped"></table>
 
@@ -28,7 +29,7 @@ class StorageList extends Table {
             elements.map((el)=> (
               <tr key={el.hash}>
                 <td>{el.hash}</td>
-                <td>{el.size || ""}</td>
+                <td>{el.stat.CumulativeSize.value || ""} {el.stat.CumulativeSize.unit || ""}</td>
               </tr>
             ))
           }

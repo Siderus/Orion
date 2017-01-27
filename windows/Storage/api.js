@@ -9,8 +9,11 @@ let IPFS_CLIENT = null
 export function startIPFS(){
   return  new Promise( success => {
     if(IPFS_CLIENT != null) return success(IPFS_CLIENT)
-    let ipfs_local_multiAddr = getMultiAddrIPFSDaemon() || "/ip4/127.0.0.1/tcp/5001"
-    IPFS_CLIENT = ipfsAPI(ipfs_local_multiAddr)
+
+    let api_multiaddr = getMultiAddrIPFSDaemon() || "/ip4/127.0.0.1/tcp/5001"
+    IPFS_CLIENT = ipfsAPI(api_multiaddr)
+
+    // Somehow this is not always working
     return success(IPFS_CLIENT)
   })
 }
@@ -24,6 +27,7 @@ export function getRepoInfo(){
 
     return IPFS_CLIENT.repo.stat({human: true})
       .then((stats)=> {
+        // Providing {value, unit} to the stats.RepoSize
         stats.RepoSize = byteSize(stats.RepoSize)
         return success(stats)
       }, failure)
@@ -47,7 +51,7 @@ export function getPeersInfo(){
 /**
  * This will get the UI with the list of Pinned Objects
  */
-export function getStorageList(){
+export function getObjectList(){
   return new Promise((success, failure)=>{
     if(IPFS_CLIENT === undefined) return failure(ERROR_IPFS_UNAVAILABLE)
 
@@ -63,5 +67,46 @@ export function getStorageList(){
 
         return success(pins)
       }, failure)
+  })
+}
+
+/**
+ * Return a promise containing the stats of an object
+ */
+export function getObjectStat(objectMultiHash){
+  return new Promise((success, failure)=>{
+    if(IPFS_CLIENT === undefined) return failure(ERROR_IPFS_UNAVAILABLE)
+
+    return IPFS_CLIENT.object.stat(objectMultiHash)
+      .then((stat)=> {
+        stat.BlockSize = byteSize(stat.BlockSize)
+        stat.LinksSize = byteSize(stat.LinksSize)
+        stat.DataSize = byteSize(stat.DataSize)
+        stat.CumulativeSize = byteSize(stat.CumulativeSize)
+        return success(stat)
+      }, failure)
+  })
+}
+
+// PRovide the actual data combined (SIZE, STATS etc) as list of objects
+export function getStorageList(){
+  return new Promise((success, failure)=>{
+    return getObjectList()
+      // Now obtain the object data
+      .then(pins => {
+        // Get a list of promises that will return the pin object with the
+        // stat injected
+        let promises = pins.map(pin => {
+          return new Promise( (pin_success) => {
+            getObjectStat(pin.hash).then( stat => {
+              pin.stat = pin.stat || stat
+              pin_success(pin)
+            })
+          })
+        })
+        // Return a promise that will complete when all the data will be
+        // available.
+        Promise.all(promises).then(success, failure)
+      })
   })
 }
