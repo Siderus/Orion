@@ -1,29 +1,28 @@
-// This file is required by the index.html file and will
-// be executed in the renderer process for that window.
-// All of the Node.js APIs are available in this process.
+import byteSize from 'byte-size'
+import ipfsAPI from 'ipfs-api'
+import { getMultiAddrIPFSDaemon } from '../../app/daemon.js'
 
-const byteSize = require('byte-size')
-let ipfsAPI = require('ipfs-api')
-const { getMultiAddrIPFSDaemon } = require('../../app/daemon.js')
+const ERROR_IPFS_UNAVAILABLE = "IPFS NOT AVAILABLE"
 
-let ipfs
+let IPFS_CLIENT = null
 
 export function startIPFS(){
-  return  new Promise((success)=>{
+  return  new Promise( success => {
+    if(IPFS_CLIENT != null) return success(IPFS_CLIENT)
     let ipfs_local_multiAddr = getMultiAddrIPFSDaemon() || "/ip4/127.0.0.1/tcp/5001"
-    ipfs = ipfsAPI(ipfs_local_multiAddr)
-    return success(ipfs)
+    IPFS_CLIENT = ipfsAPI(ipfs_local_multiAddr)
+    return success(IPFS_CLIENT)
   })
 }
 
 /**
- * Refresh the Repository Statistics and provides the sizes
+ * get the Repository Statistics and provides the sizes
  */
-export function refreshRepoInfo(){
+export function getRepoInfo(){
   return new Promise((success, failure)=>{
-    if(ipfs === undefined) startIPFS()
+    if(IPFS_CLIENT === undefined) return failure(ERROR_IPFS_UNAVAILABLE)
 
-    return ipfs.repo.stat({human: true})
+    return IPFS_CLIENT.repo.stat({human: true})
       .then((stats)=> {
         stats.RepoSize = byteSize(stats.RepoSize)
         return success(stats)
@@ -32,13 +31,13 @@ export function refreshRepoInfo(){
 }
 
 /**
- * This will refresh the UI about the connections stats (peers)
+ * This will get the UI about the connections stats (peers)
  */
-export function refreshPeersInfo(){
+export function getPeersInfo(){
   return new Promise((success, failure)=>{
-    if(ipfs === undefined) startIPFS()
+    if(IPFS_CLIENT === undefined) return failure(ERROR_IPFS_UNAVAILABLE)
 
-    return ipfs.swarm.peers()
+    return IPFS_CLIENT.swarm.peers()
       .then((peers)=> {
         return success(peers)
       }, failure)
@@ -46,14 +45,14 @@ export function refreshPeersInfo(){
 }
 
 /**
- * This will refresh the UI with the list of Pinned Objects
+ * This will get the UI with the list of Pinned Objects
  */
-export function refreshStorageList(){
+export function getStorageList(){
   return new Promise((success, failure)=>{
-    if(ipfs === undefined) startIPFS()
+    if(IPFS_CLIENT === undefined) return failure(ERROR_IPFS_UNAVAILABLE)
 
-    return ipfs.pin.ls()
-      .then((pinsObj)=>{
+    return IPFS_CLIENT.pin.ls()
+      .then(pinsObj => {
         // Now we have pins, lets return an iterable array
         let pins = []
         for(let hash in pinsObj) {
@@ -65,40 +64,4 @@ export function refreshStorageList(){
         return success(pins)
       }, failure)
   })
-}
-
-/**
- * This simple function will wait for IPFS connection to be available via IPFS.
- * It relies on the ipfs variable with an undefined value.
- */
-export function waitForIPFS(max_waiting=500){
-  return new Promise((success, failure)=>{
-    let interval
-    let times = 0
-    interval = setInterval(() =>{
-      if(ipfs != undefined){
-        clearInterval(interval)
-        return success()
-      }
-      if(times >= max_waiting) {
-        clearInterval(interval)
-        return failure()
-      }
-      times++
-    }, 0.25*1000)
-
-  })
-}
-
-export function refresh(){
-  return waitForIPFS()
-    .then(refreshStorageList)
-    .then(refreshRepoInfo)
-    .then(refreshPeersInfo)
-    .then(refreshStorageList)
-}
-
-export function start(){
-  return startIPFS()
-    .then(refresh)
 }

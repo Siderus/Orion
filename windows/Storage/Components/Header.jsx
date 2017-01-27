@@ -1,5 +1,4 @@
 import React from "react"
-import _ from "underscore"
 import { Toolbar, Actionbar, Button, ButtonGroup } from "react-photonkit"
 
 class Header extends React.Component {
@@ -20,5 +19,4 @@ class Header extends React.Component {
   }
 }
 
-
-export default Header;
+export default Header
