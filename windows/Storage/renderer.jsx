@@ -26,7 +26,10 @@ window.loopTimeoutID = null
  */
 function startLoop(){
   // Starts IPFS
-  startIPFS()
+  startIPFS().catch((err)=>{
+    console.log(err)
+    window.loopTimeoutID = setTimeout(startLoop, 0.25*1000)
+  })
   let promises = []
 
   // Obtain the peers list and update teh Store
