@@ -17,28 +17,43 @@ import Footer from "./Components/Footer.jsx"
 import StorageStore from "./Stores/Storage.js"
 import StatusStore from "./Stores/Status.js"
 
-window.store = StorageStore
+
+// This will store the loop's timeout ID
+window.loopTimeoutID = null
+
 /**
  * This method will poll periodically the API and update the store
  */
-function updateUI(){
+function startLoop(){
   // Starts IPFS
   startIPFS()
+  let promises = []
+
   // Obtain the peers list and update teh Store
-  getPeersInfo()
+  promises.push(getPeersInfo()
     .then((peers)=>{
       StatusStore.peers = peers
-    })
+  }))
+
   // Obtain the repo stats and update teh Store
-  getRepoInfo()
+  promises.push(getRepoInfo()
     .then((stats)=>{
       StatusStore.stats = stats
-    })
+  }))
+
   // Obtain the repository pinned Objects (Pins or Storage)
-  getStorageList()
+  promises.push(getStorageList()
     .then((pins)=>{
       StorageStore.elements = pins
-    })
+  }))
+
+  // When everything is done, update in 1 sec
+  // Having a timeout instead of a loop, will avoid to have the the same API
+  // call, used more at the same time. This should be solved by implementing
+  // native JS IPFS daemon.
+  Promise.all(promises).then(()=>{
+    window.loopTimeoutID = setTimeout(startLoop, 1*1000)
+  })
 }
 
 class App extends React.Component {
@@ -57,7 +72,7 @@ class App extends React.Component {
   }
 }
 
-// Update the Storage / UI
-setInterval(updateUI, 1*1000)
+
 // Render the APP
 ReactDom.render(<App />, document.querySelector("#host"))
+startLoop()

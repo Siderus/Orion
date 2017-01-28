@@ -102,6 +102,8 @@ export function getStorageList(){
     return getObjectList()
       // Now obtain the object data
       .then(pins => {
+        // Filter out the indirect objects. Required to reduce API Calls
+        pins = pins.filter(pin => pin.Type != "indirect")
 
         // Get a list of promises that will return the pin object with the
         // stat injected
