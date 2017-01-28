@@ -21,6 +21,8 @@ module.exports.create = function createStorageWindow(app) {
     minHeight: 300,
     titleBarStyle: 'hidden',
     fullscreenable: false,
+    // The transparency will make it feel more native
+    transparent: true,
     show: false
   })
 
