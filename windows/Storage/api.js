@@ -12,9 +12,21 @@ export function startIPFS(){
 
     let api_multiaddr = getMultiAddrIPFSDaemon() || "/ip4/127.0.0.1/tcp/5001"
     IPFS_CLIENT = ipfsAPI(api_multiaddr)
-
+    window.ipfs = IPFS_CLIENT
     // Somehow this is not always working
     return success(IPFS_CLIENT)
+  })
+}
+
+/**
+ * This function will allow the user to add a file to the IPFS repo.
+ */
+export function addFileFromFSPath(filePath){
+  return new Promise((success, failure) => {
+    ipfs.util.addFromFs(filePath).then((objects)=>{
+      console.log(objects)
+      return success(objects)
+    })
   })
 }
 
@@ -23,7 +35,7 @@ export function startIPFS(){
  * a byteSize (ex: {value, unit}) to make it human readable
  */
 export function getRepoInfo(){
-  return new Promise((success, failure)=>{
+  return new Promise((success, failure) => {
     if(IPFS_CLIENT === undefined) return failure(ERROR_IPFS_UNAVAILABLE)
 
     return IPFS_CLIENT.repo.stat({human: true})
@@ -40,7 +52,7 @@ export function getRepoInfo(){
  * be manipualted)
  */
 export function getPeersInfo(){
-  return new Promise((success, failure)=>{
+  return new Promise((success, failure) => {
     if(IPFS_CLIENT === undefined) return failure(ERROR_IPFS_UNAVAILABLE)
 
     return IPFS_CLIENT.swarm.peers()
@@ -55,7 +67,7 @@ export function getPeersInfo(){
  * containing its hash.
  */
 export function getObjectList(){
-  return new Promise((success, failure)=>{
+  return new Promise((success, failure) => {
     if(IPFS_CLIENT === undefined) return failure(ERROR_IPFS_UNAVAILABLE)
 
     return IPFS_CLIENT.pin.ls()
@@ -79,7 +91,7 @@ export function getObjectList(){
  * values are a byteSize object (ex: {value, unit}) to make it human readable
  */
 export function getObjectStat(objectMultiHash){
-  return new Promise((success, failure)=>{
+  return new Promise((success, failure) => {
     if(IPFS_CLIENT === undefined) return failure(ERROR_IPFS_UNAVAILABLE)
 
     return IPFS_CLIENT.object.stat(objectMultiHash)
@@ -98,7 +110,7 @@ export function getObjectStat(objectMultiHash){
  * details, ex: Sizes, Links, Hash. Used by the Interface to render the table
  */
 export function getStorageList(){
-  return new Promise((success, failure)=>{
+  return new Promise((success, failure) => {
     return getObjectList()
       // Now obtain the object data
       .then(pins => {

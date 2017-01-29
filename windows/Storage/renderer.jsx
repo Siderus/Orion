@@ -23,6 +23,8 @@ window.loopTimeoutID = null
 
 /**
  * This method will poll periodically the API and update the store
+ *
+ * ToDo: Consider to use web workers to perform these actions
  */
 function startLoop(){
   // Starts IPFS
