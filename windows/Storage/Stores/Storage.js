@@ -7,6 +7,7 @@ import { observable } from "mobx"
 export class StorageStore {
   @observable elements = []
   @observable filters = []
+  @observable selected = []
 }
 
 export default new StorageStore
