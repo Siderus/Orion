@@ -1,14 +1,14 @@
 {
-  "name": "siderus-wire-client",
-  "version": "1.0.0",
-  "description": "IPFS client",
+  "name": "lumpy",
+  "version": "0.0.1",
+  "description": "Lumpy is an easy-to-use and KISS IPFS desktop interface",
   "main": "main.js",
   "scripts": {
     "start": "electron .",
-    "build": "mkdir -p ./builds/ ; cd ./builds/ ; electron-packager .. siderus.wire.client",
-    "build-all": "mkdir -p ./builds/ ; cd ./builds/ ; electron-packager .. siderus.wire.client --all"
+    "build": "mkdir -p ./builds/ ; cd ./builds/ ; electron-packager .. Lumpy",
+    "build-all": "mkdir -p ./builds/ ; cd ./builds/ ; electron-packager .. Lumpy --all"
   },
-  "repository": "",
+  "repository": "https://github.com/koalalorenzo/Lumpy",
   "keywords": [
     "electron",
     "ipfs",

@@ -1,9 +1,15 @@
-# Siderus Wire Client
-This client is an easy to use [IPFS](http://ipfs.io) desktop client, capable of managing a local node.
+# Lumpy Client
+Lumpy is an easy-to-use and KISS [IPFS](http://ipfs.io) desktop interface, to add,
+remove and manage the repository and the node info.
 
 This project is not ready for a stable use.
 
-## To Use
+## Goals
+ToDo
+
+## Naming
+
+## How To use
 
 ```bash
 # Install dependencies
