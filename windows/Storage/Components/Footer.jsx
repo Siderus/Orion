@@ -5,17 +5,18 @@ import { observer } from "mobx-react"
 @observer
 class Footer extends React.Component {
   render() {
-    let title = ""
+    let elements = []
     if(this.props.store){
       if(this.props.store.peers.length > 0)
-        title += ` Peers: ${this.props.store.peers.length}`
+        elements.push(`Peers: ${this.props.store.peers.length}`)
 
       if(this.props.store.stats.RepoSize){
         let repoSize = this.props.store.stats.RepoSize
 
-        title += ` Space: ${repoSize.value} ${repoSize.unit}`
+        elements.push(`Space: ${repoSize.value} ${repoSize.unit}`)
       }
     }
+    let title = elements.join(" - ") || "Waiting for IPFS..."
 
     return (
       <Toolbar ptType="footer" title={title}>
