@@ -22,14 +22,19 @@ export function startIPFS(){
  * This function will allow the user to add a file to the IPFS repo.
  */
 export function addFileFromFSPath(filePath){
-  return new Promise((success, failure) => {
+  if(!IPFS_CLIENT) return Promise.reject(ERROR_IPFS_UNAVAILABLE)
+  let options = { recursive: true }
+  IPFS_CLIENT.util.addFromFs(filePath, options)
+}
 
-    let options = { recursive: true }
-    ipfs.util.addFromFs(filePath, options).then((objects)=>{
-      return success(objects)
-    })
-
-  })
+/**
+ * This function will allow the user to unpin an object from the IPFS repo.
+ * Used to remove the file from the repo, if combined with the GC.
+ */
+export function unpinObject(hash){
+  if(!IPFS_CLIENT) return Promise.reject(ERROR_IPFS_UNAVAILABLE)
+  let options = { recursive: true }
+  return IPFS_CLIENT.pin.rm(hash, options)
 }
 
 /**
@@ -37,16 +42,14 @@ export function addFileFromFSPath(filePath){
  * a byteSize (ex: {value, unit}) to make it human readable
  */
 export function getRepoInfo(){
-  return new Promise((success, failure) => {
-    if(IPFS_CLIENT === undefined) return failure(ERROR_IPFS_UNAVAILABLE)
+  if(!IPFS_CLIENT) return Promise.reject(ERROR_IPFS_UNAVAILABLE)
 
-    return IPFS_CLIENT.repo.stat({human: true})
-      .then((stats)=> {
-        // Providing {value, unit} to the stats.RepoSize
-        stats.RepoSize = byteSize(stats.RepoSize)
-        return success(stats)
-      }, failure)
-  })
+  return IPFS_CLIENT.repo.stat({human: true})
+    .then((stats)=> {
+      // Providing {value, unit} to the stats.RepoSize
+      stats.RepoSize = byteSize(stats.RepoSize)
+      return Promise.resolve(stats)
+    }, Promise.reject)
 }
 
 /**
@@ -54,14 +57,9 @@ export function getRepoInfo(){
  * be manipualted)
  */
 export function getPeersInfo(){
-  return new Promise((success, failure) => {
-    if(IPFS_CLIENT === undefined) return failure(ERROR_IPFS_UNAVAILABLE)
+  if(!IPFS_CLIENT) return failure(ERROR_IPFS_UNAVAILABLE)
 
-    return IPFS_CLIENT.swarm.peers()
-      .then((peers)=> {
-        return success(peers)
-      }, failure)
-  })
+  return IPFS_CLIENT.swarm.peers()
 }
 
 /**
@@ -69,23 +67,21 @@ export function getPeersInfo(){
  * containing its hash.
  */
 export function getObjectList(){
-  return new Promise((success, failure) => {
-    if(IPFS_CLIENT === undefined) return failure(ERROR_IPFS_UNAVAILABLE)
+  if(!IPFS_CLIENT) return Promise.reject(ERROR_IPFS_UNAVAILABLE)
 
-    return IPFS_CLIENT.pin.ls()
-      .then(pinsObj => {
-        // Now we have pins, lets return an iterable array
-        let pins = []
-        for(let hash in pinsObj) {
-          let new_obj = pinsObj[hash]
-          // Add the hash key
-          new_obj.hash = new_obj.hash || hash
-          pins.push(new_obj)
-        }
+  return IPFS_CLIENT.pin.ls()
+    .then(pinsObj => {
+      // Now we have pins, lets return an iterable array
+      let pins = []
+      for(let hash in pinsObj) {
+        let new_obj = pinsObj[hash]
+        // Add the hash key
+        new_obj.hash = new_obj.hash || hash
+        pins.push(new_obj)
+      }
 
-        return success(pins)
-      }, failure)
-  })
+      return Promise.resolve(pins)
+    }, Promise.reject)
 }
 
 /**
@@ -94,7 +90,7 @@ export function getObjectList(){
  */
 export function getObjectStat(objectMultiHash){
   return new Promise((success, failure) => {
-    if(IPFS_CLIENT === undefined) return failure(ERROR_IPFS_UNAVAILABLE)
+    if(!IPFS_CLIENT) return failure(ERROR_IPFS_UNAVAILABLE)
 
     return IPFS_CLIENT.object.stat(objectMultiHash)
       .then((stat)=> {
