@@ -8,10 +8,8 @@ class StorageList extends Table {
 
   _handleCheckboxOnClick(element, proxy, event){
     if(this.props.storageStore.selected.find((el) => isEqual(el, element))){
-      console.log("o")
-      this.props.storageStore.selected.remove(element)
+      this.props.storageStore.selected.pop(element)
     }else{
-      console.log("added")
       this.props.storageStore.selected.push(element)
     }
   }
@@ -39,8 +37,15 @@ class StorageList extends Table {
           {
             elements.map((el)=> (
               <tr key={el.hash}>
-                <td><input onClick={this._handleCheckboxOnClick.bind(this, el)} type="checkbox"/> {el.hash}</td>
-                <td>{el.stat.CumulativeSize.value || ""} {el.stat.CumulativeSize.unit || ""}</td>
+                <td>
+                  <input
+                    onClick={this._handleCheckboxOnClick.bind(this, el)}
+                    type="checkbox"/>
+                  &nbsp;{el.hash}
+                </td>
+                <td>
+                  {el.stat.CumulativeSize.value} {el.stat.CumulativeSize.unit}
+                </td>
               </tr>
             ))
           }
