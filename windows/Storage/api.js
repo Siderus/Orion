@@ -57,7 +57,7 @@ export function getRepoInfo(){
  * be manipualted)
  */
 export function getPeersInfo(){
-  if(!IPFS_CLIENT) return failure(ERROR_IPFS_UNAVAILABLE)
+  if(!IPFS_CLIENT) return Promise.reject(ERROR_IPFS_UNAVAILABLE)
 
   return IPFS_CLIENT.swarm.peers()
 }
