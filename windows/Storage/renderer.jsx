@@ -1,8 +1,9 @@
 import React from "react"
 import ReactDom from "react-dom"
 
-// Load API
+// Load API and custom stuff
 import { startIPFS, getPeersInfo, getRepoInfo, getStorageList } from "./api.js"
+import { setupAddAppOnDrop } from "./fileIntegration.js"
 
 // Load Components
 import { Window, Content, PaneGroup, Pane } from "react-photonkit"
@@ -17,9 +18,11 @@ import Footer from "./Components/Footer.jsx"
 import StorageStore from "./Stores/Storage.js"
 import StatusStore from "./Stores/Status.js"
 
-
 // This will store the loop's timeout ID
 window.loopTimeoutID = null
+
+// Setup drag and drop events for adding files
+setupAddAppOnDrop()
 
 /**
  * This method will poll periodically the API and update the store
