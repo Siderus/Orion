@@ -6,12 +6,12 @@ import { observer } from "mobx-react"
 class Footer extends React.Component {
   render() {
     let elements = []
-    if(this.props.store){
-      if(this.props.store.peers.length > 0)
-        elements.push(`Peers: ${this.props.store.peers.length}`)
+    if(this.props.statusStore){
+      if(this.props.statusStore.peers.length > 0)
+        elements.push(`Peers: ${this.props.statusStore.peers.length}`)
 
-      if(this.props.store.stats.RepoSize){
-        let repoSize = this.props.store.stats.RepoSize
+      if(this.props.statusStore.stats.RepoSize){
+        let repoSize = this.props.statusStore.stats.RepoSize
 
         elements.push(`Space: ${repoSize.value} ${repoSize.unit}`)
       }

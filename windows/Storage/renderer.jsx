@@ -68,13 +68,13 @@ class App extends React.Component {
   render() {
     return (
       <Window>
-        <Header />
+        <Header storageStore={StorageStore}/>
 
         <Content>
-          <StorageList store={StorageStore}/>
+          <StorageList storageStore={StorageStore}/>
         </Content>
 
-        <Footer store={StatusStore}/>
+        <Footer statusStore={StatusStore}/>
       </Window>
     )
   }

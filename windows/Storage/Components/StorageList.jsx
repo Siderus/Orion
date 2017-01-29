@@ -1,14 +1,25 @@
 import React from "react"
+import { isEqual } from "underscore"
 import { observer } from "mobx-react"
 import { Table } from "react-photonkit"
 
 @observer
 class StorageList extends Table {
 
-  render() {
-    if(!this.props.store) return <table className="table-striped"></table>
+  _handleCheckboxOnClick(element, proxy, event){
+    if(this.props.storageStore.selected.find((el) => isEqual(el, element))){
+      console.log("o")
+      this.props.storageStore.selected.remove(element)
+    }else{
+      console.log("added")
+      this.props.storageStore.selected.push(element)
+    }
+  }
 
-    let { elements, filters } = this.props.store
+  render() {
+    if(!this.props.storageStore) return <table className="table-striped"></table>
+
+    let { elements, filters } = this.props.storageStore
 
     // Filters contains a list of functions
     filters.forEach((filter) => {
@@ -19,8 +30,7 @@ class StorageList extends Table {
       <table className="table-striped">
         <thead>
           <tr>
-            <th></th>
-            <th>Hash</th>
+            <th>ID</th>
             <th>Size</th>
           </tr>
         </thead>
@@ -29,8 +39,7 @@ class StorageList extends Table {
           {
             elements.map((el)=> (
               <tr key={el.hash}>
-                <td><input type="checkbox"/></td>
-                <td>{el.hash}</td>
+                <td><input onClick={this._handleCheckboxOnClick.bind(this, el)} type="checkbox"/> {el.hash}</td>
                 <td>{el.stat.CumulativeSize.value || ""} {el.stat.CumulativeSize.unit || ""}</td>
               </tr>
             ))
