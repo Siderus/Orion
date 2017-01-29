@@ -23,10 +23,12 @@ export function startIPFS(){
  */
 export function addFileFromFSPath(filePath){
   return new Promise((success, failure) => {
-    ipfs.util.addFromFs(filePath).then((objects)=>{
-      console.log(objects)
+
+    let options = { recursive: true }
+    ipfs.util.addFromFs(filePath, options).then((objects)=>{
       return success(objects)
     })
+
   })
 }
 
