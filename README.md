@@ -3,9 +3,9 @@ Lumpy is an easy-to-use and KISS [IPFS](http://ipfs.io) desktop interface, to ad
 remove and manage the repository and the node info.
 
 This project is not ready for a stable use.
-
+Trello Board: [https://trello.com/b/Z1iOgLYc/lumpy-ipfs](https://trello.com/b/Z1iOgLYc/lumpy-ipfs)
 ## Goals
-ToDo
+ToDo [https://trello.com/c/DvDsahxA/11-improve-the-readme](https://trello.com/c/DvDsahxA/11-improve-the-readme)
 
 ## Naming
 
