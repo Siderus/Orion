@@ -1,6 +1,9 @@
+import { join } from "path"
 import { remote } from "electron"
-import { addFilesPaths } from "../fileIntegration.js"
+
+import { addFilesPaths, saveFileToPath } from "../fileIntegration.js"
 import { unpinObject } from "../api.js"
+
 import React from "react"
 import { Toolbar, Actionbar, Button, ButtonGroup } from "react-photonkit"
 
@@ -49,6 +52,29 @@ class Header extends React.Component {
     }
   }
 
+  _handleDownloadButtonClick(){
+    // ToDo: extract file name when saving.
+
+    let selected = this.props.storageStore.selected
+    let opts = { title: "Where should I save?" }
+
+    if(selected.length > 1){
+      opts.properties = ["openDirectory", "createDirectory"]
+      opts.buttonLabel = "Save everything here"
+      let destDir = remote.dialog.showOpenDialog(remote.app.mainWindow, opts)[0]
+
+      let promises = selected.map(element =>{
+        let filePath = join(destDir, `./${element.hash}`)
+        return saveFileToPath(element.hash, filePath)
+      })
+      Promise.all(promises)
+
+    }else{ // selected.length == 1
+      let dest = remote.dialog.showSaveDialog(remote.app.mainWindow)
+      saveFileToPath(selected[0].hash, dest)
+    }
+  }
+
   render() {
     return (
       <Toolbar title="Storage">
@@ -56,7 +82,7 @@ class Header extends React.Component {
           <ButtonGroup>
             <Button glyph="plus-circled" onClick={this._handleAddButtonClick.bind(this)}/>
             <Button glyph="minus-circled" onClick={this._handleRemoveButtonClick.bind(this)}/>
-            <Button glyph="download" />
+            <Button glyph="download" onClick={this._handleDownloadButtonClick.bind(this)}/>
           </ButtonGroup>
 
           <Button glyph="cog" pullRight/>
