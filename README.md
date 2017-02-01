@@ -1,6 +1,7 @@
-# Lumpy - Easy-to-Use and KISS desktop client for IPFS
-Lumpy is an easy-to-use and KISS [IPFS](http://ipfs.io) desktop client, to add,
-remove and manage the repository and the node info.
+# Lumpy - Easy and KISS desktop client for IPFS
+Lumpy is an easy and KISS [inter planetary file system](http://ipfs.io) desktop
+client. It allows you to easily add and remove files, and manage the repository
+and the daemon.
 
 ![StorageList Screenshot](.readme/StorageList.png)
 
@@ -16,10 +17,10 @@ adding and removing files from the node. The main goals are:
 file/Directory, not hash. KISS, but configurable)
 * Listen to KISS use cases for IPFS for common users, content publishers and
 developers, like:
-  * allows the user to easily **share and transfer** a file with another user
-  * should integrate and work without problems to other IPFS clients/daemons
-  * **encrypts** if requested when adding a new file/directory to increase privacy
-and security
+  * allows the user to easily **share and transfer** a file with another users
+  * integrates and works without problems, with other IPFS clients/daemons
+  * **encrypts** if requested when adding a new file/directory to increase
+  privacy and security
 
 ### Features:
 
@@ -32,6 +33,7 @@ and security
 
 Note: This project is not ready for a stable use. Help is needed!
 It is developed using *Electron* and *React*, but we have a lot of things to do!
+
 You can contribute by checkign what should be done in the
 [Trello Board](https://trello.com/b/Z1iOgLYc/lumpy-ipfs).
 
