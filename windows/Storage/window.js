@@ -3,12 +3,12 @@
  * repository. Its purpose is to let the user know what he has added.
  */
 
-const {
-  BrowserWindow
-} = require('electron')
+import { BrowserWindow } from 'electron'
 
-const path = require('path')
-const url = require('url')
+import path from 'path'
+import url from 'url'
+
+import ImportWindow from '../Import/window.js'
 
 module.exports = {}
 
@@ -16,7 +16,7 @@ module.exports.create = function createStorageWindow(app) {
   // Create the browser window.
   let theWindow = new BrowserWindow({
     width: 600,
-    height: 400,
+    height: 450,
     minWidth: 400,
     minHeight: 300,
     titleBarStyle: 'hidden',
@@ -28,7 +28,6 @@ module.exports.create = function createStorageWindow(app) {
 
   theWindow.once('ready-to-show', () => {
     theWindow.show()
-    theWindow.toggleDevTools()
   })
 
   // and load the index.html of the app.

@@ -6,8 +6,7 @@ import { startIPFS, getPeersInfo, getRepoInfo, getStorageList } from "./api.js"
 import { setupAddAppOnDrop } from "./fileIntegration.js"
 
 // Load Components
-import { Window, Content, PaneGroup, Pane } from "react-photonkit"
-import { Toolbar, Actionbar, Button, ButtonGroup, Table } from "react-photonkit"
+import { Window, Content } from "react-photonkit"
 
 // Load Custom Components
 import Header from "./Components/Header.jsx"

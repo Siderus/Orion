@@ -1,10 +1,9 @@
-const { app } = require('electron')
+import { app }  from 'electron'
 
-const { startIPFSCommand, setMultiAddrIPFSDaemon } = require('./app/daemon.js')
-const { initDB } = require('./app/database.js')
+import { startIPFSCommand, setMultiAddrIPFSDaemon }  from './app/daemon.js'
+import { initDB }  from './app/database.js'
 
-const StorageWindow = require('./windows/Storage/window.js')
-// const SettingsWindow = require('./windows/Settings/window.js')
+import StorageWindow from './windows/Storage/window.js'
 
 // Let's create the main window
 app.mainWindow = null
