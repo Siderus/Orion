@@ -10,17 +10,17 @@ import Form from './Components/Form.jsx'
 import Footer from './Components/Footer.jsx'
 
 // Load MobX Stores
-import Stats from "./Stores/Stats.js"
+import StatsStore from "./Stores/Stats.js"
 
 class App extends React.Component {
   render() {
     return (
       <Window>
         <Content>
-          <Form statsStore={Stats}/>
+          <Form statsStore={StatsStore}/>
         </Content>
 
-        <Footer statsStore={Stats} />
+        <Footer statsStore={StatsStore} />
       </Window>
     )
   }
