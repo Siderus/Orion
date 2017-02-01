@@ -6,12 +6,17 @@ import { observer } from "mobx-react"
 class Footer extends React.Component {
 
   render() {
+    let props = Object.assign({}, this.props);
+    let importButton = null
+
+    if(props.statsStore.hash.length >= 3)
+      importButton = <Button text="Import" ptStyle="primary" pullRight />
+
     return (
       <Toolbar ptType="footer">
         <Actionbar>
           <Button text="Close" ptStyle="default" onClick={window.close} />
-
-          <Button text="Import" ptStyle="primary" pullRight />
+          {importButton}
         </Actionbar>
       </Toolbar>
     )
