@@ -23,10 +23,10 @@ and security
 
 ### Features:
 
-* Provide information about the repository and the daemon
-* Manage easily the files in the repository (Not just objects)
+* Manages easily the files in the repository (Not just objects)
 * Integrates with OS actions like drag-and-drop or URI
-* Allows to maintain a daemon from the interface.
+* Provides information and statistics about the repository and the daemon
+* Allows to maintain a daemon from the interface (gc)
 
 ## How To use and contribute
 
