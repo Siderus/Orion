@@ -1,7 +1,6 @@
 import { app }  from 'electron'
 
 import { startIPFSCommand, setMultiAddrIPFSDaemon }  from './app/daemon.js'
-import { initDB }  from './app/database.js'
 
 import StorageWindow from './windows/Storage/window.js'
 
@@ -52,6 +51,5 @@ app.on('will-quit', () => {
 })
 
 
-// initDB()
 setMultiAddrIPFSDaemon()
 IPFS_PROCESS = startIPFSCommand()
