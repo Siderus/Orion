@@ -16,7 +16,6 @@ require('./app/menu.js')
 require('./app/singleInstance.js')
 
 
-
 app.on('ready', () => {
   app.mainWindow = StorageWindow.create(app)
 })
