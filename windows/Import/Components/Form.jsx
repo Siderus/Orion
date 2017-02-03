@@ -1,6 +1,6 @@
 import React from "react"
 import { Input } from "react-photonkit"
-import { observer } from "mobx-react"
+import { multihash as isMultiHash } from 'is-ipfs'
 
 class Form extends React.Component {
   /**
@@ -12,9 +12,16 @@ class Form extends React.Component {
    */
   _handelOnTextChange(event){
     if(!this.props.statsStore) return
+    this.props.statsStore.reset()
 
-    if(event.target.value.length >= 5)
-      this.props.statsStore.hash = event.target.value
+    let hash = event.target.value
+    let isValid = isMultiHash(hash)
+
+    if(isValid) {
+      this.props.statsStore.hash = hash
+      this.props.statsStore.isValid = isValid
+      this.forceUpdate()
+    }
   }
 
   /**
