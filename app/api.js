@@ -1,6 +1,6 @@
 import byteSize from 'byte-size'
 import ipfsAPI from 'ipfs-api'
-import { getMultiAddrIPFSDaemon } from '../../app/daemon.js'
+import { getMultiAddrIPFSDaemon } from './daemon.js'
 
 const ERROR_IPFS_UNAVAILABLE = "IPFS NOT AVAILABLE"
 
@@ -136,4 +136,24 @@ export function getStorageList(){
         Promise.all(promises).then(success, failure)
       })
   })
+}
+
+/**
+ * This function will return a promise that wants to provide the peers that
+ * are owning a specific hash.
+ */
+export function getPeersWithObjectbyHash(hash){
+  if(!IPFS_CLIENT) return Promise.reject(ERROR_IPFS_UNAVAILABLE)
+  return IPFS_CLIENT.dht.findprovs(hash)
+}
+
+
+/**
+ * importObjectByHash will "import" an object recursively, by pinning it to the
+ * repository.
+ */
+export function importObjectByHash(hash){
+  if(!IPFS_CLIENT) return Promise.reject(ERROR_IPFS_UNAVAILABLE)
+  let options = { recursive: true }
+  return IPFS_CLIENT.pin.add(hash, options)
 }
