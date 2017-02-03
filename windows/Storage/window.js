@@ -8,8 +8,6 @@ import { BrowserWindow } from 'electron'
 import path from 'path'
 import url from 'url'
 
-import ImportWindow from '../Import/window.js'
-
 module.exports = {}
 
 module.exports.create = function createStorageWindow(app) {
