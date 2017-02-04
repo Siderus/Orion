@@ -30,7 +30,6 @@ class App extends React.Component {
   }
 }
 
-
 startIPFS()
 // Render the APP
 ReactDom.render(<App />, document.querySelector("#host"))

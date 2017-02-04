@@ -13,14 +13,14 @@ class Stats extends React.Component {
 
     if(!store.isValid || !store.wasLoadingStats) return <div></div>
 
-    const CumSize = {value: "", unit: ""}
+    const DefaultCumSize = {value: "Loading...", unit: ""}
 
-    let CumulativeSize = store.stats.CumulativeSize || CumSize
+    let CumulativeSize = store.stats.CumulativeSize || DefaultCumSize
 
     return (
-      <div>
-        <p>Peers with this Hash: {store.peersAmount || "..."}</p>
-        <p>Object/files size: {CumulativeSize.value} {CumulativeSize.unit}</p>
+      <div className="stats">
+        <p>Peers with this Hash: <b>{store.peersAmount || "Loading..."}</b></p>
+        <p>Object cumulative size: <b>{CumulativeSize.value} {CumulativeSize.unit}</b></p>
       </div>
     )
   }

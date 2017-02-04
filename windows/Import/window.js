@@ -19,10 +19,10 @@ module.exports.create = function createImportModal(app) {
     parent: app.mainWindow,
     modal: true,
 
-    width: 350,
-    height: 300,
+    width: 430,
+    height: 250,
     minWidth: 300,
-    minHeight: 400,
+    minHeight: 250,
 
     maximizable: false,
     resizable: true,
