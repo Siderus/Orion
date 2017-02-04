@@ -2,12 +2,27 @@
  * Import/require this file to set up the Menu of the windows
  */
 
-const electron = require('electron')
-const BrowserWindow = electron.BrowserWindow
-const Menu = electron.Menu
-const app = electron.app
+import electron from 'electron'
+import { BrowserWindow, Menu, app } from 'electron'
+
+import ImportWindow from '../windows/Import/window.js'
 
 let template = [{
+  label: 'File',
+  submenu: [{
+    label: 'Add from Local',
+    accelerator: 'CmdOrCtrl+A',
+  },{
+    label: 'Import from hash',
+    accelerator: 'CmdOrCtrl+D',
+    click: function (item) {
+      let import_window = ImportWindow.create(app)
+      import_window.once('ready-to-show', () => {
+        import_window.show()
+      })
+    }
+  }]
+}, {
   label: 'Edit',
   submenu: [{
     label: 'Undo',

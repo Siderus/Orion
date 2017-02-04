@@ -2,12 +2,12 @@ import React from "react"
 import ReactDom from "react-dom"
 
 // Load API and custom stuff
-import { startIPFS, getPeersInfo, getRepoInfo, getStorageList } from "./api.js"
+import { startIPFS, getPeersInfo, getRepoInfo } from "../../app/api.js"
+import { getStorageList } from "../../app/api.js"
 import { setupAddAppOnDrop } from "./fileIntegration.js"
 
 // Load Components
-import { Window, Content, PaneGroup, Pane } from "react-photonkit"
-import { Toolbar, Actionbar, Button, ButtonGroup, Table } from "react-photonkit"
+import { Window, Content } from "react-photonkit"
 
 // Load Custom Components
 import Header from "./Components/Header.jsx"

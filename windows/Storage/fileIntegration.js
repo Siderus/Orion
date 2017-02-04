@@ -1,5 +1,5 @@
 import { remote } from 'electron'
-import { addFileFromFSPath } from './api.js'
+import { addFileFromFSPath } from "../../app/api.js"
 
 import { get } from 'http'
 import { createWriteStream, unlink } from 'fs'

@@ -2,7 +2,7 @@ import { join } from "path"
 import { remote } from "electron"
 
 import { addFilesPaths, saveFileToPath } from "../fileIntegration.js"
-import { unpinObject } from "../api.js"
+import { unpinObject } from "../../../app/api.js"
 
 import React from "react"
 import { Toolbar, Actionbar, Button, ButtonGroup } from "react-photonkit"

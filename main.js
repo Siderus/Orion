@@ -1,10 +1,8 @@
-const { app } = require('electron')
+import { app }  from 'electron'
 
-const { startIPFSCommand, setMultiAddrIPFSDaemon } = require('./app/daemon.js')
-const { initDB } = require('./app/database.js')
+import { startIPFSCommand, setMultiAddrIPFSDaemon }  from './app/daemon.js'
 
-const StorageWindow = require('./windows/Storage/window.js')
-// const SettingsWindow = require('./windows/Settings/window.js')
+import StorageWindow from './windows/Storage/window.js'
 
 // Let's create the main window
 app.mainWindow = null
@@ -16,7 +14,6 @@ let IPFS_PROCESS = null
 require('./app/menu.js')
 // Make sure we have a single instance
 require('./app/singleInstance.js')
-
 
 
 app.on('ready', () => {
@@ -53,6 +50,5 @@ app.on('will-quit', () => {
 })
 
 
-// initDB()
 setMultiAddrIPFSDaemon()
 IPFS_PROCESS = startIPFSCommand()
