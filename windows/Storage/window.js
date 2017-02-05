@@ -20,7 +20,6 @@ module.exports.create = function createStorageWindow(app) {
     titleBarStyle: 'hidden',
     fullscreenable: false,
     // The transparency will make it feel more native
-    transparent: true,
     show: false
   })
 

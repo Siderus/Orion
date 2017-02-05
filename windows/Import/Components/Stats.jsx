@@ -19,7 +19,7 @@ class Stats extends React.Component {
 
     return (
       <div className="stats">
-        <p>Peers with this Hash: <b>{store.peersAmount || "Loading..."}</b></p>
+        <p>Peers with this Object: <b>{store.peersAmount || "Loading..."}</b></p>
         <p>Object cumulative size: <b>{CumulativeSize.value} {CumulativeSize.unit}</b></p>
       </div>
     )
