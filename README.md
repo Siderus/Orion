@@ -4,7 +4,7 @@ client. It allows you to easily add and remove files, and manage the repository
 and the daemon.
 
 [![Stories in Ready](https://badge.waffle.io/koalalorenzo/Lumpy.png?label=ready&title=Ready)](https://waffle.io/koalalorenzo/Lumpy)
-![StorageList Screenshot](.readme/StorageList.png)
+![Screenshots](.readme/main.png)
 
 **Note**: This page and project is still work in progress!
 
@@ -52,5 +52,3 @@ npm install
 # 4. Run the app
 npm start
 ```
-
-#### License [GPL 3](LICENSE.md)
