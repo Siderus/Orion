@@ -16,7 +16,7 @@ export function addFilesPaths(paths){
   let successMessageOption = {
     type: "info",
     title: "File/s added successfully",
-    message: "All the files selected were added successfully",
+    message: "All the files selected were added successfully! \n",
     cancelId: 0,
     buttons
   }
