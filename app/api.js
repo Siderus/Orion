@@ -24,7 +24,7 @@ export function startIPFS(){
 export function addFileFromFSPath(filePath){
   if(!IPFS_CLIENT) return Promise.reject(ERROR_IPFS_UNAVAILABLE)
   let options = { recursive: true }
-  IPFS_CLIENT.util.addFromFs(filePath, options)
+  return IPFS_CLIENT.util.addFromFs(filePath, options)
 }
 
 /**

@@ -1,4 +1,5 @@
 import { remote } from 'electron'
+const { app, dialog, shell } = remote
 import { addFileFromFSPath } from "../../app/api.js"
 
 import { get } from 'http'
@@ -11,10 +12,13 @@ import { createWriteStream, unlink } from 'fs'
  * ToDo: add loading messages/feedback
  */
 export function addFilesPaths(paths){
+  let buttons = ['Close', 'Open in the browser']
   let successMessageOption = {
     type: "info",
     title: "File/s added successfully",
-    message: "All the files selected were added successfully"
+    message: "All the files selected were added successfully! \n",
+    cancelId: 0,
+    buttons
   }
 
   let errorMessageOption = {
@@ -24,12 +28,26 @@ export function addFilesPaths(paths){
 
   let promises = paths.map(path => addFileFromFSPath(path))
   return Promise.all(promises)
-    .then( ()=>{
-      remote.dialog.showMessageBox(remote.app.mainWindow, successMessageOption)
+    .then( hashes  =>{
+      // building the lines of the text messages, containing the file name
+      // followed by its hash
+      let text_lines = hashes.map(el => `${el[0].hash} ${el[0].path}`)
+
+      // ToDo: improve this, maybe show a custom window with more details.
+      //       it is ugly!!!
+      successMessageOption.message +=`This includes: \n${text_lines.join(`\n`)}`
+      let btn_id = dialog.showMessageBox(app.mainWindow, successMessageOption)
+
+      // if(btn_id == buttons.indexOf('Open on the browser'))
+      if(btn_id === 1)
+        hashes.forEach(el => {
+          shell.openExternal(`https://ipfs.io/ipfs/${el[0].hash}`)
+        })
+
     })
     .catch( (err) => {
       errorMessageOption.message = `Error: ${err}`
-      remote.dialog.showMessageBox(remote.app.mainWindow, errorMessageOption)
+      dialog.showMessageBox(app.mainWindow, errorMessageOption)
     })
 }
 
