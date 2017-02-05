@@ -1,9 +1,9 @@
-[![Stories in Ready](https://badge.waffle.io/koalalorenzo/Lumpy.png?label=ready&title=Ready)](https://waffle.io/koalalorenzo/Lumpy)
 # Lumpy - Easy and KISS desktop client for IPFS
 Lumpy is an easy and KISS [inter planetary file system](http://ipfs.io) desktop
 client. It allows you to easily add and remove files, and manage the repository
 and the daemon.
 
+[![Stories in Ready](https://badge.waffle.io/koalalorenzo/Lumpy.png?label=ready&title=Ready)](https://waffle.io/koalalorenzo/Lumpy)
 ![StorageList Screenshot](.readme/StorageList.png)
 
 **Note**: This page and project is still work in progress!
@@ -23,6 +23,7 @@ file/Directory, not hash. KISS, but configurable)
 ### Features:
 
 * Manages the files pinned in the repository (Not just objects)
+* Allows _Downloads_/_Uploads_ to the IPFS node
 * Integrates with OS actions like drag-and-drop or URI
 * Provides information and statistics about the repository and the daemon
 * Allows to maintain a daemon from the interface

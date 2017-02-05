@@ -38,7 +38,7 @@ class Form extends React.Component {
     return (
       <form onSubmit={this._handelOnSubit.bind(this)}>
         <Input
-          label="Object/File Hash"
+          label="Insert the Object Hash to import:"
           type="text"
           placeholder="Qm1A2B3C4D...."
           onChange={this._handelOnTextChange.bind(this)}/>
