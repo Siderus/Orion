@@ -1,8 +1,8 @@
 import { app }  from 'electron'
 
-import { startIPFSCommand, setMultiAddrIPFSDaemon }  from './app/daemon.js'
+import { startIPFSCommand, setMultiAddrIPFSDaemon }  from './app/daemon'
 
-import StorageWindow from './windows/Storage/window.js'
+import StorageWindow from './windows/Storage/window'
 
 // Let's create the main window
 app.mainWindow = null
@@ -11,9 +11,9 @@ let IPFS_PROCESS = null
 
 
 // Setup the menu
-require('./app/menu.js')
+require('./app/menu')
 // Make sure we have a single instance
-require('./app/singleInstance.js')
+require('./app/singleInstance')
 
 
 app.on('ready', () => {

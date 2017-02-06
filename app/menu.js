@@ -5,7 +5,7 @@
 import electron from 'electron'
 import { BrowserWindow, Menu, app } from 'electron'
 
-import ImportWindow from '../windows/Import/window.js'
+import ImportWindow from '../windows/Import/window'
 
 let template = [{
   label: 'File',

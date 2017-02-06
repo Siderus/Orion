@@ -1,6 +1,6 @@
 import byteSize from 'byte-size'
 import ipfsAPI from 'ipfs-api'
-import { getMultiAddrIPFSDaemon } from './daemon.js'
+import { getMultiAddrIPFSDaemon } from './daemon'
 
 const ERROR_IPFS_UNAVAILABLE = "IPFS NOT AVAILABLE"
 
