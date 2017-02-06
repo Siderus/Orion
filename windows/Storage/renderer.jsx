@@ -2,21 +2,21 @@ import React from "react"
 import ReactDom from "react-dom"
 
 // Load API and custom stuff
-import { startIPFS, getPeersInfo, getRepoInfo } from "../../app/api.js"
-import { getStorageList } from "../../app/api.js"
-import { setupAddAppOnDrop } from "./fileIntegration.js"
+import { startIPFS, getPeersInfo, getRepoInfo } from "../../app/api"
+import { getStorageList } from "../../app/api"
+import { setupAddAppOnDrop } from "./fileIntegration"
 
 // Load Components
 import { Window, Content } from "react-photonkit"
 
 // Load Custom Components
-import Header from "./Components/Header.jsx"
-import StorageList from "./Components/StorageList.jsx"
-import Footer from "./Components/Footer.jsx"
+import Header from "./Components/Header"
+import StorageList from "./Components/StorageList"
+import Footer from "./Components/Footer"
 
 // Load MobX Stores
-import StorageStore from "./Stores/Storage.js"
-import StatusStore from "./Stores/Status.js"
+import StorageStore from "./Stores/Storage"
+import StatusStore from "./Stores/Status"
 
 // This will store the loop's timeout ID
 window.loopTimeoutID = null
@@ -59,9 +59,10 @@ function startLoop(){
   // Having a timeout instead of a loop, will avoid to have the the same API
   // call, used more at the same time. This should be solved by implementing
   // native JS IPFS daemon.
-  Promise.all(promises).then(()=>{
-    window.loopTimeoutID = setTimeout(startLoop, 1*1000)
-  })
+  Promise.all(promises)
+    .then(()=>{
+      window.loopTimeoutID = setTimeout(startLoop, 1*1000)
+    })
 }
 
 class App extends React.Component {
