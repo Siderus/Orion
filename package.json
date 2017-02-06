@@ -30,6 +30,7 @@
   },
   "dependencies": {
     "byte-size": "^3.0.0",
+    "electron-context-menu": "^0.8.0",
     "eslint-plugin-react": "^6.9.0",
     "ipfs-api": "git+https://github.com/ipfs/js-ipfs-api.git",
     "is-ipfs": "^0.3.0",
