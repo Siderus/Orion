@@ -1,6 +1,6 @@
 import { remote } from 'electron'
 const { app, dialog, shell } = remote
-import { addFileFromFSPath } from "../../app/api.js"
+import { addFileFromFSPath, unpinObject } from "../../app/api"
 
 import { get } from 'http'
 import { createWriteStream, unlink } from 'fs'
@@ -40,9 +40,7 @@ export function addFilesPaths(paths){
 
       // if(btn_id == buttons.indexOf('Open on the browser'))
       if(btn_id === 1)
-        hashes.forEach(el => {
-          shell.openExternal(`https://ipfs.io/ipfs/${el[0].hash}`)
-        })
+        openInBrowser(hashes.map(el => el[0].hash))
 
     })
     .catch( (err) => {
@@ -101,4 +99,42 @@ export function setupAddAppOnDrop(){
       addFilesPaths(paths)
     }
   }
+}
+
+/**
+ * Prompt the user if he is sure that we should remove a file
+ * return a Promise
+ */
+export function proptAndRemoveObjects(hashes){
+  let buttons = ["Abort", "Of course, Duh!"]
+  let opts = {
+    title: "Continue?",
+    message: `Are you sure you want to delete ${hashes.length} files?`,
+    detail: `This includes: \n${hashes.join(`\n`)}`,
+    buttons,
+    cancelId: 0,
+  }
+
+  let btnClicked = remote.dialog.showMessageBox(remote.app.mainWindow, opts)
+  // Check the electron dialog documentation, cancel button is always 0
+  if(btnClicked != 0){
+    let promises = hashes.map(hash =>{
+      return unpinObject(hash)
+    })
+
+    // ToDo: Handle failure
+    return Promise.all(promises)
+  }
+  return Promise.resolve()
+}
+
+
+/**
+ * Open hashes in a browser
+ */
+export function openInBrowser(hashes){
+  hashes.forEach(hash => {
+    shell.openExternal(`https://ipfs.io/ipfs/${hash}`)
+  })
+  return Promise.resolve(hashes)
 }
