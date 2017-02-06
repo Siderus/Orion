@@ -1,8 +1,9 @@
 import { join } from "path"
 import { remote } from "electron"
 
-import { addFilesPaths, saveFileToPath } from "../fileIntegration.js"
-import { unpinObject } from "../../../app/api.js"
+import {
+  addFilesPaths, saveFileToPath, proptAndRemoveObjects
+} from "../fileIntegration"
 
 import React from "react"
 import { Toolbar, Actionbar, Button, ButtonGroup } from "react-photonkit"
@@ -33,31 +34,13 @@ class Header extends React.Component {
     if(!this.props.storageStore) return
     if(this.props.storageStore.selected.length == 0) return
 
-    let selected = this.props.storageStore.selected
+    let hashes = this.props.storageStore.selected.map( el => el.hash )
 
-    let buttons = ["Abort", "Of course, Duh!"]
-    let opts = {
-      title: "Continue?",
-      message: `Are you sure you want to delete ${selected.length} files?`,
-      detail: `This includes: \n${selected.map(el => el.hash).join(`\n`)}`,
-      buttons,
-      cancelId: 0,
-    }
-
-    let btnClicked = remote.dialog.showMessageBox(remote.app.mainWindow, opts)
-    // Check the electron dialog documentation, cancel button is always 0
-    if(btnClicked != 0){
-      let promises = selected.map(element =>{
-        return unpinObject(element.hash)
-      })
-
-      // ToDo: Handle failure
-      Promise.all(promises)
-      .then(() => {
-        this.props.storageStore.selected.clear()
-        this.props.storageStore.elements.clear()
-      })
-    }
+    proptAndRemoveObjects(hashes)
+    .then(() => {
+      this.props.storageStore.selected.clear()
+      this.props.storageStore.elements.clear()
+    })
   }
 
   /**
