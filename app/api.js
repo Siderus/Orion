@@ -167,21 +167,25 @@ export function importObjectByHash(hash){
  * See: https://github.com/ipfs/interface-ipfs-core/tree/master/API/files#get
  */
 export function saveFileToPath(hash, dest){
-  if(!IPFS_CLIENT) return Promise.reject(ERROR_IPFS_UNAVAILABLE)
+  return new Promise((success, failure)=>{
+    if(!IPFS_CLIENT) return failure(ERROR_IPFS_UNAVAILABLE)
 
-  return IPFS_CLIENT.files.get(hash)
-    .then(stream => {
-      stream.on('data', (file) => {
-        let finalDest = join(dest, file.path)
-        console.log(finalDest)
-        // Pipe the file content into an actual write stream
-        if(file.content){
-          let writeStream = createWriteStream(finalDest)
-          file.content.pipe(writeStream)
-        }else{
-          mkdirSync(finalDest)
-        }
+    return IPFS_CLIENT.files.get(hash)
+      .then(stream => {
+        stream.on('data', (file) => {
+          let finalDest = join(dest, file.path)
+
+          // First make all the directories
+          if(!file.content){
+            mkdirSync(finalDest)
+          }else{
+            let finalDest = join(dest, file.path)
+            // Pipe the file content into an actual write stream
+            let writeStream = createWriteStream(finalDest)
+            file.content.pipe(writeStream)
+          }
+        })
+        stream.on('end', success)
       })
-    })
-
+  })
 }
