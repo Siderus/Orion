@@ -1,6 +1,8 @@
 import byteSize from 'byte-size'
 import ipfsAPI from 'ipfs-api'
 import { getMultiAddrIPFSDaemon } from './daemon'
+import { join } from 'path'
+import { createWriteStream, mkdirSync } from 'fs'
 
 const ERROR_IPFS_UNAVAILABLE = "IPFS NOT AVAILABLE"
 
@@ -156,4 +158,30 @@ export function importObjectByHash(hash){
   if(!IPFS_CLIENT) return Promise.reject(ERROR_IPFS_UNAVAILABLE)
   let options = { recursive: true }
   return IPFS_CLIENT.pin.add(hash, options)
+}
+
+/**
+ * This function allows to save on FS the content of an object to a specific
+ * path.
+ *
+ * See: https://github.com/ipfs/interface-ipfs-core/tree/master/API/files#get
+ */
+export function saveFileToPath(hash, dest){
+  if(!IPFS_CLIENT) return Promise.reject(ERROR_IPFS_UNAVAILABLE)
+
+  return IPFS_CLIENT.files.get(hash)
+    .then(stream => {
+      stream.on('data', (file) => {
+        let finalDest = join(dest, file.path)
+        console.log(finalDest)
+        // Pipe the file content into an actual write stream
+        if(file.content){
+          let writeStream = createWriteStream(finalDest)
+          file.content.pipe(writeStream)
+        }else{
+          mkdirSync(finalDest)
+        }
+      })
+    })
+
 }

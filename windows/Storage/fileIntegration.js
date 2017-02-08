@@ -2,9 +2,6 @@ import { remote } from 'electron'
 const { app, dialog, shell } = remote
 import { addFileFromFSPath, unpinObject } from "../../app/api"
 
-import { get } from 'http'
-import { createWriteStream, unlink } from 'fs'
-
 /**
  * This function will add the files from a list of their paths, and show
  * message when it was a success or a failure.
@@ -47,33 +44,6 @@ export function addFilesPaths(paths){
       errorMessageOption.message = `Error: ${err}`
       dialog.showMessageBox(app.mainWindow, errorMessageOption)
     })
-}
-
-/**
- * This method will easily download from localhsot an Object, and save the file
- * into a specific path (dest).
- *
- * ToDo: Work with directories. (This saves only a file, not a directory)
- */
-export function saveFileToPath(objectID, dest){
-  return new Promise((success, failure) =>{
-    let url = `http://localhost:8080/ipfs/${objectID}`
-    let file = createWriteStream(dest)
-
-    get(url, function(response) {
-      response.pipe(file)
-
-      file.on('finish', function() {
-        file.close(success)
-      })
-
-    }).on('error', err => {
-      // Delete the file.
-      unlink(dest)
-      failure(err.message)
-    })
-
-  })
 }
 
 /**
