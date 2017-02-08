@@ -1,6 +1,8 @@
 import byteSize from 'byte-size'
 import ipfsAPI from 'ipfs-api'
 import { getMultiAddrIPFSDaemon } from './daemon'
+import { join } from 'path'
+import { createWriteStream, mkdirSync } from 'fs'
 
 const ERROR_IPFS_UNAVAILABLE = "IPFS NOT AVAILABLE"
 
@@ -49,7 +51,7 @@ export function getRepoInfo(){
       // Providing {value, unit} to the stats.RepoSize
       stats.RepoSize = byteSize(stats.RepoSize)
       return Promise.resolve(stats)
-    }, Promise.reject)
+    })
 }
 
 /**
@@ -81,7 +83,7 @@ export function getObjectList(){
       }
 
       return Promise.resolve(pins)
-    }, Promise.reject)
+    })
 }
 
 /**
@@ -100,6 +102,7 @@ export function getObjectStat(objectMultiHash){
         stat.CumulativeSize = byteSize(stat.CumulativeSize)
         return success(stat)
       }, failure)
+      .catch(failure)
   })
 }
 
@@ -135,6 +138,7 @@ export function getStorageList(){
         // available. When done, it will run the main promise success()
         Promise.all(promises).then(success, failure)
       })
+      .catch(failure)
   })
 }
 
@@ -156,4 +160,35 @@ export function importObjectByHash(hash){
   if(!IPFS_CLIENT) return Promise.reject(ERROR_IPFS_UNAVAILABLE)
   let options = { recursive: true }
   return IPFS_CLIENT.pin.add(hash, options)
+}
+
+/**
+ * This function allows to save on FS the content of an object to a specific
+ * path.
+ *
+ * See: https://github.com/ipfs/interface-ipfs-core/tree/master/API/files#get
+ */
+export function saveFileToPath(hash, dest){
+  return new Promise((success, failure)=>{
+    if(!IPFS_CLIENT) return failure(ERROR_IPFS_UNAVAILABLE)
+
+    return IPFS_CLIENT.files.get(hash)
+      .then(stream => {
+        stream.on('data', (file) => {
+          let finalDest = join(dest, file.path)
+
+          // First make all the directories
+          if(!file.content){
+            mkdirSync(finalDest)
+          }else{
+            let finalDest = join(dest, file.path)
+            // Pipe the file content into an actual write stream
+            let writeStream = createWriteStream(finalDest)
+            file.content.pipe(writeStream)
+          }
+        })
+        stream.on('end', success)
+      })
+      .catch(failure)
+  })
 }

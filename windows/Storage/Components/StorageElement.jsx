@@ -3,8 +3,10 @@ import { remote } from "electron"
 import React from "react"
 import { isEqual } from "underscore"
 
+import { saveFileToPath } from "../../../app/api"
+
 import {
-  saveFileToPath, proptAndRemoveObjects, openInBrowser
+  proptAndRemoveObjects, openInBrowser
 } from "../fileIntegration"
 
 class StorageElement extends React.Component {
@@ -22,8 +24,9 @@ class StorageElement extends React.Component {
       {
         label: 'Save on disk',
         click: (item) => {
-          let dest = remote.dialog.showSaveDialog(remote.app.mainWindow)
-          saveFileToPath(this.props.element.hash, dest)
+          let opts = {properties: ['openDirectory'], buttonLabel: 'Save here'}
+          let dest = remote.dialog.showOpenDialog(remote.app.mainWindow, opts)
+          saveFileToPath(this.props.element.hash, dest[0])
         }
       },
       {
