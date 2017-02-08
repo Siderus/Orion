@@ -51,7 +51,7 @@ export function getRepoInfo(){
       // Providing {value, unit} to the stats.RepoSize
       stats.RepoSize = byteSize(stats.RepoSize)
       return Promise.resolve(stats)
-    }, Promise.reject)
+    })
 }
 
 /**
@@ -83,7 +83,7 @@ export function getObjectList(){
       }
 
       return Promise.resolve(pins)
-    }, Promise.reject)
+    })
 }
 
 /**
@@ -102,6 +102,7 @@ export function getObjectStat(objectMultiHash){
         stat.CumulativeSize = byteSize(stat.CumulativeSize)
         return success(stat)
       }, failure)
+      .catch(failure)
   })
 }
 
@@ -137,6 +138,7 @@ export function getStorageList(){
         // available. When done, it will run the main promise success()
         Promise.all(promises).then(success, failure)
       })
+      .catch(failure)
   })
 }
 
@@ -187,5 +189,6 @@ export function saveFileToPath(hash, dest){
         })
         stream.on('end', success)
       })
+      .catch(failure)
   })
 }
