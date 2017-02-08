@@ -24,7 +24,7 @@ class StorageElement extends React.Component {
       {
         label: 'Save on disk',
         click: (item) => {
-          let opts = {properties: ['openDirectory'], title: 'where to save?'}
+          let opts = {properties: ['openDirectory'], buttonLabel: 'Save here'}
           let dest = remote.dialog.showOpenDialog(remote.app.mainWindow, opts)
           saveFileToPath(this.props.element.hash, dest[0])
         }

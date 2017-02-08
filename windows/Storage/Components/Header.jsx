@@ -72,7 +72,7 @@ class Header extends React.Component {
 
     }else{
       // selected.length == 1
-      let opts = {properties: ['openDirectory'], title: 'Where to save?'}
+      let opts = {properties: ['openDirectory'], buttonLabel: 'Save here'}
       let dest = remote.dialog.showOpenDialog(remote.app.mainWindow, opts)
       saveFileToPath(selected[0].hash, dest[0])
     }
