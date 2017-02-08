@@ -2,8 +2,10 @@ import { join } from "path"
 import { remote } from "electron"
 
 import {
-  addFilesPaths, saveFileToPath, proptAndRemoveObjects
+  addFilesPaths, proptAndRemoveObjects
 } from "../fileIntegration"
+
+import { saveFileToPath } from "../../../app/api"
 
 import React from "react"
 import { Toolbar, Actionbar, Button, ButtonGroup } from "react-photonkit"
@@ -62,19 +64,17 @@ class Header extends React.Component {
       opts.buttonLabel = "Save everything here"
       let destDir = remote.dialog.showOpenDialog(remote.app.mainWindow, opts)[0]
 
-      // Make a promise for each object/element
       let promises = selected.map(element =>{
-        let filePath = join(destDir, `./${element.hash}`)
-        return saveFileToPath(element.hash, filePath)
+        return saveFileToPath(element.hash, destDir)
       })
       // ToDo: Handle failure
       Promise.all(promises)
 
     }else{
       // selected.length == 1
-      let dest = remote.dialog.showSaveDialog(remote.app.mainWindow)
-      // ToDo: Handle failure
-      saveFileToPath(selected[0].hash, dest)
+      let opts = {properties: ['openDirectory'], title: 'Where to save?'}
+      let dest = remote.dialog.showOpenDialog(remote.app.mainWindow, opts)
+      saveFileToPath(selected[0].hash, dest[0])
     }
   }
 
