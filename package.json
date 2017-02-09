@@ -5,8 +5,8 @@
   "main": "main.js",
   "scripts": {
     "start": "electron .",
-    "build": "electron-packager-compile $PWD Lumpy --overwrite",
-    "build-all": "electron-packager-compile $PWD Lumpy --all --overwrite"
+    "build": "electron-packager $PWD Lumpy --overwrite",
+    "build-all": "electron-packager $PWD Lumpy --all --overwrite"
   },
   "repository": "https://github.com/koalalorenzo/Lumpy",
   "keywords": [
