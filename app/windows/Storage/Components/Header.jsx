@@ -5,7 +5,7 @@ import {
   addFilesPaths, proptAndRemoveObjects
 } from "../fileIntegration"
 
-import { saveFileToPath } from "../../../app/api"
+import { saveFileToPath } from "../../../api"
 
 import React from "react"
 import { Toolbar, Actionbar, Button, ButtonGroup } from "react-photonkit"

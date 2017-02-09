@@ -1,7 +1,7 @@
 import React from "react"
 import ReactDom from "react-dom"
 
-import { startIPFS } from '../../app/api'
+import { startIPFS } from '../../api'
 
 // Load Components
 import { Window, Content, PaneGroup, Pane } from "react-photonkit"

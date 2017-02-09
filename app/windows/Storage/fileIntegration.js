@@ -1,6 +1,6 @@
 import { remote } from 'electron'
 const { app, dialog, shell } = remote
-import { addFileFromFSPath, unpinObject } from "../../app/api"
+import { addFileFromFSPath, unpinObject } from "../../api"
 
 /**
  * This function will add the files from a list of their paths, and show

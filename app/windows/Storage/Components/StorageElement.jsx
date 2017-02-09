@@ -3,7 +3,7 @@ import { remote } from "electron"
 import React from "react"
 import { isEqual } from "underscore"
 
-import { saveFileToPath } from "../../../app/api"
+import { saveFileToPath } from "../../../api"
 
 import {
   proptAndRemoveObjects, openInBrowser
