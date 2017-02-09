@@ -5,8 +5,8 @@
   "main": "main.js",
   "scripts": {
     "start": "electron .",
-    "build": "electron-packager-compile .. Lumpy",
-    "build-all": "electron-packager-compile .. Lumpy --all"
+    "build": "electron-packager-compile $PWD Lumpy --overwrite",
+    "build-all": "electron-packager-compile $PWD Lumpy --all --overwrite"
   },
   "repository": "https://github.com/koalalorenzo/Lumpy",
   "keywords": [
@@ -19,14 +19,14 @@
   "author": "Lorenzo Setale",
   "license": "GPL-3.0",
   "devDependencies": {
-    "babel-cli": "^6.22.2",
-    "babel-plugin-transform-decorators-legacy": "^1.3.4",
-    "babel-preset-react": "^6.22.0",
-    "babel-preset-stage-0": "^6.22.0",
     "electron-packager": "^8.5.1",
     "eslint": "^3.14.0"
   },
   "dependencies": {
+    "babel-cli": "^6.22.2",
+    "babel-plugin-transform-decorators-legacy": "^1.3.4",
+    "babel-preset-react": "^6.22.0",
+    "babel-preset-stage-0": "^6.22.0",
     "electron": "^1.6.0",
     "electron-compile": "^5.1.3",
     "electron-compilers": "^5.4.0",
