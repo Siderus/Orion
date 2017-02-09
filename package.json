@@ -5,8 +5,10 @@
   "main": "main.js",
   "scripts": {
     "start": "electron .",
-    "build": "electron-packager $PWD Lumpy --overwrite",
-    "build-all": "electron-packager $PWD Lumpy --all --overwrite"
+    "build-dev": "electron-packager . Lumpy --overwrite --out=./build",
+    "build-icons": "icon-gen -i logo.svg -o ./build/ -m ico,icns,png",
+    "build-darwin": "electron-packager . Lumpy --overwrite --icon=./build/app.icns --out=./build",
+    "build": "npm run build-icons ; npm run build-darwin"
   },
   "repository": "https://github.com/koalalorenzo/Lumpy",
   "keywords": [
@@ -20,7 +22,8 @@
   "license": "GPL-3.0",
   "devDependencies": {
     "electron-packager": "^8.5.1",
-    "eslint": "^3.14.0"
+    "eslint": "^3.14.0",
+    "icon-gen": "^1.0.7"
   },
   "dependencies": {
     "babel-cli": "^6.22.2",
