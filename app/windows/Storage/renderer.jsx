@@ -2,8 +2,8 @@ import React from "react"
 import ReactDom from "react-dom"
 
 // Load API and custom stuff
-import { startIPFS, getPeersInfo, getRepoInfo } from "../../app/api"
-import { getStorageList } from "../../app/api"
+import { startIPFS, getPeersInfo, getRepoInfo } from "../../api"
+import { getStorageList } from "../../api"
 import { setupAddAppOnDrop } from "./fileIntegration"
 
 // Load Components

@@ -7,7 +7,7 @@ import { spawn, execSync } from "child_process"
  * return child process with IPFS daemon
  */
 export function startIPFSCommand() {
-  const ipfs_process = spawn("ipfs", ["daemon"])
+  const ipfs_process = spawn("/usr/local/bin/ipfs", ["daemon"])
 
   ipfs_process.stdout.on("data", (data) => console.log(`IPFS: ${data}`))
   ipfs_process.stderr.on("data", (data) => console.log(`IPFS Error: ${data}`))
@@ -20,7 +20,7 @@ export function startIPFSCommand() {
  * Returns the multiAddr usable to connect to the local dameon via API
  */
 export function getMultiAddrIPFSDaemon(){
-  let multiAddr = execSync('ipfs config Addresses.API')
+  let multiAddr = execSync('/usr/local/bin/ipfs config Addresses.API')
   return `${multiAddr}`
 }
 
@@ -29,6 +29,6 @@ export function getMultiAddrIPFSDaemon(){
  * It restores it to /ip4/127.0.0.1/tcp/5001
  */
 export function setMultiAddrIPFSDaemon(){
-  let multiAddr = execSync('ipfs config Addresses.API /ip4/127.0.0.1/tcp/5001')
+  let multiAddr = execSync('/usr/local/bin/ipfs config Addresses.API /ip4/127.0.0.1/tcp/5001')
   return `${multiAddr}`
 }

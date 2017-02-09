@@ -5,17 +5,14 @@
 import electron from 'electron'
 import { BrowserWindow, Menu, app } from 'electron'
 
-import ImportWindow from '../windows/Import/window'
+import ImportWindow from './windows/Import/window'
 
 let template = [{
   label: 'File',
   submenu: [{
-    label: 'Add from Local',
-    accelerator: 'CmdOrCtrl+A',
-  },{
     label: 'Import from hash',
     accelerator: 'CmdOrCtrl+D',
-    click: function (item) {
+    click: function () {
       let import_window = ImportWindow.create(app)
       import_window.once('ready-to-show', () => {
         import_window.show()

@@ -4,8 +4,8 @@ import React from "react"
 import { Toolbar, Actionbar, Button, ButtonGroup } from "react-photonkit"
 import { observer } from "mobx-react"
 
-import { getPeersWithObjectbyHash, importObjectByHash } from '../../../app/api'
-import { getObjectStat } from '../../../app/api'
+import { getPeersWithObjectbyHash, importObjectByHash } from '../../../api'
+import { getObjectStat } from '../../../api'
 
 @observer
 class Footer extends React.Component {
