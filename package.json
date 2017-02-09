@@ -5,8 +5,8 @@
   "main": "main.js",
   "scripts": {
     "start": "electron .",
-    "build": "mkdir -p ./builds/ ; cd ./builds/ ; electron-packager .. Lumpy",
-    "build-all": "mkdir -p ./builds/ ; cd ./builds/ ; electron-packager .. Lumpy --all"
+    "build": "electron-packager-compile .. Lumpy",
+    "build-all": "electron-packager-compile .. Lumpy --all"
   },
   "repository": "https://github.com/koalalorenzo/Lumpy",
   "keywords": [
@@ -23,12 +23,13 @@
     "babel-plugin-transform-decorators-legacy": "^1.3.4",
     "babel-preset-react": "^6.22.0",
     "babel-preset-stage-0": "^6.22.0",
-    "electron": "^1.4.1",
-    "electron-packager": "^8.5.0",
-    "electron-prebuilt-compile": "^1.4.15",
+    "electron-packager": "^8.5.1",
     "eslint": "^3.14.0"
   },
   "dependencies": {
+    "electron": "^1.6.0",
+    "electron-compile": "^5.1.3",
+    "electron-compilers": "^5.4.0",
     "byte-size": "^3.0.0",
     "eslint-plugin-react": "^6.9.0",
     "ipfs-api": "git+https://github.com/ipfs/js-ipfs-api.git",
