@@ -1,7 +1,8 @@
-# Lumpy - Easy and KISS desktop client for IPFS
+# ![Logo](.readme/logo.png) Lumpy - Easy and KISS desktop client for IPFS
 Lumpy is an easy and KISS [inter planetary file system](http://ipfs.io) desktop
 client. It allows you to easily add and remove files, and manage the repository
 and the daemon.
+
 
 [![Stories in Ready](https://badge.waffle.io/koalalorenzo/Lumpy.png?label=ready&title=Ready)](https://waffle.io/koalalorenzo/Lumpy)
 
@@ -38,7 +39,7 @@ It is developed using *Electron* and *React*, but we have a lot of things to do!
 You can contribute by checkign what should be done in the
 [Waffle Board](https://waffle.io/koalalorenzo/Lumpy).
 
-## How to use
+## How to run
 At the moment Lumpy works only on macOS and Linux, and it requires IPFS to be
 installed.
 
@@ -49,7 +50,14 @@ brew install ipfs
 git clone https://github.com/koalalorenzo/Lumpy.git
 cd ./Lumpy
 # 3. Install dependencies
-npm install
+yarn # or npm install
 # 4. Run the app
-npm start
+yarn start # or npm start
+```
+
+In case you want to build the standalone app, you can just run:
+
+```bash
+yarn build-icons
+yarn build-darwin
 ```
