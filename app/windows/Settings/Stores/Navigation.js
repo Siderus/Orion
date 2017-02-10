@@ -5,10 +5,10 @@ import { observable } from "mobx"
  * accordingly.
  */
 export class NavigationStore {
-  @observable selected = ""
+  @observable selected = 0
 
   reset(){
-    this.selected = ""
+    this.selected = 0
   }
 }
 

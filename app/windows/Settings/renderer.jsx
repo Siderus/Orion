@@ -6,9 +6,9 @@ import { startIPFS } from '../../api'
 // Load Components
 import { Window, Content, Toolbar, Actionbar, Button } from "react-photonkit"
 import { Pane, PaneGroup } from "react-photonkit"
-import { NavGroup, NavGroupItem, NavTitle } from "react-photonkit"
 
 import Sidebar from './Components/Sidebar'
+import DynamicPanel from './Components/DynamicPanel'
 
 // Load MobX Stores
 import NavigationStore from "./Stores/Navigation"
@@ -21,8 +21,7 @@ class SettingsWindow extends React.Component {
         <Content>
           <PaneGroup>
             <Sidebar navigationStore={NavigationStore} />
-            <Pane></Pane>
-
+            <DynamicPanel navigationStore={NavigationStore} />
           </PaneGroup>
         </Content>
 
