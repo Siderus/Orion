@@ -43,9 +43,10 @@ class Footer extends React.Component {
     let storage = this.props.statsStore
 
     storage.isLoading = true
-
+    storage.importing = true
     importObjectByHash(storage.hash).then(()=>{
       // Object added. Yay!
+      storage.importing = false
       window.close()
     })
     .catch(err => {

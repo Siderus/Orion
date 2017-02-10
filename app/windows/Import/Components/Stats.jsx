@@ -6,12 +6,16 @@ class Stats extends React.Component {
   render() {
     let store = this.props.statsStore
 
-    if(store.isLoading) return <div>
-      Loading... this may take a while depending how distributed is the hash in
-      the network and the speed of the nodes having it.
-    </div>
+    // ToDo: show a different message when importing
+    if(store.isLoading || store.importing) return (
+      <div>
+        Loading... this may take a while depending how distributed is the hash in
+        the network and the speed of the nodes having it.
+      </div>
+    )
 
-    if(!store.isValid || !store.wasLoadingStats) return <div></div>
+    if(!store.isValid || !store.wasLoadingStats)
+      return <div></div>
 
     const DefaultCumSize = {value: "Loading...", unit: ""}
 
