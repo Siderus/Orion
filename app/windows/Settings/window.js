@@ -19,10 +19,10 @@ module.exports.create = function createSettingsModal(app) {
     parent: app.mainWindow,
     modal: true,
 
-    width: 450,
+    width: 650,
     height: 350,
-    minWidth: 400,
-    minHeight: 350,
+    minWidth: 450,
+    minHeight: 200,
 
     maximizable: false,
     resizable: true,
