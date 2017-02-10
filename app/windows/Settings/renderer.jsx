@@ -8,7 +8,9 @@ import { Window, Content, Toolbar, Actionbar, Button } from "react-photonkit"
 import { Pane, PaneGroup } from "react-photonkit"
 
 import Sidebar from './Components/Sidebar'
-import DynamicPanel from './Components/DynamicPanel'
+import RepositoryPanel from './Components/RepositoryPanel'
+import ConnectivityPanel from './Components/ConnectivityPanel'
+import DaemonPanel from './Components/DaemonPanel'
 
 // Load MobX Stores
 import NavigationStore from "./Stores/Navigation"
@@ -21,11 +23,13 @@ class SettingsWindow extends React.Component {
         <Content>
           <PaneGroup>
             <Sidebar navigationStore={NavigationStore} />
-            <DynamicPanel navigationStore={NavigationStore} />
+
+            <RepositoryPanel navigationStore={NavigationStore}/>
+            <ConnectivityPanel navigationStore={NavigationStore}/>
+            <DaemonPanel navigationStore={NavigationStore}/>
           </PaneGroup>
         </Content>
 
-        {/* Footer */}
         <Toolbar ptType="footer">
           <Actionbar>
             <Button text="Close" ptStyle="default" onClick={window.close} />
