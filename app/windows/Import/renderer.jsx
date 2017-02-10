@@ -4,8 +4,7 @@ import ReactDom from "react-dom"
 import { startIPFS } from '../../api'
 
 // Load Components
-import { Window, Content, PaneGroup, Pane } from "react-photonkit"
-import { Input, Button, ButtonGroup } from "react-photonkit"
+import { Window, Content } from "react-photonkit"
 
 // Load Custom Components
 import Form from './Components/Form'
@@ -15,7 +14,7 @@ import Footer from './Components/Footer'
 // Load MobX Stores
 import StatsStore from "./Stores/Stats"
 
-class App extends React.Component {
+class ImportWindow extends React.Component {
   render() {
     return (
       <Window>
@@ -31,5 +30,5 @@ class App extends React.Component {
 }
 
 startIPFS()
-// Render the APP
-ReactDom.render(<App />, document.querySelector("#host"))
+// Render the ImportWindow
+ReactDom.render(<ImportWindow />, document.querySelector("#host"))
