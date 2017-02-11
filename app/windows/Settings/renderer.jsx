@@ -14,6 +14,7 @@ import DaemonPanel from './Components/DaemonPanel'
 
 // Load MobX Stores
 import NavigationStore from "./Stores/Navigation"
+import InformationStore from "./Stores/Information"
 
 class SettingsWindow extends React.Component {
   render() {
@@ -24,9 +25,15 @@ class SettingsWindow extends React.Component {
           <PaneGroup>
             <Sidebar navigationStore={NavigationStore} />
 
-            <RepositoryPanel navigationStore={NavigationStore}/>
-            <ConnectivityPanel navigationStore={NavigationStore}/>
-            <DaemonPanel navigationStore={NavigationStore}/>
+            <RepositoryPanel
+              informationStore={InformationStore}
+              navigationStore={NavigationStore}/>
+            <ConnectivityPanel
+              informationStore={InformationStore}
+              navigationStore={NavigationStore}/>
+            <DaemonPanel
+              informationStore={InformationStore}
+              navigationStore={NavigationStore}/>
           </PaneGroup>
         </Content>
 

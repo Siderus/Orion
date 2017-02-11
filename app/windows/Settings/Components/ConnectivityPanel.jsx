@@ -15,6 +15,9 @@ class ConnectivityPanel extends React.Component {
 
   render() {
     if(this.props.navigationStore.selected != 1) return null
+    if(!this.props.informationStore) return null
+
+    const data = this.props.informationStore
 
     return (
       <Pane className="settings">
@@ -23,18 +26,19 @@ class ConnectivityPanel extends React.Component {
           <Input
             label="Your peer ID"
             type="text"
+            value={data.peerId || "..."}
             placeholder="Hey girl..." readOnly/>
 
           <Input
             label="Number of peers connected"
             type="text"
-            value="0"
+            value={data.peers.length || 0}
             placeholder="Hey girl..." readOnly/>
 
           <TextArea
             label="Peers connected"
             placeholder="Hey girl..." readOnly>
-
+            {/*{data.peeers.map(peer => peer.id)}*/}
           </TextArea>
         </form>
       </Pane>
