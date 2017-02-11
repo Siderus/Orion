@@ -3,18 +3,25 @@
  * show some informations about it.
  */
 
-const {
-  BrowserWindow
-} = require('electron')
+import path from 'path'
+import url from 'url'
 
-const path = require('path')
-const url = require('url')
+import { BrowserWindow, remote } from 'electron'
+
+import isRenderer from 'is-electron-renderer'
+
+// Allow us to use create() in both electron windows and main process
+let BrowserWindowClass
+if(isRenderer)
+  BrowserWindowClass = remote.BrowserWindow
+else
+  BrowserWindowClass = BrowserWindow
 
 module.exports = {}
 
 module.exports.create = function createImportModal(app) {
   // Create the browser modal window.
-  let thisWindow = new BrowserWindow({
+  let thisWindow = new BrowserWindowClass({
     title: "Import a new Object/File",
     parent: app.mainWindow,
     modal: true,
