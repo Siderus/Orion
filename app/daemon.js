@@ -16,6 +16,8 @@ export function getPathIPFSBinary() {
  * return child process with IPFS daemon
  */
 export function startIPFSCommand() {
+  if(!Settings.getSync("daemon.startIPFSAtStartup")) return null
+
   const binaryPath = getPathIPFSBinary()
   const ipfs_process = spawn(binaryPath, ["daemon"])
 
