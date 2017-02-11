@@ -15,9 +15,7 @@ let template = [{
     accelerator: 'CmdOrCtrl+D',
     click: function () {
       let import_window = ImportWindow.create(app)
-      import_window.once('ready-to-show', () => {
-        import_window.show()
-      })
+      import_window.show()
     }
   }]
 }, {
@@ -185,9 +183,7 @@ if (process.platform === 'darwin') {
       accelerator: 'CommandOrControl+,',
       click: function(){
         let settings_window = SettingsWindow.create(app)
-        settings_window.once('ready-to-show', () => {
-          settings_window.show()
-        })
+        settings_window.show()
       }
     }, {
       type: 'separator'
