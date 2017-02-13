@@ -16,7 +16,12 @@ import DaemonPanel from './Components/DaemonPanel'
 import NavigationStore from "./Stores/Navigation"
 import InformationStore from "./Stores/Information"
 
+
 class SettingsWindow extends React.Component {
+  componentDidMount(){
+    InformationStore.loadData()
+  }
+
   render() {
     return (
       <Window>

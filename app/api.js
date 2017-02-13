@@ -46,7 +46,7 @@ export function unpinObject(hash){
 export function getRepoInfo(){
   if(!IPFS_CLIENT) return Promise.reject(ERROR_IPFS_UNAVAILABLE)
 
-  return IPFS_CLIENT.repo.stat({human: true})
+  return IPFS_CLIENT.repo.stat({human: false})
     .then((stats)=> {
       // Providing {value, unit} to the stats.RepoSize
       stats.RepoSize = byteSize(stats.RepoSize)
@@ -62,6 +62,15 @@ export function getPeersInfo(){
   if(!IPFS_CLIENT) return Promise.reject(ERROR_IPFS_UNAVAILABLE)
 
   return IPFS_CLIENT.swarm.peers()
+}
+
+/**
+ * Provides a Promise that will resolve the peer info (id, pubkye etc..)
+ */
+export function getPeer(){
+  if(!IPFS_CLIENT) return Promise.reject(ERROR_IPFS_UNAVAILABLE)
+
+  return IPFS_CLIENT.id()
 }
 
 /**
