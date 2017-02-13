@@ -10,6 +10,7 @@ import { saveFileToPath } from "../../../api"
 import React from "react"
 import { Toolbar, Actionbar, Button, ButtonGroup } from "react-photonkit"
 
+import SettingsWindow from '../../Settings/window'
 
 class Header extends React.Component {
 
@@ -78,6 +79,14 @@ class Header extends React.Component {
     }
   }
 
+  /**
+   * Opens SettingsWindow from the button
+   */
+  _handleSettingsButtonClick(){
+    let settingsWindow = SettingsWindow.create(remote.app)
+    settingsWindow.show()
+  }
+
   render() {
     return (
       <Toolbar title="Storage">
@@ -88,7 +97,7 @@ class Header extends React.Component {
             <Button glyph="download" onClick={this._handleDownloadButtonClick.bind(this)}/>
           </ButtonGroup>
 
-          <Button glyph="cog" pullRight/>
+          <Button glyph="cog" pullRight onClick={this._handleSettingsButtonClick.bind(this)}/>
         </Actionbar>
       </Toolbar>
     )

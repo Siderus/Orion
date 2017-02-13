@@ -20,6 +20,7 @@ export class StatStorage {
   @observable isValid = false
   @observable isLoading = false
   @observable wasLoading = false
+  @observable importing = false
 
   reset(){
     this.hash = ""
@@ -29,6 +30,7 @@ export class StatStorage {
     this.isValid = false
     this.isLoading = false
     this.wasLoading = false
+    this.importing = false
   }
 }
 

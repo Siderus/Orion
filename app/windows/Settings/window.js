@@ -1,6 +1,6 @@
 /**
- * This window will simply prompt the user for the hash of an object/file and
- * show some informations about it.
+ * This window will show some information and allow the user to tune the
+ * application's settings/preferences.
  */
 
 import path from 'path'
@@ -19,17 +19,17 @@ else
 
 module.exports = {}
 
-module.exports.create = function createImportModal(app) {
+module.exports.create = function createSettingsModal(app) {
   // Create the browser modal window.
   let thisWindow = new BrowserWindowClass({
-    title: "Import a new Object/File",
+    title: "Settings and Info",
     parent: app.mainWindow,
     modal: true,
 
-    width: 430,
-    height: 250,
-    minWidth: 300,
-    minHeight: 250,
+    width: 650,
+    height: 350,
+    minWidth: 450,
+    minHeight: 200,
 
     maximizable: false,
     resizable: true,

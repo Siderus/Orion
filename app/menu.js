@@ -6,6 +6,7 @@ import electron from 'electron'
 import { BrowserWindow, Menu, app } from 'electron'
 
 import ImportWindow from './windows/Import/window'
+import SettingsWindow from './windows/Settings/window'
 
 let template = [{
   label: 'File',
@@ -14,9 +15,7 @@ let template = [{
     accelerator: 'CmdOrCtrl+D',
     click: function () {
       let import_window = ImportWindow.create(app)
-      import_window.once('ready-to-show', () => {
-        import_window.show()
-      })
+      import_window.show()
     }
   }]
 }, {
@@ -112,7 +111,7 @@ let template = [{
   submenu: [{
     label: 'Learn More',
     click: function () {
-      electron.shell.openExternal('http://electron.atom.io')
+      electron.shell.openExternal('https://github.com/koalalorenzo/Lumpy')
     }
   }]
 }]
@@ -178,6 +177,14 @@ if (process.platform === 'darwin') {
       label: 'Services',
       role: 'services',
       submenu: []
+    },{
+      label: 'Preferences',
+      role: 'preferences',
+      accelerator: 'CommandOrControl+,',
+      click: function(){
+        let settings_window = SettingsWindow.create(app)
+        settings_window.show()
+      }
     }, {
       type: 'separator'
     }, {

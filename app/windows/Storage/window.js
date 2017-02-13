@@ -3,16 +3,24 @@
  * repository. Its purpose is to let the user know what he has added.
  */
 
-import { BrowserWindow } from 'electron'
-
 import path from 'path'
 import url from 'url'
+
+import { BrowserWindow, remote } from 'electron'
+import isRenderer from 'is-electron-renderer'
+
+// Allow us to use create() in both electron windows and main process
+let BrowserWindowClass
+if(isRenderer)
+  BrowserWindowClass = remote.BrowserWindow
+else
+  BrowserWindowClass = BrowserWindow
 
 module.exports = {}
 
 module.exports.create = function createStorageWindow(app) {
   // Create the browser window.
-  let theWindow = new BrowserWindow({
+  let theWindow = new BrowserWindowClass({
     width: 600,
     height: 450,
     minWidth: 400,
