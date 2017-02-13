@@ -201,3 +201,12 @@ export function saveFileToPath(hash, dest){
       .catch(failure)
   })
 }
+
+/**
+ * This will just run the garbage collector to clean the repo for unused and
+ * Unpinned objects.
+ */
+export function runGarbageCollector(){
+  if(!IPFS_CLIENT) return Promise.reject(ERROR_IPFS_UNAVAILABLE)
+  return IPFS_CLIENT.repo.gc()
+}
