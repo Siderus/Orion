@@ -34,6 +34,8 @@ class DaemonPanel extends React.Component {
   // When the user select target value
   _handleChangeStartDaemon(event){
     Settings.set('daemon.startIPFSAtStartup', event.target.checked)
+    this.settings.startIPFSAtStartup = event.target.checked
+    this.forceUpdate()
   }
 
   _handleChangePathIPFSBinary(event){
@@ -78,7 +80,7 @@ class DaemonPanel extends React.Component {
           <CheckBox
             label="Start IPFS Daemon with the app"
             checked={data.startIPFSAtStartup}
-            onChange={this._handleChangeStartDaemon}
+            onChange={this._handleChangeStartDaemon.bind(this)}
             />
 
           <label>Restart is required</label>
