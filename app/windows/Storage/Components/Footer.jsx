@@ -7,7 +7,8 @@ class Footer extends React.Component {
   render() {
     let title = "Waiting for IPFS... Is the daemon enabled in the settings?"
     if(this.props.statusStore){
-      title = "Connected"
+      if(this.props.statusStore.peers.length > 0)
+        title = "Connected"
     }
 
     return (
