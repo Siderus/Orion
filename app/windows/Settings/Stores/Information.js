@@ -10,6 +10,7 @@ export class InformationStore {
   @observable peers = []
   @observable peer = {}
   @observable repoStats = {}
+  @observable loaded = false
 
   loadData(){
     let promises = []
@@ -17,7 +18,10 @@ export class InformationStore {
     promises.push(getPeersInfo().then(peers => this.peers = peers))
     promises.push(getRepoInfo().then(stats => this.repoStats = stats))
 
-    Promise.all(promises)
+    return Promise.all(promises).then((data) => {
+      this.loaded = true
+      return data
+    })
   }
 }
 
