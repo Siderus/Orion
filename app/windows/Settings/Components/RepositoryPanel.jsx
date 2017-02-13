@@ -38,8 +38,8 @@ class RepositoryPanel extends React.Component {
           <Input
             label="Path of the Repository"
             type="text"
-            defaultValue={data.RepoPath || "$HOME... maybe? Whatever, it's 2009!"}
-            placeholder="Hey girl..."/>
+            value={data.RepoPath || "$HOME... maybe? Whatever, it's 2009!"}
+            placeholder="Hey girl..." readOnly/>
 
           <Input
             label="Repository Size:"
