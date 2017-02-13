@@ -9,6 +9,7 @@ import { Pane, Input, TextArea } from "react-photonkit"
 
 @observer
 class ConnectivityPanel extends React.Component {
+
   _handelOnSubit(event){
 
   }
@@ -18,7 +19,7 @@ class ConnectivityPanel extends React.Component {
     if(!this.props.informationStore) return null
 
     const data = this.props.informationStore
-
+    // const peers = data.peers.map(peer => peer.addr.toString()).join("   ")
     return (
       <Pane className="settings">
         <form onSubmit={this._handelOnSubit.bind(this)}>
@@ -26,7 +27,7 @@ class ConnectivityPanel extends React.Component {
           <Input
             label="Your peer ID"
             type="text"
-            value={data.peerId || "..."}
+            value={data.peer.id || "..."}
             placeholder="Hey girl..." readOnly/>
 
           <Input
@@ -35,11 +36,11 @@ class ConnectivityPanel extends React.Component {
             value={data.peers.length || 0}
             placeholder="Hey girl..." readOnly/>
 
-          <TextArea
+          {/*<TextArea
             label="Peers connected"
+            value={peers}
             placeholder="Hey girl..." readOnly>
-            {/*{data.peeers.map(peer => peer.id)}*/}
-          </TextArea>
+          </TextArea>*/}
         </form>
       </Pane>
     )
