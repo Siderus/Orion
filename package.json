@@ -8,7 +8,7 @@
     "build-dev": "electron-packager . Lumpy --overwrite --out=./build",
     "build-icons": "icon-gen -i logo.svg -o ./build/ -m ico,icns,png",
     "build-darwin": "electron-packager . Lumpy --overwrite --icon=./build/app.icns --out=./build",
-    "build": "npm run build-icons ; npm run build-darwin"
+    "build": "yarn build-icons ; yarn build-darwin"
   },
   "repository": "https://github.com/koalalorenzo/Lumpy",
   "keywords": [

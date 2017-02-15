@@ -58,6 +58,6 @@ yarn start # or npm start
 In case you want to build the standalone app, you can just run:
 
 ```bash
-yarn build-icons
-yarn build-darwin
+yarn build-icons # Builds icons
+yarn build-darwin # Builds the actual app
 ```
