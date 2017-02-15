@@ -26,8 +26,7 @@
     "eslint": "^3.14.0",
     "eslint-config-equimper": "^1.3.5",
     "eslint-plugin-react": "^6.9.0",
-    "icon-gen": "^1.0.7",
-    "xo": "^0.17.1"
+    "icon-gen": "^1.0.7"
   },
   "dependencies": {
     "babel-cli": "^6.22.2",
@@ -53,11 +52,5 @@
     "react-dom": "^15.4.2",
     "react-photonkit": "git+https://github.com/react-photonkit/react-photonkit.git",
     "underscore": "^1.8.3"
-  },
-  "xo": {
-    "esnext": true,
-    "semicolon": false,
-    "space": 2,
-    "plugins": ["react"]
   }
 }
