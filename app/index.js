@@ -1,6 +1,6 @@
-import { app }  from 'electron'
+import { app } from 'electron'
 
-import { startIPFSCommand, setMultiAddrIPFSDaemon }  from './daemon'
+import { startIPFSCommand, setMultiAddrIPFSDaemon } from './daemon'
 
 import StorageWindow from './windows/Storage/window'
 
@@ -36,7 +36,7 @@ app.on('activate', () => {
     app.mainWindow.once('ready-to-show', () => {
       app.mainWindow.show()
     })
-  }else{
+  }else {
     app.mainWindow = StorageWindow.create(app)
   }
 })
@@ -44,7 +44,7 @@ app.on('activate', () => {
 app.on('will-quit', () => {
   // Kill IPFS process after the windows have been closed and before the app is
   // fully terminated
-  if(IPFS_PROCESS){
+  if (IPFS_PROCESS) {
     IPFS_PROCESS.kill()
   }
 })

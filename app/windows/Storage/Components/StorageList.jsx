@@ -1,21 +1,21 @@
-import React from "react"
-import { isEqual } from "underscore"
-import { observer } from "mobx-react"
-import { Table } from "react-photonkit"
+import React from 'react'
+import { isEqual } from 'underscore'
+import { observer } from 'mobx-react'
+import { Table } from 'react-photonkit'
 
-import StorageElement from "./StorageElement"
+import StorageElement from './StorageElement'
 
 @observer
 class StorageList extends Table {
   render() {
-    if(!this.props.storageStore) return <table className="table-striped"></table>
+    if (!this.props.storageStore) return <table className="table-striped" />
 
     let { elements, filters } = this.props.storageStore
 
     // Filters contains a list of functions
     filters.forEach((filter) => {
-      elements = filter(elements)}
-    )
+      elements = filter(elements)
+    })
 
     return (
       <table className="table-striped">
@@ -28,11 +28,12 @@ class StorageList extends Table {
 
         <tbody>
           {
-            elements.map((el)=> (
+            elements.map((el) => (
               <StorageElement
                 element={el}
                 storageStore={this.props.storageStore}
-                key={el.hash} />
+                key={el.hash}
+              />
             ))
           }
         </tbody>

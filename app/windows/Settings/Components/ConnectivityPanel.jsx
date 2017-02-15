@@ -1,7 +1,7 @@
-import React from "react"
-import { observer } from "mobx-react"
+import React from 'react'
+import { observer } from 'mobx-react'
 
-import { Pane, Input, TextArea } from "react-photonkit"
+import { Pane, Input, TextArea } from 'react-photonkit'
 
 /**
  * Connectivity Panel
@@ -10,14 +10,14 @@ import { Pane, Input, TextArea } from "react-photonkit"
 @observer
 class ConnectivityPanel extends React.Component {
 
-  _handelOnSubit(event){
+  _handelOnSubit(event) {
 
   }
 
   render() {
-    if(this.props.navigationStore.selected != 1) return null
-    if(!this.props.informationStore) return null
-    if(!this.props.informationStore.loaded) return null
+    if (this.props.navigationStore.selected != 1) return null
+    if (!this.props.informationStore) return null
+    if (!this.props.informationStore.loaded) return null
 
     const data = this.props.informationStore
     // const peers = data.peers.map(peer => peer.addr.toString()).join("   ")
@@ -28,14 +28,16 @@ class ConnectivityPanel extends React.Component {
           <Input
             label="Your peer ID"
             type="text"
-            value={data.peer.id || "..."}
-            placeholder="Hey girl..." readOnly/>
+            value={data.peer.id || '...'}
+            placeholder="Hey girl..." readOnly
+          />
 
           <Input
             label="Number of peers connected"
             type="text"
             value={data.peers.length || 0}
-            placeholder="Hey girl..." readOnly/>
+            placeholder="Hey girl..." readOnly
+          />
 
           {/*<TextArea
             label="Peers connected"

@@ -4,15 +4,15 @@ import { getMultiAddrIPFSDaemon } from './daemon'
 import { join } from 'path'
 import { createWriteStream, mkdirSync } from 'fs'
 
-const ERROR_IPFS_UNAVAILABLE = "IPFS NOT AVAILABLE"
+const ERROR_IPFS_UNAVAILABLE = 'IPFS NOT AVAILABLE'
 
 let IPFS_CLIENT = null
 
-export function startIPFS(){
-  return  new Promise( success => {
-    if(IPFS_CLIENT != null) return success(IPFS_CLIENT)
+export function startIPFS() {
+  return new Promise(success => {
+    if (IPFS_CLIENT != null) return success(IPFS_CLIENT)
 
-    let api_multiaddr = getMultiAddrIPFSDaemon() || "/ip4/127.0.0.1/tcp/5001"
+    const api_multiaddr = getMultiAddrIPFSDaemon() || '/ip4/127.0.0.1/tcp/5001'
     IPFS_CLIENT = ipfsAPI(api_multiaddr)
     window.ipfs = IPFS_CLIENT
     // Somehow this is not always working
@@ -23,9 +23,9 @@ export function startIPFS(){
 /**
  * This function will allow the user to add a file to the IPFS repo.
  */
-export function addFileFromFSPath(filePath){
-  if(!IPFS_CLIENT) return Promise.reject(ERROR_IPFS_UNAVAILABLE)
-  let options = { recursive: true }
+export function addFileFromFSPath(filePath) {
+  if (!IPFS_CLIENT) return Promise.reject(ERROR_IPFS_UNAVAILABLE)
+  const options = { recursive: true }
   return IPFS_CLIENT.util.addFromFs(filePath, options)
 }
 
@@ -33,9 +33,9 @@ export function addFileFromFSPath(filePath){
  * This function will allow the user to unpin an object from the IPFS repo.
  * Used to remove the file from the repo, if combined with the GC.
  */
-export function unpinObject(hash){
-  if(!IPFS_CLIENT) return Promise.reject(ERROR_IPFS_UNAVAILABLE)
-  let options = { recursive: true }
+export function unpinObject(hash) {
+  if (!IPFS_CLIENT) return Promise.reject(ERROR_IPFS_UNAVAILABLE)
+  const options = { recursive: true }
   return IPFS_CLIENT.pin.rm(hash, options)
 }
 
@@ -43,11 +43,11 @@ export function unpinObject(hash){
  * Provide a promise to get the Repository information. Its RepoSize is actually
  * a byteSize (ex: {value, unit}) to make it human readable
  */
-export function getRepoInfo(){
-  if(!IPFS_CLIENT) return Promise.reject(ERROR_IPFS_UNAVAILABLE)
+export function getRepoInfo() {
+  if (!IPFS_CLIENT) return Promise.reject(ERROR_IPFS_UNAVAILABLE)
 
-  return IPFS_CLIENT.repo.stat({human: false})
-    .then((stats)=> {
+  return IPFS_CLIENT.repo.stat({ human: false })
+    .then((stats) => {
       // Providing {value, unit} to the stats.RepoSize
       stats.RepoSize = byteSize(stats.RepoSize)
       return Promise.resolve(stats)
@@ -58,8 +58,8 @@ export function getRepoInfo(){
  * Provides a Promise that will resolve the peers list (in the future that can
  * be manipualted)
  */
-export function getPeersInfo(){
-  if(!IPFS_CLIENT) return Promise.reject(ERROR_IPFS_UNAVAILABLE)
+export function getPeersInfo() {
+  if (!IPFS_CLIENT) return Promise.reject(ERROR_IPFS_UNAVAILABLE)
 
   return IPFS_CLIENT.swarm.peers()
 }
@@ -67,8 +67,8 @@ export function getPeersInfo(){
 /**
  * Provides a Promise that will resolve the peer info (id, pubkye etc..)
  */
-export function getPeer(){
-  if(!IPFS_CLIENT) return Promise.reject(ERROR_IPFS_UNAVAILABLE)
+export function getPeer() {
+  if (!IPFS_CLIENT) return Promise.reject(ERROR_IPFS_UNAVAILABLE)
 
   return IPFS_CLIENT.id()
 }
@@ -77,15 +77,15 @@ export function getPeer(){
  * Provide a Promise that will resolve into the Pin's object, with an hash key
  * containing its hash.
  */
-export function getObjectList(){
-  if(!IPFS_CLIENT) return Promise.reject(ERROR_IPFS_UNAVAILABLE)
+export function getObjectList() {
+  if (!IPFS_CLIENT) return Promise.reject(ERROR_IPFS_UNAVAILABLE)
 
   return IPFS_CLIENT.pin.ls()
     .then(pinsObj => {
       // Now we have pins, lets return an iterable array
-      let pins = []
-      for(let hash in pinsObj) {
-        let new_obj = pinsObj[hash]
+      const pins = []
+      for (const hash in pinsObj) {
+        const new_obj = pinsObj[hash]
         // Add the hash key
         new_obj.hash = new_obj.hash || hash
         pins.push(new_obj)
@@ -99,12 +99,12 @@ export function getObjectList(){
  * Provides using a Promise the stat of an IPFS object. Note: All the Size
  * values are a byteSize object (ex: {value, unit}) to make it human readable
  */
-export function getObjectStat(objectMultiHash){
+export function getObjectStat(objectMultiHash) {
   return new Promise((success, failure) => {
-    if(!IPFS_CLIENT) return failure(ERROR_IPFS_UNAVAILABLE)
+    if (!IPFS_CLIENT) return failure(ERROR_IPFS_UNAVAILABLE)
 
     return IPFS_CLIENT.object.stat(objectMultiHash)
-      .then((stat)=> {
+      .then((stat) => {
         stat.BlockSize = byteSize(stat.BlockSize)
         stat.LinksSize = byteSize(stat.LinksSize)
         stat.DataSize = byteSize(stat.DataSize)
@@ -119,9 +119,8 @@ export function getObjectStat(objectMultiHash){
  * Returns a Promise that resolves a fully featured StorageList with more
  * details, ex: Sizes, Links, Hash. Used by the Interface to render the table
  */
-export function getStorageList(){
-  return new Promise((success, failure) => {
-    return getObjectList()
+export function getStorageList() {
+  return new Promise((success, failure) => getObjectList()
       // Now obtain the object data
       .then(pins => {
         // Filter out the indirect objects. Required to reduce API Calls
@@ -147,16 +146,15 @@ export function getStorageList(){
         // available. When done, it will run the main promise success()
         Promise.all(promises).then(success, failure)
       })
-      .catch(failure)
-  })
+      .catch(failure))
 }
 
 /**
  * This function will return a promise that wants to provide the peers that
  * are owning a specific hash.
  */
-export function getPeersWithObjectbyHash(hash){
-  if(!IPFS_CLIENT) return Promise.reject(ERROR_IPFS_UNAVAILABLE)
+export function getPeersWithObjectbyHash(hash) {
+  if (!IPFS_CLIENT) return Promise.reject(ERROR_IPFS_UNAVAILABLE)
   return IPFS_CLIENT.dht.findprovs(hash)
 }
 
@@ -165,9 +163,9 @@ export function getPeersWithObjectbyHash(hash){
  * importObjectByHash will "import" an object recursively, by pinning it to the
  * repository.
  */
-export function importObjectByHash(hash){
-  if(!IPFS_CLIENT) return Promise.reject(ERROR_IPFS_UNAVAILABLE)
-  let options = { recursive: true }
+export function importObjectByHash(hash) {
+  if (!IPFS_CLIENT) return Promise.reject(ERROR_IPFS_UNAVAILABLE)
+  const options = { recursive: true }
   return IPFS_CLIENT.pin.add(hash, options)
 }
 
@@ -177,22 +175,22 @@ export function importObjectByHash(hash){
  *
  * See: https://github.com/ipfs/interface-ipfs-core/tree/master/API/files#get
  */
-export function saveFileToPath(hash, dest){
-  return new Promise((success, failure)=>{
-    if(!IPFS_CLIENT) return failure(ERROR_IPFS_UNAVAILABLE)
+export function saveFileToPath(hash, dest) {
+  return new Promise((success, failure) => {
+    if (!IPFS_CLIENT) return failure(ERROR_IPFS_UNAVAILABLE)
 
     return IPFS_CLIENT.files.get(hash)
       .then(stream => {
         stream.on('data', (file) => {
-          let finalDest = join(dest, file.path)
+          const finalDest = join(dest, file.path)
 
           // First make all the directories
-          if(!file.content){
+          if (!file.content) {
             mkdirSync(finalDest)
-          }else{
-            let finalDest = join(dest, file.path)
+          }else {
+            const finalDest = join(dest, file.path)
             // Pipe the file content into an actual write stream
-            let writeStream = createWriteStream(finalDest)
+            const writeStream = createWriteStream(finalDest)
             file.content.pipe(writeStream)
           }
         })
@@ -206,7 +204,7 @@ export function saveFileToPath(hash, dest){
  * This will just run the garbage collector to clean the repo for unused and
  * Unpinned objects.
  */
-export function runGarbageCollector(){
-  if(!IPFS_CLIENT) return Promise.reject(ERROR_IPFS_UNAVAILABLE)
+export function runGarbageCollector() {
+  if (!IPFS_CLIENT) return Promise.reject(ERROR_IPFS_UNAVAILABLE)
   return IPFS_CLIENT.repo.gc()
 }

@@ -1,16 +1,16 @@
-import { remote } from "electron"
+import { remote } from 'electron'
 
-import React from "react"
-import { isEqual } from "underscore"
+import React from 'react'
+import { isEqual } from 'underscore'
 
-import { saveFileToPath } from "../../../api"
+import { saveFileToPath } from '../../../api'
 
 import {
   proptAndRemoveObjects, openInBrowser
-} from "../fileIntegration"
+} from '../fileIntegration'
 
 class StorageElement extends React.Component {
-  constructor(props){
+  constructor(props) {
     super(props)
 
     this.menu = null
@@ -24,8 +24,8 @@ class StorageElement extends React.Component {
       {
         label: 'Save on disk',
         click: (item) => {
-          let opts = {properties: ['openDirectory'], buttonLabel: 'Save here'}
-          let dest = remote.dialog.showOpenDialog(remote.app.mainWindow, opts)
+          const opts = { properties: ['openDirectory'], buttonLabel: 'Save here' }
+          const dest = remote.dialog.showOpenDialog(remote.app.mainWindow, opts)
           saveFileToPath(this.props.element.hash, dest[0])
         }
       },
@@ -48,32 +48,33 @@ class StorageElement extends React.Component {
   }
 
   // Setup the Menu
-  componentWillMount(){
+  componentWillMount() {
     this.menu = remote.Menu.buildFromTemplate(this.menuTemplate)
   }
 
-  _handleContextMenu(event){
+  _handleContextMenu(event) {
     event.preventDefault()
     this.menu.popup()
   }
 
-  _handleCheckboxOnClick(element, proxy, event){
-    if(this.props.storageStore.selected.find((el) => isEqual(el, element))){
+  _handleCheckboxOnClick(element, proxy, event) {
+    if (this.props.storageStore.selected.find((el) => isEqual(el, element))) {
       this.props.storageStore.selected.pop(element)
-    }else{
+    } else{
       this.props.storageStore.selected.push(element)
     }
   }
 
   render() {
-    if(!this.props.storageStore) return <tr></tr>
-    let el = this.props.element
+    if (!this.props.storageStore) return <tr />
+    const el = this.props.element
     return (
       <tr key={el.hash} onContextMenu={this._handleContextMenu.bind(this)}>
         <td>
           <input
             onClick={this._handleCheckboxOnClick.bind(this, el)}
-            type="checkbox"/>
+            type="checkbox"
+          />
           &nbsp;{el.hash}
         </td>
         <td>

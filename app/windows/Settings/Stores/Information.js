@@ -1,6 +1,6 @@
-import { observable } from "mobx"
+import { observable } from 'mobx'
 
-import { getPeersInfo, getPeer, getRepoInfo } from "../../../api"
+import { getPeersInfo, getPeer, getRepoInfo } from '../../../api'
 
 /**
  * This store will contain the data provided by the API, in order to render
@@ -12,8 +12,8 @@ export class InformationStore {
   @observable repoStats = {}
   @observable loaded = false
 
-  loadData(){
-    let promises = []
+  loadData() {
+    const promises = []
     promises.push(getPeer().then(peer => this.peer = peer))
     promises.push(getPeersInfo().then(peers => this.peers = peers))
     promises.push(getRepoInfo().then(stats => this.repoStats = stats))
@@ -25,4 +25,4 @@ export class InformationStore {
   }
 }
 
-export default new InformationStore
+export default new InformationStore()

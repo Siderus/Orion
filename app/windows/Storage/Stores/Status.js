@@ -1,4 +1,4 @@
-import { observable } from "mobx"
+import { observable } from 'mobx'
 
 /**
  * StatusStorage will contain the status of the IPFS Daemon. Speccifically it
@@ -13,4 +13,4 @@ export class StatusStorage {
   @observable stats = []
 }
 
-export default new StatusStorage
+export default new StatusStorage()
