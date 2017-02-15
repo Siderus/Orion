@@ -1,4 +1,4 @@
-import { observable } from "mobx"
+import { observable } from 'mobx'
 
 /**
  * StatStorage will contain the status and few information about the Object.
@@ -13,7 +13,7 @@ import { observable } from "mobx"
  * This is used by the API and React
  */
 export class StatStorage {
-  @observable hash = ""
+  @observable hash = ''
   @observable peersAmount = 0
   @observable stats = {}
 
@@ -22,8 +22,8 @@ export class StatStorage {
   @observable wasLoading = false
   @observable importing = false
 
-  reset(){
-    this.hash = ""
+  reset() {
+    this.hash = ''
     this.peersAmount = 0
     this.stats = {}
 
@@ -34,4 +34,4 @@ export class StatStorage {
   }
 }
 
-export default new StatStorage
+export default new StatStorage()

@@ -1,4 +1,4 @@
-import { observable } from "mobx"
+import { observable } from 'mobx'
 
 /**
  * StorageStore will contain observable elements that will be used by React
@@ -10,4 +10,4 @@ export class StorageStore {
   @observable selected = []
 }
 
-export default new StorageStore
+export default new StorageStore()

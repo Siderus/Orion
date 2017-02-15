@@ -1,4 +1,4 @@
-import { observable } from "mobx"
+import { observable } from 'mobx'
 
 /**
  * This will store the Navigation panel, to show/hide the window's content
@@ -7,9 +7,9 @@ import { observable } from "mobx"
 export class NavigationStore {
   @observable selected = 0
 
-  reset(){
+  reset() {
     this.selected = 0
   }
 }
 
-export default new NavigationStore
+export default new NavigationStore()

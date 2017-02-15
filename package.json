@@ -1,6 +1,6 @@
 {
   "name": "lumpy",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "Lumpy is an easy-to-use and KISS IPFS desktop interface",
   "main": "main.js",
   "scripts": {
@@ -8,7 +8,7 @@
     "build-dev": "electron-packager . Lumpy --overwrite --out=./build",
     "build-icons": "icon-gen -i logo.svg -o ./build/ -m ico,icns,png",
     "build-darwin": "electron-packager . Lumpy --overwrite --icon=./build/app.icns --out=./build",
-    "build": "npm run build-icons ; npm run build-darwin"
+    "build": "yarn build-icons ; yarn build-darwin"
   },
   "repository": "https://github.com/koalalorenzo/Lumpy",
   "keywords": [
@@ -23,6 +23,8 @@
   "devDependencies": {
     "electron-packager": "^8.5.1",
     "eslint": "^3.14.0",
+    "eslint-config-equimper": "^1.3.5",
+    "eslint-plugin-react": "^6.9.0",
     "icon-gen": "^1.0.7"
   },
   "dependencies": {

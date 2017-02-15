@@ -11,10 +11,10 @@ import isRenderer from 'is-electron-renderer'
 
 // Allow us to use create() in both electron windows and main process
 let BrowserWindowClass
-if(isRenderer)
-  BrowserWindowClass = remote.BrowserWindow
+if (isRenderer)
+  {BrowserWindowClass = remote.BrowserWindow}
 else
-  BrowserWindowClass = BrowserWindow
+  {BrowserWindowClass = BrowserWindow}
 
 module.exports = {}
 
@@ -43,7 +43,7 @@ module.exports.create = function createStorageWindow(app) {
   }))
 
   // Emitted when the window is closed.
-  theWindow.on('closed', function() {
+  theWindow.on('closed', () => {
     // Dereference the window object, usually you would store windows
     // in an array if your app supports multi windows, this is the time
     // when you should delete the corresponding element.

@@ -1,5 +1,5 @@
-import React from "react"
-import { Input } from "react-photonkit"
+import React from 'react'
+import { Input } from 'react-photonkit'
 import { multihash as isMultiHash } from 'is-ipfs'
 
 class Form extends React.Component {
@@ -10,14 +10,14 @@ class Form extends React.Component {
    *
    * Note: the full validation will be performed using API calls.
    */
-  _handelOnTextChange(event){
-    if(!this.props.statsStore) return
+  _handelOnTextChange(event) {
+    if (!this.props.statsStore) return
     this.props.statsStore.reset()
 
-    let hash = event.target.value
-    let isValid = isMultiHash(hash)
+    const hash = event.target.value
+    const isValid = isMultiHash(hash)
 
-    if(isValid) {
+    if (isValid) {
       this.props.statsStore.hash = hash
       this.props.statsStore.isValid = isValid
       this.forceUpdate()
@@ -29,7 +29,7 @@ class Form extends React.Component {
    * wants to submit the form. This will prenvent the page refresh, but will
    * validate the input and then initialize the API calls.
    */
-  _handelOnSubit(event){
+  _handelOnSubit(event) {
     event.preventDefault()
     // ToDo.
   }
@@ -41,7 +41,8 @@ class Form extends React.Component {
           label="Insert the Object Hash to import:"
           type="text"
           placeholder="Qm1A2B3C4D...."
-          onChange={this._handelOnTextChange.bind(this)}/>
+          onChange={this._handelOnTextChange.bind(this)}
+        />
       </form>
     )
   }

@@ -1,8 +1,8 @@
 import { remote } from 'electron'
 
-import React from "react"
-import { Toolbar, Actionbar, Button, ButtonGroup } from "react-photonkit"
-import { observer } from "mobx-react"
+import React from 'react'
+import { Toolbar, Actionbar, Button, ButtonGroup } from 'react-photonkit'
+import { observer } from 'mobx-react'
 
 import { getPeersWithObjectbyHash, importObjectByHash } from '../../../api'
 import { getObjectStat } from '../../../api'
@@ -10,11 +10,11 @@ import { getObjectStat } from '../../../api'
 @observer
 class Footer extends React.Component {
 
-  _handleCheckButton (){
-    let storage = this.props.statsStore
+  _handleCheckButton() {
+    const storage = this.props.statsStore
 
     // Prepare the promise to check the Peers
-    let pPeers = getPeersWithObjectbyHash(storage.hash)
+    const pPeers = getPeersWithObjectbyHash(storage.hash)
       .then(peers => {
         storage.peersAmount = peers.length
         storage.isLoading = false
@@ -22,7 +22,7 @@ class Footer extends React.Component {
       })
 
     // Prepare the promise to check the stats
-    let pStats = getObjectStat(storage.hash)
+    const pStats = getObjectStat(storage.hash)
       .then(stats => {
         storage.stats = stats
         storage.isLoading = false
@@ -39,12 +39,12 @@ class Footer extends React.Component {
     })
   }
 
-  _handleImportButton (){
-    let storage = this.props.statsStore
+  _handleImportButton() {
+    const storage = this.props.statsStore
 
     storage.isLoading = true
     storage.importing = true
-    importObjectByHash(storage.hash).then(()=>{
+    importObjectByHash(storage.hash).then(() => {
       // Object added. Yay!
       storage.importing = false
       window.close()
@@ -57,14 +57,14 @@ class Footer extends React.Component {
 
 
   render() {
-    let storage = this.props.statsStore
+    const storage = this.props.statsStore
     let rightButton = null
 
-    if(!storage.isLoading && storage.isValid)
-      rightButton = <Button onClick={this._handleCheckButton.bind(this)} text="Check" ptStyle="primary" pullRight/>
+    if (!storage.isLoading && storage.isValid)
+      {rightButton = <Button onClick={this._handleCheckButton.bind(this)} text="Check" ptStyle="primary" pullRight/>}
 
-    if(!storage.isLoading && storage.wasLoadingStats)
-      rightButton = <Button onClick={this._handleImportButton.bind(this)} text="Import" ptStyle="primary" pullRight/>
+    if (!storage.isLoading && storage.wasLoadingStats)
+      {rightButton = <Button onClick={this._handleImportButton.bind(this)} text="Import" ptStyle="primary" pullRight/>}
 
     return (
       <Toolbar ptType="footer">

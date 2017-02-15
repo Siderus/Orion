@@ -12,17 +12,17 @@ import isRenderer from 'is-electron-renderer'
 
 // Allow us to use create() in both electron windows and main process
 let BrowserWindowClass
-if(isRenderer)
-  BrowserWindowClass = remote.BrowserWindow
+if (isRenderer)
+  {BrowserWindowClass = remote.BrowserWindow}
 else
-  BrowserWindowClass = BrowserWindow
+  {BrowserWindowClass = BrowserWindow}
 
 module.exports = {}
 
 module.exports.create = function createSettingsModal(app) {
   // Create the browser modal window.
   let thisWindow = new BrowserWindowClass({
-    title: "Settings and Info",
+    title: 'Settings and Info',
     parent: app.mainWindow,
     modal: true,
 
@@ -51,7 +51,7 @@ module.exports.create = function createSettingsModal(app) {
   }))
 
   // Emitted when the window is closed.
-  thisWindow.on('closed', function() {
+  thisWindow.on('closed', () => {
     // Dereference the window object, usually you would store windows
     // in an array if your app supports multi windows, this is the time
     // when you should delete the corresponding element.

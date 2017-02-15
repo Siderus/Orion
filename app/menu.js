@@ -8,13 +8,13 @@ import { BrowserWindow, Menu, app } from 'electron'
 import ImportWindow from './windows/Import/window'
 import SettingsWindow from './windows/Settings/window'
 
-let template = [{
+const template = [{
   label: 'File',
   submenu: [{
     label: 'Import from hash',
     accelerator: 'CmdOrCtrl+D',
-    click: function () {
-      let import_window = ImportWindow.create(app)
+    click () {
+      const import_window = ImportWindow.create(app)
       import_window.show()
     }
   }]
@@ -52,12 +52,12 @@ let template = [{
   submenu: [{
     label: 'Reload',
     accelerator: 'CmdOrCtrl+R',
-    click: function (item, focusedWindow) {
+    click (item, focusedWindow) {
       if (focusedWindow) {
         // on reload, start fresh and close any old
         // open secondary windows
         if (focusedWindow.id === 1) {
-          BrowserWindow.getAllWindows().forEach(function (win) {
+          BrowserWindow.getAllWindows().forEach((win) => {
             if (win.id > 1) {
               win.close()
             }
@@ -71,11 +71,11 @@ let template = [{
     accelerator: (function () {
       if (process.platform === 'darwin') {
         return 'Alt+Command+I'
-      } else {
-        return 'Ctrl+Shift+I'
       }
-    })(),
-    click: function (item, focusedWindow) {
+        return 'Ctrl+Shift+I'
+
+    }()),
+    click (item, focusedWindow) {
       if (focusedWindow) {
         focusedWindow.toggleDevTools()
       }
@@ -101,7 +101,7 @@ let template = [{
     accelerator: 'CmdOrCtrl+Shift+T',
     enabled: false,
     key: 'reopenMenuItem',
-    click: function () {
+    click () {
       app.emit('activate')
     }
   }]
@@ -110,17 +110,17 @@ let template = [{
   role: 'help',
   submenu: [{
     label: 'Learn More',
-    click: function () {
+    click () {
       electron.shell.openExternal('https://github.com/koalalorenzo/Lumpy')
     }
   }]
 }]
 
-function addUpdateMenuItems (items, position) {
+function addUpdateMenuItems(items, position) {
   if (process.mas) return
 
   const version = app.getVersion()
-  let updateItems = [{
+  const updateItems = [{
     label: `Version ${version}`,
     enabled: false
   }, {
@@ -131,7 +131,7 @@ function addUpdateMenuItems (items, position) {
     label: 'Check for Update',
     visible: false,
     key: 'checkForUpdate',
-    click: function () {
+    click () {
       require('electron').autoUpdater.checkForUpdates()
     }
   }, {
@@ -139,22 +139,22 @@ function addUpdateMenuItems (items, position) {
     enabled: true,
     visible: false,
     key: 'restartToUpdate',
-    click: function () {
+    click () {
       require('electron').autoUpdater.quitAndInstall()
     }
   }]
 
-  items.splice.apply(items, [position, 0].concat(updateItems))
+  items.splice(...[position, 0].concat(updateItems))
 }
 
-function findReopenMenuItem () {
+function findReopenMenuItem() {
   const menu = Menu.getApplicationMenu()
   if (!menu) return
 
   let reopenMenuItem
-  menu.items.forEach(function (item) {
+  menu.items.forEach((item) => {
     if (item.submenu) {
-      item.submenu.items.forEach(function (item) {
+      item.submenu.items.forEach((item) => {
         if (item.key === 'reopenMenuItem') {
           reopenMenuItem = item
         }
@@ -177,12 +177,12 @@ if (process.platform === 'darwin') {
       label: 'Services',
       role: 'services',
       submenu: []
-    },{
+    }, {
       label: 'Preferences',
       role: 'preferences',
       accelerator: 'CommandOrControl+,',
-      click: function(){
-        let settings_window = SettingsWindow.create(app)
+      click () {
+        const settings_window = SettingsWindow.create(app)
         settings_window.show()
       }
     }, {
@@ -203,7 +203,7 @@ if (process.platform === 'darwin') {
     }, {
       label: 'Quit',
       accelerator: 'Command+Q',
-      click: function () {
+      click () {
         app.quit()
       }
     }]
@@ -225,17 +225,17 @@ if (process.platform === 'win32') {
   addUpdateMenuItems(helpMenu, 0)
 }
 
-app.on('ready', function () {
+app.on('ready', () => {
   const menu = Menu.buildFromTemplate(template)
   Menu.setApplicationMenu(menu)
 })
 
-app.on('browser-window-created', function () {
-  let reopenMenuItem = findReopenMenuItem()
+app.on('browser-window-created', () => {
+  const reopenMenuItem = findReopenMenuItem()
   if (reopenMenuItem) reopenMenuItem.enabled = false
 })
 
-app.on('window-all-closed', function () {
-  let reopenMenuItem = findReopenMenuItem()
+app.on('window-all-closed', () => {
+  const reopenMenuItem = findReopenMenuItem()
   if (reopenMenuItem) reopenMenuItem.enabled = true
 })
