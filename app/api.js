@@ -12,8 +12,8 @@ export function startIPFS() {
   return new Promise(success => {
     if (IPFS_CLIENT != null) return success(IPFS_CLIENT)
 
-    const api_multiaddr = getMultiAddrIPFSDaemon() || '/ip4/127.0.0.1/tcp/5001'
-    IPFS_CLIENT = ipfsAPI(api_multiaddr)
+    const apiMultiaddr = getMultiAddrIPFSDaemon()
+    IPFS_CLIENT = ipfsAPI(apiMultiaddr)
     window.ipfs = IPFS_CLIENT
     // Somehow this is not always working
     return success(IPFS_CLIENT)
