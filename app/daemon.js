@@ -32,6 +32,11 @@ export function startIPFSCommand() {
  * Returns the multiAddr usable to connect to the local dameon via API
  */
 export function getMultiAddrIPFSDaemon() {
+  // If the user specified a value in the multiaddrAPI
+  const settingsAddress = Settings.getSync('daemon.multiAddrAPI')
+  if (settingsAddress) return settingsAddress
+
+  // Otherwise ask the binary wich one to use
   const binaryPath = getPathIPFSBinary()
   const multiAddr = execSync(`${binaryPath} config Addresses.API`)
   return `${multiAddr}`
