@@ -10,7 +10,7 @@ class Form extends React.Component {
    *
    * Note: the full validation will be performed using API calls.
    */
-  _handelOnTextChange(event) {
+  _handelOnTextChange (event) {
     if (!this.props.statsStore) return
     this.props.statsStore.reset()
 
@@ -29,18 +29,18 @@ class Form extends React.Component {
    * wants to submit the form. This will prenvent the page refresh, but will
    * validate the input and then initialize the API calls.
    */
-  _handelOnSubit(event) {
+  _handelOnSubit (event) {
     event.preventDefault()
     // ToDo.
   }
 
-  render() {
+  render () {
     return (
       <form onSubmit={this._handelOnSubit.bind(this)}>
         <Input
-          label="Insert the Object Hash to import:"
-          type="text"
-          placeholder="Qm1A2B3C4D...."
+          label='Insert the Object Hash to import:'
+          type='text'
+          placeholder='Qm1A2B3C4D....'
           onChange={this._handelOnTextChange.bind(this)}
         />
       </form>

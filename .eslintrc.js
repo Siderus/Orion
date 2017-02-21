@@ -4,7 +4,7 @@ module.exports = {
         "es6": true,
         "node": true
     },
-    "extends": "equimper",
+    "extends": ["equimper","standard"],
     "plugins": ["react"],
     "parserOptions": {
         "sourceType": "module"

@@ -2,8 +2,7 @@
  * Import/require this file to set up the Menu of the windows
  */
 
-import electron from 'electron'
-import { BrowserWindow, Menu, app } from 'electron'
+import electron, { BrowserWindow, Menu, app } from 'electron'
 
 import ImportWindow from './windows/Import/window'
 import SettingsWindow from './windows/Settings/window'
@@ -14,8 +13,8 @@ const template = [{
     label: 'Import from hash',
     accelerator: 'CmdOrCtrl+D',
     click () {
-      const import_window = ImportWindow.create(app)
-      import_window.show()
+      const importWindow = ImportWindow.create(app)
+      importWindow.show()
     }
   }]
 }, {
@@ -72,8 +71,7 @@ const template = [{
       if (process.platform === 'darwin') {
         return 'Alt+Command+I'
       }
-        return 'Ctrl+Shift+I'
-
+      return 'Ctrl+Shift+I'
     }()),
     click (item, focusedWindow) {
       if (focusedWindow) {
@@ -116,7 +114,7 @@ const template = [{
   }]
 }]
 
-function addUpdateMenuItems(items, position) {
+function addUpdateMenuItems (items, position) {
   if (process.mas) return
 
   const version = app.getVersion()
@@ -147,16 +145,16 @@ function addUpdateMenuItems(items, position) {
   items.splice(...[position, 0].concat(updateItems))
 }
 
-function findReopenMenuItem() {
+function findReopenMenuItem () {
   const menu = Menu.getApplicationMenu()
   if (!menu) return
 
   let reopenMenuItem
   menu.items.forEach((item) => {
     if (item.submenu) {
-      item.submenu.items.forEach((item) => {
-        if (item.key === 'reopenMenuItem') {
-          reopenMenuItem = item
+      item.submenu.items.forEach((subItem) => {
+        if (subItem.key === 'reopenMenuItem') {
+          reopenMenuItem = subItem
         }
       })
     }
@@ -182,8 +180,8 @@ if (process.platform === 'darwin') {
       role: 'preferences',
       accelerator: 'CommandOrControl+,',
       click () {
-        const settings_window = SettingsWindow.create(app)
-        settings_window.show()
+        const settingsWindow = SettingsWindow.create(app)
+        settingsWindow.show()
       }
     }, {
       type: 'separator'

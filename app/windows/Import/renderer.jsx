@@ -15,7 +15,7 @@ import Footer from './Components/Footer'
 import StatsStore from './Stores/Stats'
 
 class ImportWindow extends React.Component {
-  render() {
+  render () {
     return (
       <Window>
         <Content>

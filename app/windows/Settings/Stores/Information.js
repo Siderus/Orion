@@ -12,7 +12,7 @@ export class InformationStore {
   @observable repoStats = {}
   @observable loaded = false
 
-  loadData() {
+  loadData () {
     const promises = []
     promises.push(getPeer().then(peer => this.peer = peer))
     promises.push(getPeersInfo().then(peers => this.peers = peers))

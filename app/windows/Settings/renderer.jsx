@@ -1,11 +1,17 @@
 import React from 'react'
 import ReactDom from 'react-dom'
 
-import { startIPFS } from '../../api'
-
 // Load Components
-import { Window, Content, Toolbar, Actionbar, Button } from 'react-photonkit'
-import { Pane, PaneGroup } from 'react-photonkit'
+import {
+  Window,
+  Content,
+  Toolbar,
+  Actionbar,
+  Button,
+  PaneGroup
+} from 'react-photonkit'
+
+import { startIPFS } from '../../api'
 
 import Sidebar from './Components/Sidebar'
 import RepositoryPanel from './Components/RepositoryPanel'
@@ -17,11 +23,11 @@ import NavigationStore from './Stores/Navigation'
 import InformationStore from './Stores/Information'
 
 class SettingsWindow extends React.Component {
-  componentDidMount() {
+  componentDidMount () {
     InformationStore.loadData()
   }
 
-  render() {
+  render () {
     return (
       <Window>
 
@@ -44,9 +50,9 @@ class SettingsWindow extends React.Component {
           </PaneGroup>
         </Content>
 
-        <Toolbar ptType="footer">
+        <Toolbar ptType='footer'>
           <Actionbar>
-            <Button text="Close" ptStyle="default" onClick={window.close} />
+            <Button text='Close' ptStyle='default' onClick={window.close} />
           </Actionbar>
         </Toolbar>
 
