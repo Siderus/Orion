@@ -126,7 +126,7 @@ export function getStorageList () {
 
         // Get a list of promises that will return the pin object with the
         // stat injected
-        let promises = pins.map(pin => {
+        const promises = pins.map(pin => {
           // Use the promises to perform multiple injections, so always
           // resolve with the pin object
           return getObjectStat(pin.hash)
@@ -181,7 +181,6 @@ export function saveFileToPath (hash, dest) {
           if (!file.content) {
             mkdirSync(finalDest)
           } else {
-            const finalDest = join(dest, file.path)
             // Pipe the file content into an actual write stream
             const writeStream = createWriteStream(finalDest)
             file.content.pipe(writeStream)

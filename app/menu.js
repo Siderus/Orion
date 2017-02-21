@@ -152,9 +152,9 @@ function findReopenMenuItem () {
   let reopenMenuItem
   menu.items.forEach((item) => {
     if (item.submenu) {
-      item.submenu.items.forEach((item) => {
-        if (item.key === 'reopenMenuItem') {
-          reopenMenuItem = item
+      item.submenu.items.forEach((subItem) => {
+        if (subItem.key === 'reopenMenuItem') {
+          reopenMenuItem = subItem
         }
       })
     }
