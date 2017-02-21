@@ -4,9 +4,10 @@ import { observer } from 'mobx-react'
 
 import { access, constants } from 'fs'
 
+import { Pane, Input, CheckBox } from 'react-photonkit'
+
 import { getMultiAddrIPFSDaemon, getPathIPFSBinary } from '../../../daemon'
 
-import { Pane, Input, CheckBox } from 'react-photonkit'
 
 /**
  * Daemon Panel
@@ -54,7 +55,7 @@ class DaemonPanel extends React.Component {
   }
 
   render() {
-    if (this.props.navigationStore.selected != 2) return null
+    if (this.props.navigationStore.selected !== 2) return null
     const data = this.settings || {}
 
     return (

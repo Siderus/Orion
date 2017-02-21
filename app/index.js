@@ -9,12 +9,10 @@ app.mainWindow = null
 // A little space for IPFS
 let IPFS_PROCESS = null
 
-
 // Setup the menu
 require('./menu')
 // Make sure we have a single instance
 require('./singleInstance')
-
 
 app.on('ready', () => {
   app.mainWindow = StorageWindow.create(app)
@@ -36,7 +34,7 @@ app.on('activate', () => {
     app.mainWindow.once('ready-to-show', () => {
       app.mainWindow.show()
     })
-  }else {
+  } else {
     app.mainWindow = StorageWindow.create(app)
   }
 })
@@ -48,7 +46,6 @@ app.on('will-quit', () => {
     IPFS_PROCESS.kill()
   }
 })
-
 
 setMultiAddrIPFSDaemon()
 IPFS_PROCESS = startIPFSCommand()

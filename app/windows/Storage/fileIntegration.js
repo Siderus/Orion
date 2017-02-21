@@ -1,6 +1,7 @@
 import { remote } from 'electron'
-const { app, dialog, shell } = remote
 import { addFileFromFSPath, unpinObject } from '../../api'
+
+const { app, dialog, shell } = remote
 
 /**
  * This function will add the files from a list of their paths, and show
@@ -8,7 +9,7 @@ import { addFileFromFSPath, unpinObject } from '../../api'
  *
  * ToDo: add loading messages/feedback
  */
-export function addFilesPaths(paths) {
+export function addFilesPaths (paths) {
   const buttons = ['Close', 'Open in the browser']
   const successMessageOption = {
     type: 'info',
@@ -28,16 +29,17 @@ export function addFilesPaths(paths) {
     .then(hashes => {
       // building the lines of the text messages, containing the file name
       // followed by its hash
-      const text_lines = hashes.map(el => `${el[0].hash} ${el[0].path}`)
+      const textLines = hashes.map(el => `${el[0].hash} ${el[0].path}`)
 
       // ToDo: improve this, maybe show a custom window with more details.
       //       it is ugly!!!
-      successMessageOption.message += `This includes: \n${text_lines.join('\n')}`
-      const btn_id = dialog.showMessageBox(app.mainWindow, successMessageOption)
+      successMessageOption.message += `This includes: \n${textLines.join('\n')}`
+      const btnId = dialog.showMessageBox(app.mainWindow, successMessageOption)
 
-      // if(btn_id == buttons.indexOf('Open on the browser'))
-      if (btn_id === 1)
-        {openInBrowser(hashes.map(el => el[0].hash))}
+      // if(btnId === buttons.indexOf('Open on the browser'))
+      if (btnId === 1) {
+        openInBrowser(hashes.map(el => el[0].hash))
+      }
     })
     .catch((err) => {
       errorMessageOption.message = `Error: ${err}`
@@ -49,7 +51,7 @@ export function addFilesPaths(paths) {
  * This functuon will setup the document and body events to add a file on drag
  * and drop action.
  */
-export function setupAddAppOnDrop() {
+export function setupAddAppOnDrop () {
   document.ondragover = document.ondrop = (ev) => {
     ev.preventDefault()
   }
@@ -73,19 +75,19 @@ export function setupAddAppOnDrop() {
  * Prompt the user if he is sure that we should remove a file
  * return a Promise
  */
-export function proptAndRemoveObjects(hashes) {
+export function proptAndRemoveObjects (hashes) {
   const buttons = ['Abort', 'Of course, Duh!']
   const opts = {
     title: 'Continue?',
     message: `Are you sure you want to delete ${hashes.length} files?`,
     detail: `This includes: \n${hashes.join('\n')}`,
     buttons,
-    cancelId: 0,
+    cancelId: 0
   }
 
   const btnClicked = remote.dialog.showMessageBox(remote.app.mainWindow, opts)
   // Check the electron dialog documentation, cancel button is always 0
-  if (btnClicked != 0) {
+  if (btnClicked !== 0) {
     const promises = hashes.map(hash => unpinObject(hash))
 
     // ToDo: Handle failure
@@ -94,11 +96,10 @@ export function proptAndRemoveObjects(hashes) {
   return Promise.resolve()
 }
 
-
 /**
  * Open hashes in a browser
  */
-export function openInBrowser(hashes) {
+export function openInBrowser (hashes) {
   hashes.forEach(hash => {
     shell.openExternal(`https://ipfs.io/ipfs/${hash}`)
   })

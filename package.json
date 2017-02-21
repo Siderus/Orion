@@ -25,7 +25,8 @@
     "eslint": "^3.14.0",
     "eslint-config-equimper": "^1.3.5",
     "eslint-plugin-react": "^6.9.0",
-    "icon-gen": "^1.0.7"
+    "icon-gen": "^1.0.7",
+    "standard": "^8.6.0"
   },
   "dependencies": {
     "babel-cli": "^6.22.2",

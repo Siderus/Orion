@@ -10,7 +10,7 @@ import {
 } from '../fileIntegration'
 
 class StorageElement extends React.Component {
-  constructor(props) {
+  constructor (props) {
     super(props)
 
     this.menu = null
@@ -43,29 +43,29 @@ class StorageElement extends React.Component {
         click: (item) => {
           openInBrowser([this.props.element.hash])
         }
-      },
+      }
     ]
   }
 
   // Setup the Menu
-  componentWillMount() {
+  componentWillMount () {
     this.menu = remote.Menu.buildFromTemplate(this.menuTemplate)
   }
 
-  _handleContextMenu(event) {
+  _handleContextMenu (event) {
     event.preventDefault()
     this.menu.popup()
   }
 
-  _handleCheckboxOnClick(element, proxy, event) {
+  _handleCheckboxOnClick (element, proxy, event) {
     if (this.props.storageStore.selected.find((el) => isEqual(el, element))) {
       this.props.storageStore.selected.pop(element)
-    } else{
+    } else {
       this.props.storageStore.selected.push(element)
     }
   }
 
-  render() {
+  render () {
     if (!this.props.storageStore) return <tr />
     const el = this.props.element
     return (
@@ -73,7 +73,7 @@ class StorageElement extends React.Component {
         <td>
           <input
             onClick={this._handleCheckboxOnClick.bind(this, el)}
-            type="checkbox"
+            type='checkbox'
           />
           &nbsp;{el.hash}
         </td>

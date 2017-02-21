@@ -1,13 +1,17 @@
 import React from 'react'
 import ReactDom from 'react-dom'
 
-// Load API and custom stuff
-import { startIPFS, getPeersInfo, getRepoInfo } from '../../api'
-import { getStorageList } from '../../api'
-import { setupAddAppOnDrop } from './fileIntegration'
-
 // Load Components
 import { Window, Content } from 'react-photonkit'
+
+// Load API and custom stuff
+import {
+  startIPFS,
+  getPeersInfo,
+  getRepoInfo,
+  getStorageList
+} from '../../api'
+import { setupAddAppOnDrop } from './fileIntegration'
 
 // Load Custom Components
 import Header from './Components/Header'
@@ -29,7 +33,7 @@ setupAddAppOnDrop()
  *
  * ToDo: Consider to use web workers to perform these actions
  */
-function startLoop() {
+function startLoop () {
   // Starts IPFS
   startIPFS().catch((err) => {
     console.log(err)
@@ -66,7 +70,7 @@ function startLoop() {
 }
 
 class App extends React.Component {
-  render() {
+  render () {
     return (
       <Window>
         <Header storageStore={StorageStore} />
@@ -80,7 +84,6 @@ class App extends React.Component {
     )
   }
 }
-
 
 // Render the APP
 ReactDom.render(<App />, document.querySelector('#host'))

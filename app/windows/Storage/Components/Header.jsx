@@ -1,4 +1,4 @@
-import { join } from 'path'
+import React from 'react'
 import { remote } from 'electron'
 
 import {
@@ -7,7 +7,6 @@ import {
 
 import { saveFileToPath } from '../../../api'
 
-import React from 'react'
 import { Toolbar, Actionbar, Button, ButtonGroup } from 'react-photonkit'
 
 import SettingsWindow from '../../Settings/window'
@@ -17,7 +16,7 @@ class Header extends React.Component {
   /**
    * Handle the add button click by adding a new file into the repository.
    */
-  _handleAddButtonClick() {
+  _handleAddButtonClick () {
     const selectOptions = {
       title: 'Add File',
       properties: ['openFile', 'openDirectory', 'multiSelections']
@@ -33,9 +32,9 @@ class Header extends React.Component {
    * StorageStore to check the selected element, prompts a "are you sure"
    * alert, and then deletes the elements eselected if everything is ok.
    */
-  _handleRemoveButtonClick() {
+  _handleRemoveButtonClick () {
     if (!this.props.storageStore) return
-    if (this.props.storageStore.selected.length == 0) return
+    if (this.props.storageStore.selected.length === 0) return
 
     const hashes = this.props.storageStore.selected.map(el => el.hash)
 
@@ -51,10 +50,10 @@ class Header extends React.Component {
    * selected are more than 1, it will ask the user the directory where those
    * should be saved.
    */
-  _handleDownloadButtonClick() {
+  _handleDownloadButtonClick () {
     // ToDo: extract file name when saving.
     if (!this.props.storageStore) return
-    if (this.props.storageStore.selected.length == 0) return
+    if (this.props.storageStore.selected.length === 0) return
 
     const selected = this.props.storageStore.selected
     const opts = { title: 'Where should I save?' }
@@ -69,7 +68,7 @@ class Header extends React.Component {
       // ToDo: Handle failure
       Promise.all(promises)
     } else {
-      // selected.length == 1
+      // selected.length === 1
       opts.properties = ['openDirectory']
       opts.buttonLabel = 'Save here'
       const dest = remote.dialog.showOpenDialog(remote.app.mainWindow, opts)
@@ -80,22 +79,22 @@ class Header extends React.Component {
   /**
    * Opens SettingsWindow from the button
    */
-  _handleSettingsButtonClick() {
+  _handleSettingsButtonClick () {
     const settingsWindow = SettingsWindow.create(remote.app)
     settingsWindow.show()
   }
 
-  render() {
+  render () {
     return (
-      <Toolbar title="Storage">
+      <Toolbar title='Storage'>
         <Actionbar>
           <ButtonGroup>
-            <Button glyph="plus-circled" onClick={this._handleAddButtonClick.bind(this)} />
-            <Button glyph="minus-circled" onClick={this._handleRemoveButtonClick.bind(this)} />
-            <Button glyph="download" onClick={this._handleDownloadButtonClick.bind(this)} />
+            <Button glyph='plus-circled' onClick={this._handleAddButtonClick.bind(this)} />
+            <Button glyph='minus-circled' onClick={this._handleRemoveButtonClick.bind(this)} />
+            <Button glyph='download' onClick={this._handleDownloadButtonClick.bind(this)} />
           </ButtonGroup>
 
-          <Button glyph="cog" pullRight onClick={this._handleSettingsButtonClick.bind(this)} />
+          <Button glyph='cog' pullRight onClick={this._handleSettingsButtonClick.bind(this)} />
         </Actionbar>
       </Toolbar>
     )

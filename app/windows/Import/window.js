@@ -12,14 +12,15 @@ import isRenderer from 'is-electron-renderer'
 
 // Allow us to use create() in both electron windows and main process
 let BrowserWindowClass
-if (isRenderer)
-  {BrowserWindowClass = remote.BrowserWindow}
-else
-  {BrowserWindowClass = BrowserWindow}
+if (isRenderer) {
+  BrowserWindowClass = remote.BrowserWindow
+} else {
+  BrowserWindowClass = BrowserWindow
+}
 
 module.exports = {}
 
-module.exports.create = function createImportModal(app) {
+module.exports.create = function createImportModal (app) {
   // Create the browser modal window.
   let thisWindow = new BrowserWindowClass({
     title: 'Import a new Object/File',

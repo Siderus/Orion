@@ -1,7 +1,7 @@
 import React from 'react'
 import { observer } from 'mobx-react'
 
-import { Pane, Input, TextArea } from 'react-photonkit'
+import { Pane, Input } from 'react-photonkit'
 
 /**
  * Connectivity Panel
@@ -15,7 +15,7 @@ class ConnectivityPanel extends React.Component {
   }
 
   render() {
-    if (this.props.navigationStore.selected != 1) return null
+    if (this.props.navigationStore.selected !== 1) return null
     if (!this.props.informationStore) return null
     if (!this.props.informationStore.loaded) return null
 
