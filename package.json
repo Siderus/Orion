@@ -1,6 +1,6 @@
 {
   "name": "lumpy",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Lumpy is an easy-to-use and KISS IPFS desktop interface",
   "main": "main.js",
   "scripts": {
