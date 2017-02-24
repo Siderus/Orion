@@ -1,6 +1,6 @@
 {
   "name": "lumpy",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Lumpy is an easy-to-use and KISS IPFS desktop interface",
   "main": "main.js",
   "scripts": {
@@ -24,8 +24,8 @@
     "electron-packager": "^8.5.1",
     "eslint": "^3.14.0",
     "eslint-config-equimper": "^1.3.5",
-    "eslint-plugin-react": "^6.9.0",
     "eslint-plugin-promise": "^3.4.2",
+    "eslint-plugin-react": "^6.9.0",
     "eslint-plugin-standard": "^2.0.1",
     "icon-gen": "^1.0.7",
     "standard": "^8.6.0"
