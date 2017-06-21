@@ -1,6 +1,7 @@
 ![Logo](.readme/logo.png)
 
 [![js-standard-style](https://img.shields.io/badge/code%20style-standard-brightgreen.svg)](http://standardjs.com)
+[![codebeat badge](https://codebeat.co/badges/55b6d66b-3b3f-41b1-a26f-9a79209e7feb)](https://codebeat.co/projects/github-com-koalalorenzo-lumpy-master)
 
 # Lumpy - Easy and KISS desktop client for IPFS
 Lumpy is an easy and KISS [inter planetary file system](http://ipfs.io) desktop
