@@ -1,6 +1,5 @@
 ![Logo](.readme/logo.png)
 
-[![Stories in Ready](https://badge.waffle.io/koalalorenzo/Lumpy.png?label=ready&title=Ready)](https://waffle.io/koalalorenzo/Lumpy)
 [![js-standard-style](https://img.shields.io/badge/code%20style-standard-brightgreen.svg)](http://standardjs.com)
 
 # Lumpy - Easy and KISS desktop client for IPFS
@@ -39,7 +38,7 @@ Note: This project is not ready for a stable use. Help is needed!
 It is developed using *Electron* and *React*, but we have a lot of things to do!
 
 You can contribute by checkign what should be done in the
-[Waffle Board](https://waffle.io/koalalorenzo/Lumpy).
+[Trello Board](https://trello.com/b/Z1iOgLYc).
 
 ## How to run
 At the moment Lumpy works only on macOS and Linux, and it requires IPFS to be
