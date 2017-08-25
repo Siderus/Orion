@@ -10,7 +10,7 @@
     "build-darwin": "electron-packager . Lumpy --overwrite --icon=./build/app.icns --out=./build",
     "build": "yarn build-icons ; yarn build-darwin"
   },
-  "repository": "https://github.com/koalalorenzo/Lumpy",
+  "repository": "https://gitlab.com/siderus/Lumpy",
   "keywords": [
     "electron",
     "ipfs",

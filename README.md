@@ -39,7 +39,7 @@ Note: This project is not ready for a stable use. Help is needed!
 It is developed using *Electron* and *React*, but we have a lot of things to do!
 
 You can contribute by checkign what should be done in the
-[Trello Board](https://trello.com/b/Z1iOgLYc).
+[Issue Board](https://gitlab.com/siderus/Lumpy/boards).
 
 ## How to run
 At the moment Lumpy works only on macOS and Linux, and it requires IPFS to be
@@ -49,7 +49,7 @@ installed.
 # 1. Install IPFS on macOS via Homebrew
 brew install ipfs
 # 2. Clone the repository
-git clone https://github.com/koalalorenzo/Lumpy.git
+git clone https://gitlab.com/siderus/Lumpy.git
 cd ./Lumpy
 # 3. Install dependencies
 yarn # or npm install

@@ -109,7 +109,7 @@ const template = [{
   submenu: [{
     label: 'Learn More',
     click () {
-      electron.shell.openExternal('https://github.com/koalalorenzo/Lumpy')
+      electron.shell.openExternal('https://gitlab.com/siderus/Lumpy')
     }
   }]
 }]
