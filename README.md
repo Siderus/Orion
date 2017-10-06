@@ -22,7 +22,7 @@ The main goals of this project are:
 * explains and **educates** the user about the perks of using IPFS
 * shows only what is **important** to the user (Sometimes the name of the
 file/Directory, not hash. KISS, but configurable)
-* Help users to acheive their goals using IPFS instead of traditioanl tools.
+* Help users to achieve their goals using IPFS instead of traditional tools.
 
 ### Features:
 
@@ -38,7 +38,7 @@ file/Directory, not hash. KISS, but configurable)
 Note: This project is not ready for a stable use. Help is needed!
 It is developed using *Electron* and *React*, but we have a lot of things to do!
 
-You can contribute by checkign what should be done in the
+You can contribute by checking what should be done in the
 [Issue Board](https://gitlab.com/siderus/Lumpy/boards).
 
 ## How to run
