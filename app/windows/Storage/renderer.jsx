@@ -67,6 +67,9 @@ function startLoop () {
     .then(() => {
       window.loopTimeoutID = setTimeout(startLoop, 1 * 1000)
     })
+    .catch((err) => {
+      alert(err)
+    })
 }
 
 class App extends React.Component {
