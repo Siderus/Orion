@@ -2025,6 +2025,10 @@ electron-packager@^8.5.1:
     sanitize-filename "^1.6.0"
     semver "^5.3.0"
 
+electron-react-devtools@^0.5.3:
+  version "0.5.3"
+  resolved "https://registry.yarnpkg.com/electron-react-devtools/-/electron-react-devtools-0.5.3.tgz#c74edb1245dc1cfe1380b93016cd4eb588ed00b7"
+
 electron-settings@^2.2.2:
   version "2.2.4"
   resolved "https://registry.yarnpkg.com/electron-settings/-/electron-settings-2.2.4.tgz#76afd53d9a4aac02fc0c2afcafd2533e80478593"

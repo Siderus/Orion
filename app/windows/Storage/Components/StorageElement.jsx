@@ -2,6 +2,7 @@ import { remote } from 'electron'
 
 import React from 'react'
 import { isEqual } from 'underscore'
+import { Icon } from 'react-photonkit'
 
 import { saveFileToPath } from '../../../api'
 
@@ -75,6 +76,12 @@ class StorageElement extends React.Component {
             onClick={this._handleCheckboxOnClick.bind(this, el)}
             type='checkbox'
           />
+        </td>
+        <td>
+          {
+            el.isDirectory &&
+            <Icon glyph='folder' />
+          }
           &nbsp;{el.hash}
         </td>
         <td>

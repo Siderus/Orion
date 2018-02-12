@@ -22,6 +22,7 @@
   "license": "GPL-3.0",
   "devDependencies": {
     "electron-packager": "^8.5.1",
+    "electron-react-devtools": "^0.5.3",
     "eslint": "^3.14.0",
     "eslint-config-equimper": "^1.3.5",
     "eslint-plugin-promise": "^3.4.2",

@@ -21,6 +21,7 @@ class StorageList extends Table {
       <table className="table-striped">
         <thead>
           <tr>
+            <th></th>
             <th>ID</th>
             <th>Size</th>
           </tr>
