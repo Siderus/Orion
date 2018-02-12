@@ -79,18 +79,6 @@ export function getObjectList () {
   if (!IPFS_CLIENT) return Promise.reject(ERROR_IPFS_UNAVAILABLE)
 
   return IPFS_CLIENT.pin.ls()
-    .then(pinsObj => {
-      // Now we have pins, lets return an iterable array
-      const pins = []
-      for (const hash in pinsObj) {
-        const newObj = pinsObj[hash]
-        // Add the hash key
-        newObj.hash = newObj.hash || hash
-        pins.push(newObj)
-      }
-
-      return Promise.resolve(pins)
-    })
 }
 
 /**
@@ -108,14 +96,29 @@ export function getObjectStat (objectMultiHash) {
         stat.DataSize = byteSize(stat.DataSize)
         stat.CumulativeSize = byteSize(stat.CumulativeSize)
         return resolve(stat)
-      }, reject)
+      })
+      .catch(reject)
+  })
+}
+
+/**
+ * Provides using a Promise the serialized dag of an IPFS object.
+ */
+export function getObjectDag (objectMultiHash) {
+  return new Promise((resolve, reject) => {
+    if (!IPFS_CLIENT) return reject(ERROR_IPFS_UNAVAILABLE)
+
+    return IPFS_CLIENT.object.get(objectMultiHash)
+      .then((dag) => {
+        return resolve(dag.toJSON())
+      })
       .catch(reject)
   })
 }
 
 /**
  * Returns a Promise that resolves a fully featured StorageList with more
- * details, ex: Sizes, Links, Hash. Used by the Interface to render the table
+ * details, ex: Sizes, Links, Hash, Data. Used by the Interface to render the table
  */
 export function getStorageList () {
   return new Promise((resolve, reject) => getObjectList()
@@ -125,20 +128,25 @@ export function getStorageList () {
         pins = pins.filter(pin => pin.Type !== 'indirect')
 
         // Get a list of promises that will return the pin object with the
-        // stat injected
+        // stat and dag injected
         const promises = pins.map(pin => {
           // Use the promises to perform multiple injections, so always
           // resolve with the pin object
           return getObjectStat(pin.hash)
             .then(stat => {
               pin.stat = pin.stat || stat
+              return getObjectDag(pin.hash)
+            })
+            .then(dag => {
+              pin.dag = dag
+              pin.isDirectory = dag.data.length === 2 && dag.data.toString() === '\u0008\u0001'
               return Promise.resolve(pin)
             })
         })
 
         // Return a promise that will complete when all the data will be
         // available. When done, it will run the main promise success()
-        Promise.all(promises).then(resolve, reject)
+        return Promise.all(promises).then(resolve, reject)
       })
       .catch(reject))
 }
