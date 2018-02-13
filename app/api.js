@@ -173,7 +173,6 @@ export function saveFileToPath (hash, dest) {
     if (!IPFS_CLIENT) return reject(ERROR_IPFS_UNAVAILABLE)
 
     const stream = IPFS_CLIENT.files.getReadableStream(hash)
-    console.log('stream', stream);
 
     stream.on('data', (file) => {
       const finalDest = join(dest, file.path)
