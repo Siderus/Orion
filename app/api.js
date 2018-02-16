@@ -180,23 +180,23 @@ export function saveFileToPath (hash, dest) {
   return new Promise((resolve, reject) => {
     if (!IPFS_CLIENT) return reject(ERROR_IPFS_UNAVAILABLE)
 
-    return IPFS_CLIENT.files.get(hash)
-      .then(stream => {
-        stream.on('data', (file) => {
-          const finalDest = join(dest, file.path)
+    const stream = IPFS_CLIENT.files.getReadableStream(hash)
 
-          // First make all the directories
-          if (!file.content) {
-            mkdirSync(finalDest)
-          } else {
-            // Pipe the file content into an actual write stream
-            const writeStream = createWriteStream(finalDest)
-            file.content.pipe(writeStream)
-          }
-        })
-        stream.on('end', resolve)
-      })
-      .catch(reject)
+    stream.on('data', (file) => {
+      const finalDest = join(dest, file.path)
+
+      // First make all the directories
+      if (!file.content) {
+        mkdirSync(finalDest)
+      } else {
+        // Pipe the file content into an actual write stream
+        const writeStream = createWriteStream(finalDest)
+        file.content.pipe(writeStream)
+      }
+    })
+
+    stream.on('end', resolve)
+    stream.on('error', reject)
   })
 }
 
