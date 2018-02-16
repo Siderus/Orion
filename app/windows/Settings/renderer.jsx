@@ -17,6 +17,7 @@ import Sidebar from './Components/Sidebar'
 import RepositoryPanel from './Components/RepositoryPanel'
 import ConnectivityPanel from './Components/ConnectivityPanel'
 import DaemonPanel from './Components/DaemonPanel'
+import GatewayPanel from './Components/GatewayPanel'
 
 // Load MobX Stores
 import NavigationStore from './Stores/Navigation'
@@ -45,6 +46,9 @@ class SettingsWindow extends React.Component {
             />
             <DaemonPanel
               informationStore={InformationStore}
+              navigationStore={NavigationStore}
+            />
+            <GatewayPanel
               navigationStore={NavigationStore}
             />
           </PaneGroup>
