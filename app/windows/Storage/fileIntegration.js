@@ -1,4 +1,5 @@
 import { remote } from 'electron'
+import Settings from 'electron-settings'
 import { addFileFromFSPath, unpinObject } from '../../api'
 
 const { app, dialog, shell } = remote
@@ -100,8 +101,9 @@ export function proptAndRemoveObjects (hashes) {
  * Open hashes in a browser
  */
 export function openInBrowser (hashes) {
+  const gatewayURL = Settings.getSync('gatewayURL') || 'https://siderus.io'
   hashes.forEach(hash => {
-    shell.openExternal(`https://ipfs.io/ipfs/${hash}`)
+    shell.openExternal(`${gatewayURL}/ipfs/${hash}`)
   })
   return Promise.resolve(hashes)
 }
