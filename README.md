@@ -39,7 +39,8 @@ Note: This project is not ready for a stable use. Help is needed!
 It is developed using *Electron* and *React*, but we have a lot of things to do!
 
 You can contribute by checking what should be done in the
-[Issue Board](https://trello.com/b/Z1iOgLYc).
+[Issue Board](https://dev.siderus.io/projects/lumpy/agile/board).
+If you need to report something, please send an email to [hello@siderus.io](mailto:hello@siderus.io)!
 
 ## How to run
 At the moment Lumpy works only on macOS and Linux, and it requires IPFS to be
