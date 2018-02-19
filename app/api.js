@@ -110,7 +110,14 @@ export function getObjectDag (objectMultiHash) {
 
     return IPFS_CLIENT.object.get(objectMultiHash)
       .then((dag) => {
-        return resolve(dag.toJSON())
+        dag = dag.toJSON()
+        dag.size = byteSize(dag.size)
+        dag.links = dag.links.map(link => {
+          link.size = byteSize(link.size)
+          return link
+        })
+
+        return resolve(dag)
       })
       .catch(reject)
   })
