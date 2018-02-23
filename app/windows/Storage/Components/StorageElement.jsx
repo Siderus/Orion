@@ -10,12 +10,29 @@ import {
   proptAndRemoveObjects, openInBrowser
 } from '../fileIntegration'
 
+import DetailsWindow from '../../Details/window'
+
 class StorageElement extends React.Component {
   constructor (props) {
     super(props)
 
     this.menu = null
     this.menuTemplate = [
+      {
+        label: 'Open',
+        click: (item) => {
+          DetailsWindow.create(remote.app, this.props.element.hash)
+        }
+      },
+      {
+        label: 'Open in browser',
+        click: (item) => {
+          openInBrowser([this.props.element.hash])
+        }
+      },
+      {
+        type: 'separator'
+      },
       {
         label: 'Copy Hash',
         click: (item) => {
@@ -36,15 +53,6 @@ class StorageElement extends React.Component {
           proptAndRemoveObjects([this.props.element.hash])
         }
       },
-      {
-        type: 'separator'
-      },
-      {
-        label: 'Open on browser',
-        click: (item) => {
-          openInBrowser([this.props.element.hash])
-        }
-      }
     ]
   }
 
