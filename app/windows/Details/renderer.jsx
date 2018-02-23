@@ -25,6 +25,9 @@ import FilesTab from './Components/FilesTab'
 const query = queryString.parse(window.location.search)
 const { hash } = query
 
+/**
+ * Show detailed information about a object, from its hash
+ */
 class DetailsWindow extends React.Component {
   state = {
     currentTab: 0
@@ -32,6 +35,9 @@ class DetailsWindow extends React.Component {
 
   constructor(props) {
     super(props)
+  }
+
+  componentDidMount() {
     Promise.all([getObjectStat(hash), getObjectDag(hash)])
       .then(result => this.setState({
         stat: result[0],
@@ -67,7 +73,7 @@ class DetailsWindow extends React.Component {
           }
           {
             currentTab === 1 && dag &&
-            <FilesTab dag={dag} />
+            <FilesTab links={dag.links} />
           }
         </Content>
 

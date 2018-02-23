@@ -1,6 +1,10 @@
 import React from 'react'
 
-function FilesTab({ dag }) {
+/**
+ * Files tab shows the objects links within a table,
+ * this information includes: id, name and size
+ */
+function FilesTab({ links }) {
   return (
     <div>
       <h5 className='nav-group-title'>Files</h5>
@@ -14,7 +18,7 @@ function FilesTab({ dag }) {
         </thead>
         <tbody>
           {
-            dag.links.map(link => (
+            links.map(link => (
               <tr key={link.multihash}>
                 <td>{link.multihash}</td>
                 <td>{link.name}</td>

@@ -1,6 +1,6 @@
 /**
- * This window will show some information and allow the user to tune the
- * application's settings/preferences.
+ * This window shows detailed information about a hash  such as data size, cumulative size, etc,
+ * but also information about its links under the tab files.
  */
 
 import path from 'path'
@@ -20,12 +20,11 @@ if (isRenderer) {
 
 module.exports = {}
 
-module.exports.create = function createSettingsModal (app, hash) {
+module.exports.create = function createDetailsWindow(app, hash) {
   // Create the browser modal window.
   let thisWindow = new BrowserWindowClass({
     title: hash,
     parent: app.mainWindow,
-    modal: true,
 
     width: 650,
     height: 350,
@@ -51,7 +50,7 @@ module.exports.create = function createSettingsModal (app, hash) {
     slashes: true,
     search: `hash=${hash}`
   }))
-  
+
   // Emitted when the window is closed.
   thisWindow.on('closed', () => {
     // Dereference the window object, usually you would store windows

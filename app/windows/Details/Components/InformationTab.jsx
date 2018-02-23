@@ -1,5 +1,10 @@
 import React from 'react'
 
+/**
+ * InformationTab shows the object's stats,
+ * i.e. id, data, number of links, cumulative size
+ *
+ */
 function InformationTab({ stat, hash }) {
   return (
     <div>
