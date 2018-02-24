@@ -13,7 +13,7 @@ import {
 import DetailsWindow from '../../Details/window'
 
 class StorageElement extends React.Component {
-  constructor (props) {
+  constructor(props) {
     super(props)
 
     this.menu = null
@@ -57,16 +57,16 @@ class StorageElement extends React.Component {
   }
 
   // Setup the Menu
-  componentWillMount () {
+  componentWillMount() {
     this.menu = remote.Menu.buildFromTemplate(this.menuTemplate)
   }
 
-  _handleContextMenu (event) {
+  _handleContextMenu(event) {
     event.preventDefault()
     this.menu.popup()
   }
 
-  _handleCheckboxOnClick (element, proxy, event) {
+  _handleCheckboxOnClick(element, proxy, event) {
     if (this.props.storageStore.selected.find((el) => isEqual(el, element))) {
       this.props.storageStore.selected.pop(element)
     } else {
@@ -74,7 +74,7 @@ class StorageElement extends React.Component {
     }
   }
 
-  render () {
+  render() {
     if (!this.props.storageStore) return <tr />
     const el = this.props.element
     return (
@@ -94,6 +94,15 @@ class StorageElement extends React.Component {
         </td>
         <td>
           {el.stat.CumulativeSize.value} {el.stat.CumulativeSize.unit}
+        </td>
+        <td>
+          {
+            el.dag.links
+              // filter out unnamed links (usually pieces of a file)
+              .filter(link => !!link.name)
+              .map(link => link.name)
+              .join(',')
+          }
         </td>
       </tr>
     )

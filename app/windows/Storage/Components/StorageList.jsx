@@ -24,6 +24,7 @@ class StorageList extends Table {
             <th></th>
             <th>ID</th>
             <th>Size</th>
+            <th>Files</th>
           </tr>
         </thead>
 
