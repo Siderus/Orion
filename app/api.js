@@ -9,6 +9,10 @@ const ERROR_IPFS_UNAVAILABLE = 'IPFS NOT AVAILABLE'
 
 let IPFS_CLIENT = null
 
+export function setClientInstance(client) {
+  IPFS_CLIENT = client
+}
+
 export function startIPFS() {
   if (IPFS_CLIENT !== null) return Promise.resolve(IPFS_CLIENT)
 
@@ -46,7 +50,7 @@ export function addFileFromFSPath(filePath) {
          *
          */
         const root = items[items.length - 1]
-        const wrapperObj = {
+        const wrapperDag = {
           Data: new Buffer('\u0008\u0001'),
           Links: [{
             Name: root.path,
@@ -55,23 +59,29 @@ export function addFileFromFSPath(filePath) {
           }],
         }
 
-        ipfs.object.put(wrapperObj)
+        IPFS_CLIENT.object.put(wrapperDag)
           .then(res => {
-            wrapperObj.hash = res.toJSON().multihash
-            wrapperObj.path = ''
+            // res is of type DAGNode
+            // https://github.com/ipld/js-ipld-dag-pb#nodetojson
+            res = res.toJSON()
+            const wrapper = {
+              hash: res.multihash,
+              path: '',
+              size: res.size
+            }
             /**
              * Pin the wrapper directory
              */
-            ipfs.pin.add(wrapperObj.hash)
+            IPFS_CLIENT.pin.add(wrapper.hash)
               .then(res =>
                 /**
                  * Unpin the initial upload
                  */
-                ipfs.pin.rm(root.hash)
+                IPFS_CLIENT.pin.rm(root.hash)
                   /**
                    * Return all items + the wrapper dir
                    */
-                  .then(res => resolve([...items, wrapperObj]))
+                  .then(res => resolve([...items, wrapper]))
               )
           })
       })

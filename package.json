@@ -4,6 +4,7 @@
   "description": "Lumpy is an easy-to-use and KISS IPFS desktop interface",
   "main": "main.js",
   "scripts": {
+    "test": "jest",
     "start": "electron .",
     "build-dev": "electron-packager . Lumpy --overwrite --out=./build",
     "build-icons": "icon-gen -i logo.svg -o ./build/ -m ico,icns,png",
@@ -29,6 +30,7 @@
     "eslint-plugin-react": "^6.9.0",
     "eslint-plugin-standard": "^2.0.1",
     "icon-gen": "^1.0.7",
+    "jest": "^22.4.2",
     "standard": "^8.6.0"
   },
   "dependencies": {
