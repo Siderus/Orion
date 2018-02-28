@@ -22,7 +22,7 @@ module.exports = {}
 module.exports.create = function createStorageWindow (app) {
   // Create the browser window.
   let theWindow = new BrowserWindowClass({
-    width: 600,
+    width: 700,
     height: 450,
     minWidth: 400,
     minHeight: 300,

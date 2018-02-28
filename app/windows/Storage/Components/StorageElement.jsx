@@ -101,7 +101,7 @@ class StorageElement extends React.Component {
               // filter out unnamed links (usually pieces of a file)
               .filter(link => !!link.name)
               .map(link => link.name)
-              .join(',')
+              .join(', ')
           }
         </td>
       </tr>
