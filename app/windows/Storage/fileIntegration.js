@@ -10,7 +10,7 @@ const { app, dialog, shell } = remote
  *
  * ToDo: add loading messages/feedback
  */
-export function addFilesPaths (paths) {
+export function addFilesPaths(paths) {
   const buttons = ['Close', 'Open in the browser']
   const successMessageOption = {
     type: 'info',
@@ -27,10 +27,17 @@ export function addFilesPaths (paths) {
 
   const promises = paths.map(path => addFileFromFSPath(path))
   return Promise.all(promises)
-    .then(hashes => {
+    .then(results => {
       // building the lines of the text messages, containing the file name
       // followed by its hash
-      const textLines = hashes.map(el => `${el[0].hash} ${el[0].path}`)
+      const textLines = results.map(result => {
+        // we need the hash of our wrapper
+        const wrapper = result[result.length - 1]
+        // we need the path of our upload (if it's a directory it will be second to last)
+        const root = result[result.length - 2]
+
+        return `${wrapper.hash} ${root.path}`
+      })
 
       // ToDo: improve this, maybe show a custom window with more details.
       //       it is ugly!!!
@@ -39,7 +46,10 @@ export function addFilesPaths (paths) {
 
       // if(btnId === buttons.indexOf('Open on the browser'))
       if (btnId === 1) {
-        openInBrowser(hashes.map(el => el[0].hash))
+        openInBrowser(results.map(result => {
+          const wrapper = result[result.length - 1]
+          return wrapper.hash
+        }))
       }
     })
     .catch((err) => {
@@ -52,7 +62,7 @@ export function addFilesPaths (paths) {
  * This functuon will setup the document and body events to add a file on drag
  * and drop action.
  */
-export function setupAddAppOnDrop () {
+export function setupAddAppOnDrop() {
   document.ondragover = document.ondrop = (ev) => {
     ev.preventDefault()
   }
@@ -76,7 +86,7 @@ export function setupAddAppOnDrop () {
  * Prompt the user if he is sure that we should remove a file
  * return a Promise
  */
-export function proptAndRemoveObjects (hashes) {
+export function proptAndRemoveObjects(hashes) {
   const buttons = ['Abort', 'Of course, Duh!']
   const opts = {
     title: 'Continue?',
@@ -100,7 +110,7 @@ export function proptAndRemoveObjects (hashes) {
 /**
  * Open hashes in a browser
  */
-export function openInBrowser (hashes) {
+export function openInBrowser(hashes) {
   const gatewayURL = Settings.getSync('gatewayURL') || 'https://siderus.io'
   hashes.forEach(hash => {
     shell.openExternal(`${gatewayURL}/ipfs/${hash}`)
