@@ -7,6 +7,7 @@ Lumpy apps requires the following dependencies installed:
 * Git
 * IPFS ([Install guide here](https://ipfs.io/docs/install/))
 * NodeJS ([Install guide here](https://nodejs.org/en/download/package-manager/))
+* Phantomjs ([official website](http://phantomjs.org/)) 
 * Yarn (`npm install -g yarn` will do it)
 
 Ubuntu Linux Users instead needs specific packages to be installed:
