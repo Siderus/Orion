@@ -19,7 +19,11 @@ class Header extends React.Component {
   _handleAddButtonClick () {
     const selectOptions = {
       title: 'Add File',
-      properties: ['openFile', 'openDirectory', 'multiSelections']
+      properties: ['openFile', 'multiSelections']
+    }
+
+    if(process.platform === 'darwin') {
+      selectOptions.properties.push('openDirectory')
     }
 
     const paths = remote.dialog.showOpenDialog(remote.app.mainWindow, selectOptions)
