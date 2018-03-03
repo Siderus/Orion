@@ -13,7 +13,6 @@ import cx from 'classnames'
 // Load Components
 import {
   Window,
-  Content,
   Toolbar,
   Actionbar,
   Button,
@@ -64,16 +63,14 @@ class DetailsWindow extends React.Component {
             Files
           </div>
         </div>
-        <Content>
-          {
-            currentTab === 0 && stat &&
-            <InformationTab stat={stat} hash={hash} />
-          }
-          {
-            currentTab === 1 && dag &&
-            <FilesTab links={dag.links} />
-          }
-        </Content>
+        {
+          currentTab === 0 && stat &&
+          <InformationTab stat={stat} hash={hash} />
+        }
+        {
+          currentTab === 1 && dag &&
+          <FilesTab links={dag.links} />
+        }
       </Window>
     )
   }
