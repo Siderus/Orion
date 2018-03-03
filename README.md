@@ -17,10 +17,10 @@ removing files from the node using an GUI instead of CLI or web interface.
 The main goals of this project are:
 
 * Help embracing IPFS by providing an easy to use and intuitive interface.
-* Explains and **educates** the user about the perks of using IPFS
-* shows only what is **important** to the user (Ex: the name of the
+* Help the user understanding IPFS and the decentralised web.
+* Show only what is **important** to the user (Ex: the name of the
 files/directory, not just CID)
-* Help users to achieve their goals using IPFS instead of traditional tools (Download, upload, update)
+* Help the user achieving their goals using IPFS instead of traditional tools (Download, upload, update)
 
 ### Features:
 
@@ -39,7 +39,7 @@ You can find more documentation in the following pages:
  * [How to build Lumpy standalone App](https://github.com/Siderus/Lumpy/tree/master/docs/BUILD.md)
  * ...More in [docs directory](https://github.com/Siderus/Lumpy/tree/master/docs)
 
-## How Help
+## How To Help
 Note: This project is not ready for a stable use. Help is needed!
 It is developed using *Electron* and *React*, but we have a lot of things to do!
 
