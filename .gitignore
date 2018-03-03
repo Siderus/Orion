@@ -3,3 +3,4 @@ build
 Lumpy*
 .cache
 coverage
+yarn-error.log

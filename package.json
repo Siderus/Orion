@@ -7,11 +7,11 @@
     "test": "jest",
     "start": "electron .",
     "build-dev": "electron-packager . Lumpy --overwrite --out=./build",
-    "build-icons": "icon-gen -i logo.svg -o ./build/ -m ico,icns,png",
-    "build-darwin": "electron-packager . Lumpy --overwrite --icon=./build/app.icns --out=./build",
-    "build": "yarn build-icons ; yarn build-darwin"
+    "build-icons": "icon-gen -i ./docs/logo.svg -o ./build/ -m ico,icns,png",
+    "build-app": "electron-packager . Lumpy --overwrite --icon=./build/app.icns --out=./build",
+    "build": "yarn build-icons ; yarn build-app"
   },
-  "repository": "https://gitlab.com/siderus/Lumpy",
+  "repository": "https://github.com/siderus/Lumpy",
   "keywords": [
     "electron",
     "ipfs",
