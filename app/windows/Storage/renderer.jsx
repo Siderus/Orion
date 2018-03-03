@@ -9,7 +9,8 @@ import {
   startIPFS,
   getPeersInfo,
   getRepoInfo,
-  getStorageList
+  getStorageList,
+  getObjectList
 } from '../../api'
 import { setupAddAppOnDrop } from './fileIntegration'
 
@@ -42,19 +43,23 @@ function startLoop () {
   const promises = []
 
   // Obtain the peers list and update teh Store
-  promises.push(getPeersInfo()
+  promises.push(
+    getPeersInfo()
     .then((peers) => {
       StatusStore.peers = peers
     }))
 
   // Obtain the repo stats and update teh Store
-  promises.push(getRepoInfo()
+  promises.push(
+    getRepoInfo()
     .then((stats) => {
       StatusStore.stats = stats
     }))
 
   // Obtain the repository pinned Objects (Pins or Storage)
-  promises.push(getStorageList()
+  promises.push(
+    getObjectList()
+    .then(pins => getStorageList(pins))
     .then((pins) => {
       StorageStore.elements = pins
     }))
