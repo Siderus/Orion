@@ -19,12 +19,6 @@ class StorageElement extends React.Component {
     this.menu = null
     this.menuTemplate = [
       {
-        label: 'Open',
-        click: (item) => {
-          DetailsWindow.create(remote.app, this.props.element.hash)
-        }
-      },
-      {
         label: 'Open in browser',
         click: (item) => {
           openInBrowser([this.props.element.hash])
@@ -51,6 +45,15 @@ class StorageElement extends React.Component {
         label: 'Remove',
         click: (item) => {
           proptAndRemoveObjects([this.props.element.hash])
+        }
+      },
+      {
+        type: 'separator'
+      },
+      {
+        label: 'Properties',
+        click: (item) => {
+          DetailsWindow.create(remote.app, this.props.element.hash)
         }
       },
     ]
