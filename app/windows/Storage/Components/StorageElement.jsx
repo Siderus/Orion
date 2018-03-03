@@ -108,7 +108,7 @@ class StorageElement extends React.Component {
         </td>
         <td>
           {
-            el.dag.links
+            el.name || el.dag.links
               // filter out unnamed links (usually pieces of a file)
               .filter(link => !!link.name)
               .map(link => link.name)
