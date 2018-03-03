@@ -13,9 +13,6 @@ import cx from 'classnames'
 // Load Components
 import {
   Window,
-  Toolbar,
-  Actionbar,
-  Button,
 } from 'react-photonkit'
 
 import InformationTab from './Components/InformationTab'
@@ -49,7 +46,7 @@ class DetailsWindow extends React.Component {
 
     return (
       <Window>
-        <div className='tab-group'>
+        <div className='tab-group' style={{minHeight: '27px'}}>
           <div
             className={cx('tab-item', { active: currentTab === 0 })}
             onClick={() => this.setState({ currentTab: 0 })}
