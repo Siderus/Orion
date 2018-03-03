@@ -16,6 +16,7 @@ class StorageElement extends React.Component {
   constructor(props) {
     super(props)
 
+    this.hideMenu = props.hideMenu ? props.hideMenu : false
     this.menu = null
     this.menuTemplate = [
       {
@@ -61,7 +62,9 @@ class StorageElement extends React.Component {
 
   // Setup the Menu
   componentWillMount() {
-    this.menu = remote.Menu.buildFromTemplate(this.menuTemplate)
+    if(this.hideMenu === false){
+      this.menu = remote.Menu.buildFromTemplate(this.menuTemplate)
+    }
   }
 
   _handleContextMenu(event) {
