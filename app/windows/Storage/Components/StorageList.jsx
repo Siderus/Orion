@@ -12,7 +12,7 @@ const ResponsiveTable = styled(Table)`
   min-width: 700px;
 
   th:nth-child(1) {
-    width: 43px;
+    width: 35px;
   }
 
   th:nth-child(2) {
@@ -20,7 +20,7 @@ const ResponsiveTable = styled(Table)`
   }
 
   th:nth-child(3) {
-    width: 100px;
+    width: 85px;
   }
 
   th:nth-child(4) {

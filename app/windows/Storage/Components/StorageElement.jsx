@@ -73,6 +73,8 @@ class StorageElement extends React.Component {
   }
 
   _handleCheckboxOnClick(element, proxy, event) {
+    if (!this.props.storageStore) return
+
     if (this.props.storageStore.selected.find((el) => isEqual(el, element))) {
       this.props.storageStore.selected.pop(element)
     } else {
@@ -81,16 +83,19 @@ class StorageElement extends React.Component {
   }
 
   render() {
-    if (!this.props.storageStore) return <tr />
     const el = this.props.element
     return (
       <tr key={el.hash} onContextMenu={this._handleContextMenu.bind(this)}>
+
+        { this.props.storageStore ?
         <td>
           <input
             onClick={this._handleCheckboxOnClick.bind(this, el)}
             type='checkbox'
           />
         </td>
+        : <td></td> }
+
         <td>
           {
             el.isDirectory &&
