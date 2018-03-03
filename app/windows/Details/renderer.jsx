@@ -50,7 +50,6 @@ class DetailsWindow extends React.Component {
 
     return (
       <Window>
-        <Toolbar title='Object Details' />
         <div className='tab-group'>
           <div
             className={cx('tab-item', { active: currentTab === 0 })}
@@ -65,7 +64,6 @@ class DetailsWindow extends React.Component {
             Files
           </div>
         </div>
-
         <Content>
           {
             currentTab === 0 && stat &&
@@ -76,12 +74,6 @@ class DetailsWindow extends React.Component {
             <FilesTab links={dag.links} />
           }
         </Content>
-
-        <Toolbar ptType='footer'>
-          <Actionbar>
-            <Button text='Close' ptStyle='default' onClick={window.close} />
-          </Actionbar>
-        </Toolbar>
       </Window>
     )
   }
