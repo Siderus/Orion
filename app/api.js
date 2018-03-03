@@ -185,6 +185,14 @@ export function getObjectDag(objectMultiHash) {
 }
 
 /**
+ * isDagDirectory will return a boolean value based on the content of the dag:
+ * If it contains a IPFS "directory" structure, then returns true
+ */
+export function isDagDirectory(dag){
+  return dag.data.length === 2 && dag.data.toString() === '\u0008\u0001'
+}
+
+/**
  * Returns a Promise that resolves a fully featured StorageList with more
  * details, ex: Sizes, Links, Hash, Data. Used by the Interface to render the table
  */
@@ -203,11 +211,13 @@ export function getStorageList() {
         return getObjectStat(pin.hash)
           .then(stat => {
             pin.stat = pin.stat || stat
+
             return getObjectDag(pin.hash)
           })
           .then(dag => {
             pin.dag = dag
-            pin.isDirectory = dag.data.length === 2 && dag.data.toString() === '\u0008\u0001'
+            pin.isDirectory = isDagDirectory(dag)
+
             return Promise.resolve(pin)
           })
       })
