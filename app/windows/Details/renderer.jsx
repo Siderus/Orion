@@ -13,10 +13,6 @@ import cx from 'classnames'
 // Load Components
 import {
   Window,
-  Content,
-  Toolbar,
-  Actionbar,
-  Button,
 } from 'react-photonkit'
 
 import InformationTab from './Components/InformationTab'
@@ -50,8 +46,7 @@ class DetailsWindow extends React.Component {
 
     return (
       <Window>
-        <Toolbar title='Object Details' />
-        <div className='tab-group'>
+        <div className='tab-group' style={{minHeight: '27px'}}>
           <div
             className={cx('tab-item', { active: currentTab === 0 })}
             onClick={() => this.setState({ currentTab: 0 })}
@@ -65,23 +60,14 @@ class DetailsWindow extends React.Component {
             Files
           </div>
         </div>
-
-        <Content>
-          {
-            currentTab === 0 && stat &&
-            <InformationTab stat={stat} hash={hash} />
-          }
-          {
-            currentTab === 1 && dag &&
-            <FilesTab links={dag.links} />
-          }
-        </Content>
-
-        <Toolbar ptType='footer'>
-          <Actionbar>
-            <Button text='Close' ptStyle='default' onClick={window.close} />
-          </Actionbar>
-        </Toolbar>
+        {
+          currentTab === 0 && stat &&
+          <InformationTab stat={stat} hash={hash} />
+        }
+        {
+          currentTab === 1 && dag &&
+          <FilesTab links={dag.links} />
+        }
       </Window>
     )
   }

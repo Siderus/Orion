@@ -1,4 +1,5 @@
 import React from 'react'
+import { Content } from 'react-photonkit'
 
 /**
  * InformationTab shows the object's stats,
@@ -7,7 +8,7 @@ import React from 'react'
  */
 function InformationTab({ stat, hash }) {
   return (
-    <div>
+    <Content>
       <h5 className='nav-group-title'>Information</h5>
       <table>
         <tbody>
@@ -29,7 +30,7 @@ function InformationTab({ stat, hash }) {
           </tr>
         </tbody>
       </table>
-    </div>
+    </Content>
   )
 }
 

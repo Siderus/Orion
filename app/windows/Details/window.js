@@ -23,7 +23,7 @@ module.exports = {}
 module.exports.create = function createDetailsWindow(app, hash) {
   // Create the browser modal window.
   let thisWindow = new BrowserWindowClass({
-    title: hash,
+    title: 'Properties ' + hash,
     parent: app.mainWindow,
 
     width: 650,

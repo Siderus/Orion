@@ -16,14 +16,9 @@ class StorageElement extends React.Component {
   constructor(props) {
     super(props)
 
+    this.hideMenu = props.hideMenu ? props.hideMenu : false
     this.menu = null
     this.menuTemplate = [
-      {
-        label: 'Open',
-        click: (item) => {
-          DetailsWindow.create(remote.app, this.props.element.hash)
-        }
-      },
       {
         label: 'Open in browser',
         click: (item) => {
@@ -53,12 +48,23 @@ class StorageElement extends React.Component {
           proptAndRemoveObjects([this.props.element.hash])
         }
       },
+      {
+        type: 'separator'
+      },
+      {
+        label: 'Properties',
+        click: (item) => {
+          DetailsWindow.create(remote.app, this.props.element.hash)
+        }
+      },
     ]
   }
 
   // Setup the Menu
   componentWillMount() {
-    this.menu = remote.Menu.buildFromTemplate(this.menuTemplate)
+    if(this.hideMenu === false){
+      this.menu = remote.Menu.buildFromTemplate(this.menuTemplate)
+    }
   }
 
   _handleContextMenu(event) {
@@ -67,6 +73,8 @@ class StorageElement extends React.Component {
   }
 
   _handleCheckboxOnClick(element, proxy, event) {
+    if (!this.props.storageStore) return
+
     if (this.props.storageStore.selected.find((el) => isEqual(el, element))) {
       this.props.storageStore.selected.pop(element)
     } else {
@@ -75,16 +83,19 @@ class StorageElement extends React.Component {
   }
 
   render() {
-    if (!this.props.storageStore) return <tr />
     const el = this.props.element
     return (
       <tr key={el.hash} onContextMenu={this._handleContextMenu.bind(this)}>
+
+        { this.props.storageStore ?
         <td>
           <input
             onClick={this._handleCheckboxOnClick.bind(this, el)}
             type='checkbox'
           />
         </td>
+        : <td></td> }
+
         <td>
           {
             el.isDirectory &&
@@ -97,7 +108,7 @@ class StorageElement extends React.Component {
         </td>
         <td>
           {
-            el.dag.links
+            el.name || el.dag.links
               // filter out unnamed links (usually pieces of a file)
               .filter(link => !!link.name)
               .map(link => link.name)

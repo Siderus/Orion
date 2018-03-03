@@ -185,38 +185,45 @@ export function getObjectDag(objectMultiHash) {
 }
 
 /**
+ * isDagDirectory will return a boolean value based on the content of the dag:
+ * If it contains a IPFS "directory" structure, then returns true
+ */
+export function isDagDirectory(dag){
+  return dag.data.length === 2 && dag.data.toString() === '\u0008\u0001'
+}
+
+/**
  * Returns a Promise that resolves a fully featured StorageList with more
  * details, ex: Sizes, Links, Hash, Data. Used by the Interface to render the table
  */
-export function getStorageList() {
-  return new Promise((resolve, reject) => getObjectList()
-    // Now obtain the object data
-    .then(pins => {
-      // Filter out the indirect objects. Required to reduce API Calls
-      pins = pins.filter(pin => pin.type !== 'indirect')
+export function getStorageList(pins) {
+  return new Promise((resolve, reject) => {
+    // Filter out the indirect objects. Required to reduce API Calls
+    pins = pins.filter(pin => pin.type !== 'indirect')
 
-      // Get a list of promises that will return the pin object with the
-      // stat and dag injected
-      const promises = pins.map(pin => {
-        // Use the promises to perform multiple injections, so always
-        // resolve with the pin object
-        return getObjectStat(pin.hash)
-          .then(stat => {
-            pin.stat = pin.stat || stat
-            return getObjectDag(pin.hash)
-          })
-          .then(dag => {
-            pin.dag = dag
-            pin.isDirectory = dag.data.length === 2 && dag.data.toString() === '\u0008\u0001'
-            return Promise.resolve(pin)
-          })
-      })
+    // Get a list of promises that will return the pin object with the
+    // stat and dag injected
+    const promises = pins.map(pin => {
+      // Use the promises to perform multiple injections, so always
+      // resolve with the pin object
+      return getObjectStat(pin.hash)
+        .then(stat => {
+          pin.stat = pin.stat || stat
 
-      // Return a promise that will complete when all the data will be
-      // available. When done, it will run the main promise success()
-      return Promise.all(promises).then(resolve, reject)
+          return getObjectDag(pin.hash)
+        })
+        .then(dag => {
+          pin.dag = dag
+          pin.isDirectory = isDagDirectory(dag)
+
+          return Promise.resolve(pin)
+        })
     })
-    .catch(reject))
+
+    // Return a promise that will complete when all the data will be
+    // available. When done, it will run the main promise success()
+    return Promise.all(promises).then(resolve, reject)
+  })
 }
 
 /**
