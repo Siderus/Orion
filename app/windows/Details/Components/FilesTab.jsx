@@ -41,7 +41,7 @@ class FilesTab extends React.Component {
             <th></th>
             <th>ID</th>
             <th>Size</th>
-            <th>Files</th>
+            <th>Name</th>
           </tr>
         </thead>
         <tbody>
