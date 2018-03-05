@@ -1,0 +1,14 @@
+language: node_js
+node_js:
+  - "node"
+
+cache:
+  yarn: true
+
+matrix:
+  include:
+  - os: linux
+  - os: osx
+
+script:
+  - yarn test --coverage
