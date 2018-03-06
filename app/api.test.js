@@ -40,6 +40,35 @@ describe('api.js', function () {
         })
     })
   })
+  describe('resolveName', function () {
+    it('should reject when IPFS is not started', function () {
+      // arrange
+      api.setClientInstance(null)
+      // act
+      return api.resolveName()
+        .catch(err => {
+          // assert
+          expect(err).toBe(ERROR_IPFS_UNAVAILABLE)
+        })
+    })
+
+    it('should resolve the given name', function () {
+      // arrange
+      const resolveNameMock = jest.fn().mockReturnValue(Promise.resolve('ipfs-hash'))
+      api.setClientInstance({
+        name: {
+          resolve: resolveNameMock,
+        }
+      })
+      // act
+      return api.resolveName('fake-name')
+        .then(result => {
+          // assert
+          expect(result).toBe('ipfs-hash')
+          expect(resolveNameMock).toHaveBeenCalledWith('fake-name')
+        })
+    })
+  })
 
   describe('unpinObject', function () {
     it('should reject when IPFS is not started', function () {

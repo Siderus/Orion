@@ -6,6 +6,7 @@ import electron, { BrowserWindow, Menu, app } from 'electron'
 
 import ImportWindow from './windows/Import/window'
 import SettingsWindow from './windows/Settings/window'
+import GoToIPNS from './windows/GoToIPNS/window'
 
 const template = [{
   label: 'File',
@@ -13,8 +14,13 @@ const template = [{
     label: 'Import from hash',
     accelerator: 'CmdOrCtrl+D',
     click () {
-      const importWindow = ImportWindow.create(app)
-      importWindow.show()
+      ImportWindow.create(app)
+    }
+  }, {
+    label: 'Go to IPNS',
+    accelerator: 'CmdOrCtrl+E',
+    click () {
+      GoToIPNS.create(app)
     }
   }]
 }, {
