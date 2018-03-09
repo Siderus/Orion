@@ -6,7 +6,8 @@ import multiaddr from 'multiaddr'
 
 import { getMultiAddrIPFSDaemon } from './daemon'
 
-const ERROR_IPFS_UNAVAILABLE = 'IPFS NOT AVAILABLE'
+export const ERROR_IPFS_UNAVAILABLE = 'IPFS NOT AVAILABLE'
+export const ERROR_IPFS_TIMEOUT = 'TIMEOUT'
 
 let IPFS_CLIENT = null
 
@@ -294,4 +295,29 @@ export function connectTo(strMultiddr) {
   if (!IPFS_CLIENT) return Promise.reject(ERROR_IPFS_UNAVAILABLE)
   const addr = multiaddr(strMultiddr)
   return IPFS_CLIENT.swarm.connect(addr)
+}
+
+/**
+ * promiseIPFSReady is a function that will waint and resolve the promise
+ * only when the IPFS is accepting IPFS API. Reject after timeout in sec
+ */
+export function promiseIPFSReady(timeout) {
+  timeout = timeout ? timeout : 30 // defaults 30 secs
+  let iID // interval id
+  let trial = 0
+
+  return new Promise((resolve, reject) => {
+    iID = setInterval(()=>{
+      trial++
+      if(trial >= timeout){
+        clearInterval(iID)
+        return reject(ERROR_IPFS_TIMEOUT)
+      }
+
+      return getPeer().then(()=>{
+          clearInterval(iID)
+          return resolve()
+        }).catch(()=>{}) // do nothing in case of errors
+    }, 1000) // every second
+  })
 }

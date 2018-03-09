@@ -185,4 +185,26 @@ describe('api.js', ()=>{
         })
     })
   })
+
+  describe('promiseIPFSReady', ()=>{
+    it('It should times out', ()=>{
+      const id = jest.fn().mockImplementation(function() {
+        return Promise.reject()
+      })
+      api.setClientInstance({id})
+      let prom = api.promiseIPFSReady(5)
+      expect(prom).rejects.toThrow(api.ERROR_IPFS_TIMEOUT)
+      return
+    })
+
+    it('It should return if API available', ()=>{
+      const id = jest.fn().mockImplementation(function() {
+        return Promise.resolve()
+      })
+      api.setClientInstance({id})
+      let prom = api.promiseIPFSReady(5)
+      expect(prom).rejects
+      return
+    })
+  })
 })
