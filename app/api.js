@@ -2,6 +2,7 @@ import byteSize from 'byte-size'
 import ipfsAPI from 'ipfs-api'
 import { join } from 'path'
 import { createWriteStream, mkdirSync } from 'fs'
+import multiaddr from 'multiaddr'
 
 import { getMultiAddrIPFSDaemon } from './daemon'
 
@@ -282,4 +283,15 @@ export function saveFileToPath(hash, dest) {
 export function runGarbageCollector() {
   if (!IPFS_CLIENT) return Promise.reject(ERROR_IPFS_UNAVAILABLE)
   return IPFS_CLIENT.repo.gc()
+}
+
+/**
+ * connectTo allows easily to connect to a node by specifying a str multiaddress
+ * example: connectTo("/ip4/192.168.0.22/tcp/4001/ipfs/Qm...")
+ */
+
+export function connectTo(strMultiddr) {
+  if (!IPFS_CLIENT) return Promise.reject(ERROR_IPFS_UNAVAILABLE)
+  const addr = multiaddr(strMultiddr)
+  return IPFS_CLIENT.swarm.connect(addr)
 }
