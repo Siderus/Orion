@@ -1,13 +1,16 @@
 /* eslint no-console:0 */
 
 import { spawn, execSync } from 'child_process'
+import request from 'request-promise-native'
+
+const pjson = require('../package.json');
 
 import Settings from 'electron-settings'
 
 /**
  * getPathIPFSBinary will return the IPFS default path
  */
-export function getPathIPFSBinary () {
+export function getPathIPFSBinary() {
   return Settings.getSync('daemon.pathIPFSBinary') || '/usr/local/bin/ipfs'
 }
 
@@ -15,7 +18,7 @@ export function getPathIPFSBinary () {
  * startIPFSCommand will start IPFS go daemon, if installed.
  * return child process with IPFS daemon
  */
-export function startIPFSCommand () {
+export function startIPFSCommand() {
   if (Settings.getSync('daemon.startIPFSAtStartup') === false) return null
 
   const binaryPath = getPathIPFSBinary()
@@ -31,7 +34,7 @@ export function startIPFSCommand () {
 /**
  * Returns the multiAddr usable to connect to the local dameon via API
  */
-export function getMultiAddrIPFSDaemon () {
+export function getMultiAddrIPFSDaemon() {
   // If the user specified a value in the multiaddrAPI
   const settingsAddress = Settings.getSync('daemon.multiAddrAPI')
   if (settingsAddress) return settingsAddress
@@ -46,8 +49,26 @@ export function getMultiAddrIPFSDaemon () {
  * Set the multiAddr usable to connect to the local dameon via API.
  * It restores it to /ip4/127.0.0.1/tcp/5001
  */
-export function setMultiAddrIPFSDaemon () {
+export function setMultiAddrIPFSDaemon() {
   const binaryPath = getPathIPFSBinary()
   const multiAddr = execSync(`${binaryPath} config Addresses.API /ip4/127.0.0.1/tcp/5001`)
   return `${multiAddr}`
+}
+
+/**
+ * getSiderusPeers returns a Promise that will download and return a list of
+ * multiaddress (as str) of IPFS nodes from Siderus Network.
+ */
+export function getSiderusPeers() {
+  return request({
+    uri: "https://peers.siderus.io/ipfs.txt",
+    headers: { 'User-Agent': `Lumpy/${pjson.version}` }
+  }).then( res => {
+    let peers
+    // split the file by endlines
+    peers = res.split(/\r?\n/)
+    // remove empty lines
+    peers = peers.filter(el => el.length > 0 )
+    return Promise.resolve(peers)
+  })
 }
