@@ -1,6 +1,7 @@
-import * as  api from './api'
+import * as api from './api'
 import * as daemon from './daemon'
 import ipfsApi from 'ipfs-api'
+import multiaddr from 'multiaddr'
 
 jest.mock('./daemon', function () {
   return {
@@ -68,6 +69,33 @@ describe('api.js', function () {
           expect(result).toBe('removed')
           expect(pinRmMock).toHaveBeenCalledWith('fake-hash', { recursive: true })
         })
+    })
+  })
+
+  describe('connectTo', () => {
+    it('should reject when IPFS is not started', ()=>{
+      api.setClientInstance(null)
+      return api.connectTo('/ip4/0.0.0.0/tcp/4001/')
+        .catch(err => {
+          expect(err).toBe(ERROR_IPFS_UNAVAILABLE)
+        })
+    })
+
+    it('should connect to a node given a multiaddr', ()=>{
+      const address = "/ip4/0.0.0.0/tcp/4001/ipfs/QmXbUn6BD4"
+
+      // mock
+      const connect = jest.fn().mockReturnValue(Promise.resolve())
+      api.setClientInstance({
+        swarm: {
+          connect
+        }
+      })
+
+      // run
+      return api.connectTo(address).then(() => {
+        expect(connect).toHaveBeenCalledWith(multiaddr(address))
+      })
     })
   })
 
