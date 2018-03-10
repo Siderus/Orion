@@ -1,42 +1,42 @@
-import * as  api from './api'
+import * as api from './api'
 import * as daemon from './daemon'
 import ipfsApi from 'ipfs-api'
+import multiaddr from 'multiaddr'
 
-jest.mock('./daemon', function () {
+jest.mock('./daemon', ()=>{
   return {
     getMultiAddrIPFSDaemon: jest.fn().mockReturnValue('my-address')
   }
 })
-jest.mock('ipfs-api', function () {
+jest.mock('ipfs-api', ()=>{
   return jest.fn().mockReturnValue('new-instance')
 })
 
 const ERROR_IPFS_UNAVAILABLE = 'IPFS NOT AVAILABLE'
 
-describe('api.js', function () {
-  describe('startIPFS', function () {
-    it('should return the existing instance if it is defined', function () {
+describe('api.js', ()=>{
+  describe('initIPFSClient', ()=>{
+    it('should return the existing instance if it is defined', ()=>{
       // arrange
       api.setClientInstance('existing-instance')
       // act
-      return api.startIPFS()
+      return api.initIPFSClient()
         .then(result => {
           // assert
           expect(result).toBe('existing-instance')
         })
     })
 
-    it('should create a new instance', function () {
+    it('should create a new instance', ()=>{
       // arrange
       api.setClientInstance(null)
       // act
-      return api.startIPFS()
+      return api.initIPFSClient()
         .then(result => {
           // assert
           expect(daemon.getMultiAddrIPFSDaemon).toHaveBeenCalled()
           expect(ipfsApi).toBeCalledWith('my-address')
           expect(result).toBe('new-instance')
-          expect(window.ipfs).toBe('new-instance')
         })
     })
   })
@@ -70,8 +70,8 @@ describe('api.js', function () {
     })
   })
 
-  describe('unpinObject', function () {
-    it('should reject when IPFS is not started', function () {
+  describe('unpinObject', ()=>{
+    it('should reject when IPFS is not started', ()=>{
       // arrange
       api.setClientInstance(null)
       // act
@@ -82,7 +82,7 @@ describe('api.js', function () {
         })
     })
 
-    it('should unpin the hash recursively', function () {
+    it('should unpin the hash recursively', ()=>{
       // arrange
       const pinRmMock = jest.fn().mockReturnValue(Promise.resolve('removed'))
       api.setClientInstance({
@@ -100,8 +100,35 @@ describe('api.js', function () {
     })
   })
 
-  describe('addFileFromFSPath', function () {
-    it('should reject when IPFS is not started', function () {
+  describe('connectTo', ()=>{
+    it('should reject when IPFS is not started', ()=>{
+      api.setClientInstance(null)
+      return api.connectTo('/ip4/0.0.0.0/tcp/4001/')
+        .catch(err => {
+          expect(err).toBe(ERROR_IPFS_UNAVAILABLE)
+        })
+    })
+
+    it('should connect to a node given a multiaddr', ()=>{
+      const address = "/ip4/0.0.0.0/tcp/4001/ipfs/QmXbUn6BD4"
+
+      // mock
+      const connect = jest.fn().mockReturnValue(Promise.resolve())
+      api.setClientInstance({
+        swarm: {
+          connect
+        }
+      })
+
+      // run
+      return api.connectTo(address).then(()=>{
+        expect(connect).toHaveBeenCalledWith(multiaddr(address))
+      })
+    })
+  })
+
+  describe('addFileFromFSPath', ()=>{
+    it('should reject when IPFS is not started', ()=>{
       // arrange
       api.setClientInstance(null)
       // act
@@ -112,7 +139,7 @@ describe('api.js', function () {
         })
     })
 
-    it('should add the file/dir recursively and with a wrapper', function () {
+    it('should add the file/dir recursively and with a wrapper', ()=>{
       // arrange
       const addFromFsMock = jest.fn()
         .mockReturnValue(Promise.resolve([
@@ -129,7 +156,7 @@ describe('api.js', function () {
 
       const objectPutMock = jest.fn()
         .mockReturnValue(Promise.resolve({
-          toJSON: function () {
+          toJSON: ()=>{
 
             return {
               multihash: 'QmRgutAxd8t7oGkSm4wmeuByG6M51wcTso6cubDdQtu003',
@@ -184,6 +211,26 @@ describe('api.js', function () {
             }
           ])
         })
+    })
+  })
+
+  describe('promiseIPFSReady', ()=>{
+    it('It should times out', ()=>{
+      const id = jest.fn().mockImplementation(function() {
+        return Promise.reject()
+      })
+      api.setClientInstance({id})
+      let prom = api.promiseIPFSReady(5)
+      expect(prom).rejects.toThrow(api.ERROR_IPFS_TIMEOUT)
+    })
+
+    it('It should return if API available', ()=>{
+      const id = jest.fn().mockImplementation(function() {
+        return Promise.resolve()
+      })
+      api.setClientInstance({id})
+      let prom = api.promiseIPFSReady(5)
+      expect(prom).resolves.toBe()
     })
   })
 })
