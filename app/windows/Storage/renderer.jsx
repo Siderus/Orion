@@ -1,16 +1,16 @@
 import React from 'react'
 import ReactDom from 'react-dom'
-
 // Load Components
 import { Window, Content } from 'react-photonkit'
 
 // Load API and custom stuff
 import {
-  startIPFS,
+  initIPFSClient,
   getPeersInfo,
   getRepoInfo,
   getStorageList,
-  getObjectList
+  getObjectList,
+  promiseIPFSReady,
 } from '../../api'
 import { setupAddAppOnDrop } from './fileIntegration'
 
@@ -23,62 +23,37 @@ import Footer from './Components/Footer'
 import StorageStore from './Stores/Storage'
 import StatusStore from './Stores/Status'
 
-// This will store the loop's timeout ID
-window.loopTimeoutID = null
-
 // Setup drag and drop events for adding files
 setupAddAppOnDrop()
+initIPFSClient()
 
-/**
- * This method will poll periodically the API and update the store
- *
- * ToDo: Consider to use web workers to perform these actions
- */
-function startLoop () {
-  // Starts IPFS
-  startIPFS().catch((err) => {
-    console.log(err)
-    window.loopTimeoutID = setTimeout(startLoop, 0.25 * 1000)
-  })
-  const promises = []
-
-  // Obtain the peers list and update teh Store
-  promises.push(
-    getPeersInfo()
-    .then((peers) => {
-      StatusStore.peers = peers
-    }))
-
-  // Obtain the repo stats and update teh Store
-  promises.push(
-    getRepoInfo()
-    .then((stats) => {
-      StatusStore.stats = stats
-    }))
-
-  // Obtain the repository pinned Objects (Pins or Storage)
-  promises.push(
-    getObjectList()
-    .then(pins => getStorageList(pins))
-    .then((pins) => {
-      StorageStore.elements = pins
-    }))
-
-  // When everything is done, update in 1 sec
-  // Having a timeout instead of a loop, will avoid to have the the same API
-  // call, used more at the same time. This should be solved by implementing
-  // native JS IPFS daemon.
-  Promise.all(promises)
-    .then(() => {
-      window.loopTimeoutID = setTimeout(startLoop, 1 * 1000)
-    })
+class App extends React.Component {
+  componentDidMount() {
+    // Runs multiple promises for gathering the content
+    Promise.all([
+      // get peers info
+      getPeersInfo()
+      .then((peers) => {
+        StatusStore.peers = peers
+      }),
+      // Get the repository (pins)
+      getRepoInfo()
+      .then((stats) => {
+        StatusStore.stats = stats
+      }),
+      // Get the objects lists and sorted
+      getObjectList()
+      .then(pins => getStorageList(pins))
+      .then((pins) => {
+        StorageStore.elements = pins
+      }),
+    ])
     .catch((err) => {
       alert(err)
     })
-}
+  }
 
-class App extends React.Component {
-  render () {
+  render() {
     return (
       <Window>
         <Header storageStore={StorageStore} />
@@ -95,4 +70,3 @@ class App extends React.Component {
 
 // Render the APP
 ReactDom.render(<App />, document.querySelector('#host'))
-startLoop()

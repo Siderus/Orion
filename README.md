@@ -1,7 +1,7 @@
 ![Logo](docs/logo.png)
 
 [![js-standard-style](https://img.shields.io/badge/code%20style-standard-brightgreen.svg)](http://standardjs.com)
-[![codebeat badge](https://codebeat.co/badges/55b6d66b-3b3f-41b1-a26f-9a79209e7feb)](https://codebeat.co/projects/github-com-koalalorenzo-lumpy-master)
+[![codebeat badge](https://codebeat.co/badges/55b6d66b-3b3f-41b1-a26f-9a79209e7feb)](https://codebeat.co/projects/github-com-koalalorenzo-lumpy-master) [![Build Status](https://travis-ci.org/Siderus/Lumpy.svg?branch=master)](https://travis-ci.org/Siderus/Lumpy)
 
 # Siderus Lumpy - Easy and KISS desktop client for IPFS
 Lumpy is an easy and KISS [inter planetary file system](http://ipfs.io) desktop
@@ -28,7 +28,7 @@ files/directory, not just CID)
 - [x] Allows _Downloads_/_Uploads_ to the IPFS node
 - [x] Integrates with OS actions like drag-and-drop or URI
 - [x] Provides information and statistics about the repository and the daemon
-- [ ] Integrates with [Siderus](https://siderus.io/) IPFS for faster network and gateway connections
+- [x] Integrates with [Siderus](https://siderus.io/) IPFS for faster network and gateway connections
 - [ ] Allows to maintain a daemon from the interface
 - [ ] Integration external services/tools for encryption and content distribution
 

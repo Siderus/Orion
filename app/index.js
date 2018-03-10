@@ -1,13 +1,26 @@
-import { app } from 'electron'
+import { app, dialog } from 'electron'
 
-import { startIPFSCommand, setMultiAddrIPFSDaemon } from './daemon'
+import {
+  startIPFSDaemon,
+  setMultiAddrIPFSDaemon,
+  getSiderusPeers,
+  connectToCMD,
+  addBootstrapAddr,
+} from './daemon'
+
+import {
+  promiseIPFSReady,
+  initIPFSClient,
+} from './api'
 
 import StorageWindow from './windows/Storage/window'
 
 // Let's create the main window
 app.mainWindow = null
+
 // A little space for IPFS
-let IPFS_PROCESS = null
+global.IPFS_PROCESS = null
+global.IPFS_CLIENT = null
 
 // Setup the menu
 require('./menu')
@@ -15,7 +28,47 @@ require('./menu')
 require('./singleInstance')
 
 app.on('ready', () => {
-  app.mainWindow = StorageWindow.create(app)
+  // Set up crash reports.
+  // Set up the needed stuff as the app launches.
+
+  startIPFSDaemon()
+  .then((process) => {
+    console.log("IPFS Daemon started")
+    global.IPFS_PROCESS = process
+    return Promise.resolve()
+  })
+
+  // Start the IPFS API Client
+  .then(initIPFSClient)
+  .then(client => {
+    console.log("Connecting to the IPFS Daemon")
+    global.IPFS_CLIENT = client
+    return Promise.resolve()
+  })
+
+  // Wait for the API to be alive
+  .then(promiseIPFSReady)
+
+  // Connect to Siderus
+  .then(getSiderusPeers)
+  .then(peers => {
+    console.log("Connecting to Siderus Network")
+    // Using the CMD to connect, as the API seems not to work
+    let conn_proms = peers.map(addr => { return connectToCMD(addr) })
+    let bootstrap_proms = peers.map(addr => { return addBootstrapAddr(addr) })
+    return Promise.all(conn_proms.concat(bootstrap_proms))
+  })
+
+  // Log that we are ready
+  .then(() =>{
+    console.log("READY")
+    app.mainWindow = StorageWindow.create(app)
+  })
+
+  // Catch errors
+  .catch(err =>{
+    dialog.showMessageBox({type: "warning", message: err})
+  })
 })
 
 // Quit when all windows are closed.
@@ -42,10 +95,7 @@ app.on('activate', () => {
 app.on('will-quit', () => {
   // Kill IPFS process after the windows have been closed and before the app is
   // fully terminated
-  if (IPFS_PROCESS) {
-    IPFS_PROCESS.kill()
+  if (global.IPFS_PROCESS) {
+    global.IPFS_PROCESS.kill()
   }
 })
-
-setMultiAddrIPFSDaemon()
-IPFS_PROCESS = startIPFSCommand()
