@@ -15,20 +15,23 @@ export function getPathIPFSBinary() {
 }
 
 /**
- * startIPFSCommand will start IPFS go daemon, if installed.
- * return child process with IPFS daemon
+ * startIPFSDaemon will start IPFS go daemon, if installed.
+ * return a promise with child process of IPFS daemon
  */
-export function startIPFSCommand() {
-  if (Settings.getSync('daemon.startIPFSAtStartup') === false) return null
+export function startIPFSDaemon() {
+  if (Settings.getSync('daemon.startIPFSAtStartup') === false)
+    return Promise.resolve()
 
-  const binaryPath = getPathIPFSBinary()
-  const ipfsProcess = spawn(binaryPath, ['daemon'])
+  return Promise((resolve, reject) => {
+    const binaryPath = getPathIPFSBinary()
+    const ipfsProcess = spawn(binaryPath, ['daemon'])
 
-  ipfsProcess.stdout.on('data', (data) => console.log(`IPFS: ${data}`))
-  ipfsProcess.stderr.on('data', (data) => console.log(`IPFS Error: ${data}`))
-  ipfsProcess.on('close', (exit) => console.log(`IPFS Closed: ${exit}`))
+    ipfsProcess.stdout.on('data', (data) => console.log(`IPFS: ${data}`))
+    ipfsProcess.stderr.on('data', (data) => console.log(`IPFS Error: ${data}`))
+    ipfsProcess.on('close', (exit) => console.log(`IPFS Closed: ${exit}`))
 
-  return ipfsProcess
+    return ipfsProcess
+  })
 }
 
 /**
