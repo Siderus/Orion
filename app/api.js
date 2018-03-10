@@ -20,7 +20,6 @@ export function startIPFS() {
 
   const apiMultiaddr = getMultiAddrIPFSDaemon()
   IPFS_CLIENT = ipfsAPI(apiMultiaddr)
-  window.ipfs = IPFS_CLIENT
   return Promise.resolve(IPFS_CLIENT)
 }
 

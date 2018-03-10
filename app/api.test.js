@@ -37,7 +37,6 @@ describe('api.js', ()=>{
           expect(daemon.getMultiAddrIPFSDaemon).toHaveBeenCalled()
           expect(ipfsApi).toBeCalledWith('my-address')
           expect(result).toBe('new-instance')
-          expect(window.ipfs).toBe('new-instance')
         })
     })
   })
