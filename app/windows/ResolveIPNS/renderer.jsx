@@ -1,7 +1,7 @@
 import React from 'react'
 import ReactDom from 'react-dom'
 
-import { startIPFS, resolveName } from '../../api'
+import { initIPFSClient, resolveName } from '../../api'
 import { remote } from 'electron'
 import { multihash as isMultiHash } from 'is-ipfs'
 
@@ -84,6 +84,6 @@ class ResolveIPNSWindow extends React.Component {
   }
 }
 
-startIPFS()
+initIPFSClient()
 // Render the ImportWindow
 ReactDom.render(<ResolveIPNSWindow />, document.querySelector('#host'))
