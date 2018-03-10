@@ -1,18 +1,72 @@
-import { app } from 'electron'
+import { app, dialog } from 'electron'
 
-import { startIPFSCommand, setMultiAddrIPFSDaemon } from './daemon'
+import {
+  startIPFSDaemon,
+  setMultiAddrIPFSDaemon,
+  getSiderusPeers,
+  connectToCMD
+} from './daemon'
+
+import {
+  promiseIPFSReady,
+  startIPFS,
+} from './api'
 
 import StorageWindow from './windows/Storage/window'
 
 // Let's create the main window
 app.mainWindow = null
+
 // A little space for IPFS
-let IPFS_PROCESS = null
+global.IPFS_PROCESS = null
+global.IPFS_CLIENT = null
 
 // Setup the menu
 require('./menu')
 // Make sure we have a single instance
 require('./singleInstance')
+
+app.on('will-finish-launching', () => {
+  // Set up crash reports.
+  // Set up the needed stuff as the app launches.
+
+  startIPFSDaemon()
+  .then((process) => {
+    console.log("IPFS Daemon started")
+    global.IPFS_PROCESS = process
+    return Promise.resolve()
+  })
+
+  // Start the IPFS API Client
+  .then(startIPFS)
+  .then(client => {
+    console.log("Connecting to the IPFS Daemon")
+    global.IPFS_CLIENT = client
+    return Promise.resolve()
+  })
+
+  // Wait for the API to be alive
+  .then(promiseIPFSReady)
+
+  // Connect to Siderus
+  .then(getSiderusPeers)
+  .then(peers => {
+    console.log("Connecting to Siderus Network")
+    // Using the CMD to connect, as the API seems not to work
+    let proms = peers.map(addr => { return connectToCMD(addr) })
+    return Promise.all(proms)
+  })
+
+  // Log that we are ready
+  .then(() =>{
+    console.log("READY")
+  })
+
+  // Catch errors
+  .catch(err =>{
+    dialog.showMessageBox({type: "warning", message: err})
+  })
+})
 
 app.on('ready', () => {
   app.mainWindow = StorageWindow.create(app)
@@ -42,10 +96,7 @@ app.on('activate', () => {
 app.on('will-quit', () => {
   // Kill IPFS process after the windows have been closed and before the app is
   // fully terminated
-  if (IPFS_PROCESS) {
-    IPFS_PROCESS.kill()
+  if (global.IPFS_PROCESS) {
+    global.IPFS_PROCESS.kill()
   }
 })
-
-setMultiAddrIPFSDaemon()
-IPFS_PROCESS = startIPFSCommand()
