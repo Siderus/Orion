@@ -1,6 +1,7 @@
 /* eslint no-console:0 */
 
 import { spawn, execSync } from 'child_process'
+import exec from 'promised-exec'
 import request from 'request-promise-native'
 
 const pjson = require('../package.json');
@@ -22,7 +23,7 @@ export function startIPFSDaemon() {
   if (Settings.getSync('daemon.startIPFSAtStartup') === false)
     return Promise.resolve()
 
-  return Promise((resolve, reject) => {
+  return new Promise((resolve, reject) => {
     const binaryPath = getPathIPFSBinary()
     const ipfsProcess = spawn(binaryPath, ['daemon'])
 
@@ -30,7 +31,7 @@ export function startIPFSDaemon() {
     ipfsProcess.stderr.on('data', (data) => console.log(`IPFS Error: ${data}`))
     ipfsProcess.on('close', (exit) => console.log(`IPFS Closed: ${exit}`))
 
-    return ipfsProcess
+    return resolve(ipfsProcess)
   })
 }
 
@@ -51,11 +52,21 @@ export function getMultiAddrIPFSDaemon() {
 /**
  * Set the multiAddr usable to connect to the local dameon via API.
  * It restores it to /ip4/127.0.0.1/tcp/5001
+ * returns a promise.
  */
 export function setMultiAddrIPFSDaemon() {
   const binaryPath = getPathIPFSBinary()
-  const multiAddr = execSync(`${binaryPath} config Addresses.API /ip4/127.0.0.1/tcp/5001`)
-  return `${multiAddr}`
+  return exec(`${binaryPath} config Addresses.API /ip4/127.0.0.1/tcp/5001`)
+}
+
+/**
+ * connectToCMD allows easily to connect to a node by specifying a str
+ * multiaddress. example: connectTo("/ip4/192.168.0.22/tcp/4001/ipfs/Qm...")
+ * returns a promise
+ */
+export function connectToCMD(strMultiddr) {
+  const binaryPath = getPathIPFSBinary()
+  return exec(`${binaryPath} swarm connect ${strMultiddr}`)
 }
 
 /**

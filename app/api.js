@@ -289,7 +289,6 @@ export function runGarbageCollector() {
  * connectTo allows easily to connect to a node by specifying a str multiaddress
  * example: connectTo("/ip4/192.168.0.22/tcp/4001/ipfs/Qm...")
  */
-
 export function connectTo(strMultiddr) {
   if (!IPFS_CLIENT) return Promise.reject(ERROR_IPFS_UNAVAILABLE)
   const addr = multiaddr(strMultiddr)
