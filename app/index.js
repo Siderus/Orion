@@ -4,7 +4,8 @@ import {
   startIPFSDaemon,
   setMultiAddrIPFSDaemon,
   getSiderusPeers,
-  connectToCMD
+  connectToCMD,
+  addBootstrapAddr,
 } from './daemon'
 
 import {
@@ -53,8 +54,9 @@ app.on('ready', () => {
   .then(peers => {
     console.log("Connecting to Siderus Network")
     // Using the CMD to connect, as the API seems not to work
-    let proms = peers.map(addr => { return connectToCMD(addr) })
-    return Promise.all(proms)
+    let conn_proms = peers.map(addr => { return connectToCMD(addr) })
+    let bootstrap_proms = peers.map(addr => { return addBootstrapAddr(addr) })
+    return Promise.all(conn_proms.concat(bootstrap_proms))
   })
 
   // Log that we are ready

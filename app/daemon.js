@@ -61,12 +61,22 @@ export function setMultiAddrIPFSDaemon() {
 
 /**
  * connectToCMD allows easily to connect to a node by specifying a str
- * multiaddress. example: connectTo("/ip4/192.168.0.22/tcp/4001/ipfs/Qm...")
+ * multiaddress. example: connectToCMD("/ip4/192.168.0.22/tcp/4001/ipfs/Qm...")
  * returns a promise
  */
 export function connectToCMD(strMultiddr) {
   const binaryPath = getPathIPFSBinary()
   return exec(`${binaryPath} swarm connect ${strMultiddr}`)
+}
+
+/**
+ * addBootstrapAddr allows easily to add a node multiaddr as a bootstrap nodes
+ * example: addBootstrapAddr("/ip4/192.168.0.22/tcp/4001/ipfs/Qm...")
+ * returns a promise
+ */
+export function addBootstrapAddr(strMultiddr) {
+  const binaryPath = getPathIPFSBinary()
+  return exec(`${binaryPath} bootstrap add ${strMultiddr}`)
 }
 
 /**
