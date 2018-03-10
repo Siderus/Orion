@@ -20,10 +20,10 @@ if (isRenderer) {
 
 module.exports = {}
 
-module.exports.create = function createGoToIPNSModal (app) {
+module.exports.create = function createResolveIPNSWindow (app) {
   // Create the browser modal window.
   let thisWindow = new BrowserWindowClass({
-    title: 'Go to IPNS',
+    title: 'Resolve IPNS',
     parent: app.mainWindow,
     modal: true,
 

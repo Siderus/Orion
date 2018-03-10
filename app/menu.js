@@ -6,7 +6,7 @@ import electron, { BrowserWindow, Menu, app } from 'electron'
 
 import ImportWindow from './windows/Import/window'
 import SettingsWindow from './windows/Settings/window'
-import GoToIPNS from './windows/GoToIPNS/window'
+import ResolveIPNS from './windows/ResolveIPNS/window'
 
 const template = [{
   label: 'File',
@@ -17,10 +17,10 @@ const template = [{
       ImportWindow.create(app)
     }
   }, {
-    label: 'Go to IPNS',
+    label: 'Resolve IPNS',
     accelerator: 'CmdOrCtrl+E',
     click () {
-      GoToIPNS.create(app)
+      ResolveIPNS.create(app)
     }
   }]
 }, {

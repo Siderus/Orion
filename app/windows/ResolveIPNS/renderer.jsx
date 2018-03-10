@@ -15,10 +15,15 @@ import {
   Button,
   ButtonGroup
 } from 'react-photonkit'
-
+import ProgressOverlay from '../../components/ProgressOverlay'
+import CircularProgress from '../../components/CircularProgress'
 import DetailsWindow from '../Details/window'
 
-class ImportWindow extends React.Component {
+class ResolveIPNSWindow extends React.Component {
+  state = {
+    loading: false
+  }
+
   constructor() {
     super()
     this.handleSubmit = this.handleSubmit.bind(this)
@@ -26,6 +31,7 @@ class ImportWindow extends React.Component {
 
   handleSubmit(event) {
     event.preventDefault()
+    this.setState({ loading: true })
     const name = event.target[0].value
     resolveName(name)
       .then(result => {
@@ -35,13 +41,16 @@ class ImportWindow extends React.Component {
         if (isMultiHash(hash)) {
           const details = DetailsWindow.create(remote.app, hash)
           details.once('ready-to-show', () => {
+            this.setState({ loading: false })
             window.close()
           })
         } else {
+          this.setState({ loading: false })
           remote.dialog.showErrorBox('Error', 'Could not resolve name.')
         }
       })
       .catch(err => {
+        this.setState({ loading: false })
         remote.dialog.showErrorBox('Error', err.message)
       })
   }
@@ -63,6 +72,12 @@ class ImportWindow extends React.Component {
               <Button text="Close" ptStyle="default" onClick={window.close} />
             </Actionbar>
           </Toolbar>
+          {
+            this.state.loading &&
+            <ProgressOverlay>
+              <CircularProgress />
+            </ProgressOverlay>
+          }
         </Window>
       </form>
     )
@@ -71,4 +86,4 @@ class ImportWindow extends React.Component {
 
 startIPFS()
 // Render the ImportWindow
-ReactDom.render(<ImportWindow />, document.querySelector('#host'))
+ReactDom.render(<ResolveIPNSWindow />, document.querySelector('#host'))
