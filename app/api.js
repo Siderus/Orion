@@ -199,7 +199,7 @@ export function getObjectDag(objectMultiHash) {
  * isDagDirectory will return a boolean value based on the content of the dag:
  * If it contains a IPFS "directory" structure, then returns true
  */
-export function isDagDirectory(dag){
+export function isDagDirectory(dag) {
   return dag.data.length === 2 && dag.data.toString() === '\u0008\u0001'
 }
 
@@ -294,6 +294,15 @@ export function runGarbageCollector() {
   if (!IPFS_CLIENT) return Promise.reject(ERROR_IPFS_UNAVAILABLE)
   return IPFS_CLIENT.repo.gc()
 }
+
+/**
+ * Resolves an IPNS name to an IPFS hash.
+ */
+export function resolveName(name) {
+  if (!IPFS_CLIENT) return Promise.reject(ERROR_IPFS_UNAVAILABLE)
+
+  return IPFS_CLIENT.name.resolve(name)
+ }
 
 /**
  * connectTo allows easily to connect to a node by specifying a str multiaddress
