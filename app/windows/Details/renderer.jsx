@@ -2,7 +2,7 @@ import React from 'react'
 import ReactDom from 'react-dom'
 
 import {
-  startIPFS,
+  initIPFSClient,
   getObjectDag,
   getObjectStat,
 } from '../../api'
@@ -73,6 +73,6 @@ class DetailsWindow extends React.Component {
   }
 }
 
-startIPFS()
+initIPFSClient()
 // Render the ImportWindow
 ReactDom.render(<DetailsWindow />, document.querySelector('#host'))

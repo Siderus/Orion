@@ -1,7 +1,7 @@
 import * as daemon from './daemon'
 import Settings from 'electron-settings'
 
-jest.mock('electron-settings', function () {
+jest.mock('electron-settings', () => {
   const getSyncMock = jest.fn()
     .mockReturnValueOnce(null)
     .mockReturnValueOnce('/custom/path/to/ipfs')
@@ -11,8 +11,8 @@ jest.mock('electron-settings', function () {
   }
 })
 
-describe('daemon.js', function () {
-  describe('getPathIPFSBinary', function () {
+describe('daemon.js', () => {
+  describe('getPathIPFSBinary', () => {
     it('should return the default value when the setting is not defined', () => {
       // act
       const path = daemon.getPathIPFSBinary()
@@ -21,7 +21,7 @@ describe('daemon.js', function () {
       expect(path).toBe('/usr/local/bin/ipfs')
     })
 
-    it('should return the setting when it is defined', function () {
+    it('should return the setting when it is defined', () => {
       // act
       const path = daemon.getPathIPFSBinary()
       // assert
@@ -29,4 +29,13 @@ describe('daemon.js', function () {
       expect(path).toBe('/custom/path/to/ipfs')
     })
   })
+
+  describe('getSiderusPeers', () => {
+    it('should download list of peers, not empty', () => {
+      const prom = daemon.getSiderusPeers()
+
+      expect(prom).resolves.not.toContain("")// removes empty lines
+    })
+  })
+
 })

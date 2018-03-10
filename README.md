@@ -28,7 +28,7 @@ files/directory, not just CID)
 - [x] Allows _Downloads_/_Uploads_ to the IPFS node
 - [x] Integrates with OS actions like drag-and-drop or URI
 - [x] Provides information and statistics about the repository and the daemon
-- [ ] Integrates with [Siderus](https://siderus.io/) IPFS for faster network and gateway connections
+- [x] Integrates with [Siderus](https://siderus.io/) IPFS for faster network and gateway connections
 - [ ] Allows to maintain a daemon from the interface
 - [ ] Integration external services/tools for encryption and content distribution
 

@@ -11,7 +11,7 @@ import {
   PaneGroup
 } from 'react-photonkit'
 
-import { startIPFS } from '../../api'
+import { initIPFSClient } from '../../api'
 
 import Sidebar from './Components/Sidebar'
 import RepositoryPanel from './Components/RepositoryPanel'
@@ -61,6 +61,6 @@ class SettingsWindow extends React.Component {
   }
 }
 
-startIPFS()
+initIPFSClient()
 // Render the Settings
 ReactDom.render(<SettingsWindow />, document.querySelector('#host'))
