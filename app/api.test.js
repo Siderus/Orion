@@ -15,12 +15,12 @@ jest.mock('ipfs-api', ()=>{
 const ERROR_IPFS_UNAVAILABLE = 'IPFS NOT AVAILABLE'
 
 describe('api.js', ()=>{
-  describe('startIPFS', ()=>{
+  describe('initIPFSClient', ()=>{
     it('should return the existing instance if it is defined', ()=>{
       // arrange
       api.setClientInstance('existing-instance')
       // act
-      return api.startIPFS()
+      return api.initIPFSClient()
         .then(result => {
           // assert
           expect(result).toBe('existing-instance')
@@ -31,7 +31,7 @@ describe('api.js', ()=>{
       // arrange
       api.setClientInstance(null)
       // act
-      return api.startIPFS()
+      return api.initIPFSClient()
         .then(result => {
           // assert
           expect(daemon.getMultiAddrIPFSDaemon).toHaveBeenCalled()

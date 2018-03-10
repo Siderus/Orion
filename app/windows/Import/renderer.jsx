@@ -1,7 +1,7 @@
 import React from 'react'
 import ReactDom from 'react-dom'
 
-import { startIPFS } from '../../api'
+import { initIPFSClient } from '../../api'
 
 // Load Components
 import { Window, Content } from 'react-photonkit'
@@ -29,6 +29,6 @@ class ImportWindow extends React.Component {
   }
 }
 
-startIPFS()
+initIPFSClient()
 // Render the ImportWindow
 ReactDom.render(<ImportWindow />, document.querySelector('#host'))

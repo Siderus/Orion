@@ -9,7 +9,7 @@ import {
 
 import {
   promiseIPFSReady,
-  startIPFS,
+  initIPFSClient,
 } from './api'
 
 import StorageWindow from './windows/Storage/window'
@@ -26,7 +26,7 @@ require('./menu')
 // Make sure we have a single instance
 require('./singleInstance')
 
-app.on('will-finish-launching', () => {
+app.on('ready', () => {
   // Set up crash reports.
   // Set up the needed stuff as the app launches.
 
@@ -38,7 +38,7 @@ app.on('will-finish-launching', () => {
   })
 
   // Start the IPFS API Client
-  .then(startIPFS)
+  .then(initIPFSClient)
   .then(client => {
     console.log("Connecting to the IPFS Daemon")
     global.IPFS_CLIENT = client
@@ -60,16 +60,13 @@ app.on('will-finish-launching', () => {
   // Log that we are ready
   .then(() =>{
     console.log("READY")
+    app.mainWindow = StorageWindow.create(app)
   })
 
   // Catch errors
   .catch(err =>{
     dialog.showMessageBox({type: "warning", message: err})
   })
-})
-
-app.on('ready', () => {
-  app.mainWindow = StorageWindow.create(app)
 })
 
 // Quit when all windows are closed.

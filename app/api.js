@@ -16,20 +16,20 @@ export function setClientInstance(client) {
   IPFS_CLIENT = client
 }
 
-export function startIPFS() {
+export function initIPFSClient() {
   if (IPFS_CLIENT !== null) return Promise.resolve(IPFS_CLIENT)
 
   // get IPFS client from the main process
   if(remote){
     const global_client = remote.getGlobal('IPFS_CLIENT')
     if (global_client) {
-      setClientInstance(ipfs_client)
+      setClientInstance(global_client)
       return Promise.resolve(IPFS_CLIENT)
     }
   }
 
   const apiMultiaddr = getMultiAddrIPFSDaemon()
-  IPFS_CLIENT = ipfsAPI(apiMultiaddr)
+  setClientInstance(ipfsAPI(apiMultiaddr))
   return Promise.resolve(IPFS_CLIENT)
 }
 
