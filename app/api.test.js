@@ -193,7 +193,6 @@ describe('api.js', ()=>{
       api.setClientInstance({id})
       let prom = api.promiseIPFSReady(5)
       expect(prom).rejects.toThrow(api.ERROR_IPFS_TIMEOUT)
-      return
     })
 
     it('It should return if API available', ()=>{
@@ -202,8 +201,7 @@ describe('api.js', ()=>{
       })
       api.setClientInstance({id})
       let prom = api.promiseIPFSReady(5)
-      expect(prom).rejects
-      return
+      expect(prom).resolves.toBe()
     })
   })
 })
