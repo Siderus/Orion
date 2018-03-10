@@ -300,8 +300,9 @@ export function connectTo(strMultiddr) {
  * promiseIPFSReady is a function that will waint and resolve the promise
  * only when the IPFS is accepting IPFS API. Reject after timeout in sec
  */
-export function promiseIPFSReady(timeout) {
+export function promiseIPFSReady(timeout, ipfs_api) {
   timeout = timeout ? timeout : 30 // defaults 30 secs
+  ipfs_api = ipfs_api ? ipfs_api: IPFS_CLIENT // allows custom api
   let iID // interval id
   let trial = 0
 
