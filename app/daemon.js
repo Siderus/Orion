@@ -40,9 +40,9 @@ export function getMultiAddrIPFSDaemon() {
   if (settingsAddress) return settingsAddress
 
   // Otherwise ask the binary wich one to use
-  const binaryPath = getPathIPFSBinary()
-  const multiAddr = execSync(`${binaryPath} config Addresses.API`)
-  return `${multiAddr}`
+  // const binaryPath = getPathIPFSBinary()
+  // const multiAddr = execSync(`${binaryPath} config Addresses.API`)
+  return '/ip4/127.0.0.1/tcp/5001'
 }
 
 /**
