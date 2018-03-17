@@ -2,7 +2,7 @@ import React from 'react'
 import Settings from 'electron-settings'
 import { observer } from 'mobx-react'
 
-import { Pane, Input } from 'react-photonkit'
+import { Pane, Input, CheckBox } from 'react-photonkit'
 
 const GatewayEnum = {
   SIDERUS: 'https://siderus.io',
@@ -18,17 +18,41 @@ class ConnectivityPanel extends React.Component {
     super(props)
 
     this.state = {
-      gateway: GatewayEnum.SIDERUS
+      gateway: GatewayEnum.SIDERUS,
+      skipGatewayQuery: true
     }
 
     this._handleGatewayChange = this._handleGatewayChange.bind(this)
+    this._handleSkipGatewayQueryChange = this._handleSkipGatewayQueryChange.bind(this)
   }
 
   componentWillMount() {
     /**
-     * Retrieve setting from persistent storage
+     * Retrieve settings from persistent storage
      */
-    Settings.get('gatewayURL').then(value => this.setState({ gateway: value }))
+    Promise.all([
+      Settings.get('gatewayURL'),
+      Settings.get('skipGatewayQuery')
+    ])
+      // .then(console.log)
+      .then(values => this.setState({
+        gateway: values[0],
+        skipGatewayQuery: values[1] || false
+      }))
+  }
+
+  _handleSkipGatewayQueryChange(event) {
+    const value = !this.state.skipGatewayQuery
+    /**
+     * Save setting persistently
+     */
+    Settings.set('skipGatewayQuery', value)
+    /**
+     * Update component's state
+     */
+    this.setState({
+      skipGatewayQuery: value
+    })
   }
 
   _handleGatewayChange(event) {
@@ -44,7 +68,7 @@ class ConnectivityPanel extends React.Component {
       gateway: value
     })
   }
-  
+
   _handelOnSubit(event) {
 
   }
@@ -74,15 +98,23 @@ class ConnectivityPanel extends React.Component {
             placeholder="Hey girl..." readOnly
           />
 
-          <label>IPFS Gateway</label>
-          <select
-            className="form-control"
-            onChange={this._handleGatewayChange}
-            value={this.state.gateway}
-          >
-            <option value={GatewayEnum.SIDERUS}>Siderus.io</option>
-            <option value={GatewayEnum.LOCAL}>Local HTTP Gateway</option>
-          </select>
+          <div className='form-group'>
+            <label>IPFS Gateway</label>
+            <select
+              className="form-control"
+              onChange={this._handleGatewayChange}
+              value={this.state.gateway}
+            >
+              <option value={GatewayEnum.SIDERUS}>Siderus.io</option>
+              <option value={GatewayEnum.LOCAL}>Local HTTP Gateway</option>
+            </select>
+          </div>
+
+          <CheckBox
+            label="Skip querying gateways after adding a file"
+            checked={this.state.skipGatewayQuery}
+            onChange={this._handleSkipGatewayQueryChange}
+          />
 
           {/*<TextArea
             label="Peers connected"

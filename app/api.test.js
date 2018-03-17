@@ -5,6 +5,7 @@ import multiaddr from 'multiaddr'
 import request from 'request-promise-native'
 import gateways from './gateways'
 import pjson from '../package'
+import Settings from 'electron-settings'
 
 jest.mock('./daemon', () => {
   return {
@@ -19,6 +20,15 @@ jest.mock('./gateways', () => {
 })
 jest.mock('request-promise-native', () => {
   return jest.fn().mockReturnValue(Promise.resolve())
+})
+jest.mock('electron-settings', () => {
+  const getSyncMock = jest.fn()
+    // getSync('skipGatewayQuery)
+    .mockReturnValueOnce(true)
+    .mockReturnValueOnce(false)
+  return {
+    getSync: getSyncMock
+  }
 })
 
 const ERROR_IPFS_UNAVAILABLE = 'IPFS NOT AVAILABLE'
@@ -205,7 +215,7 @@ describe('api.js', () => {
           })
           expect(pinAddMock).toHaveBeenCalledWith('QmRgutAxd8t7oGkSm4wmeuByG6M51wcTso6cubDdQtu003')
           expect(pinRmMock).toHaveBeenCalledWith('QmRgutAxd8t7oGkSm4wmeuByG6M51wcTso6cubDdQtu002')
-          expect(queryGatewaysMock).toHaveBeenCalledWith('QmRgutAxd8t7oGkSm4wmeuByG6M51wcTso6cubDdQtu003')
+          expect(queryGatewaysMock).not.toHaveBeenCalled()
           expect(result).toEqual([
             {
               hash: 'QmRgutAxd8t7oGkSm4wmeuByG6M51wcTso6cubDdQtu001',
@@ -221,6 +231,17 @@ describe('api.js', () => {
               size: 60
             }
           ])
+        })
+    })
+
+    it('should add the file/dir recursively and query the gateways', () => {
+      // arrange
+      const queryGatewaysMock = jest.fn()
+      // act
+      return api.addFileFromFSPath('./textfiles', queryGatewaysMock)
+        .then(result => {
+          // assert
+          expect(queryGatewaysMock).toHaveBeenCalledWith('QmRgutAxd8t7oGkSm4wmeuByG6M51wcTso6cubDdQtu003')
         })
     })
   })

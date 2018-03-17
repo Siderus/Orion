@@ -8,6 +8,7 @@ import request from 'request-promise-native'
 import pjson from '../package.json'
 import gateways from './gateways.json'
 
+import Settings from 'electron-settings'
 import { getMultiAddrIPFSDaemon } from './daemon'
 
 export const ERROR_IPFS_UNAVAILABLE = 'IPFS NOT AVAILABLE'
@@ -98,7 +99,9 @@ export function addFileFromFSPath(filePath, _queryGateways = queryGateways) {
                    */
                   .then(res => resolve([...items, wrapper]))
               )
-            _queryGateways(wrapper.hash)
+            if (!Settings.getSync('skipGatewayQuery')) {
+              _queryGateways(wrapper.hash)
+            }
           })
       })
   })
