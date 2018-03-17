@@ -4,13 +4,17 @@ import ipfsAPI from 'ipfs-api'
 import { join } from 'path'
 import { createWriteStream, mkdirSync } from 'fs'
 import multiaddr from 'multiaddr'
+import request from 'request-promise-native'
+import pjson from '../package.json'
+import gateways from './gateways.json'
 
 import { getMultiAddrIPFSDaemon } from './daemon'
 
 export const ERROR_IPFS_UNAVAILABLE = 'IPFS NOT AVAILABLE'
 export const ERROR_IPFS_TIMEOUT = 'TIMEOUT'
-
 let IPFS_CLIENT = null
+
+const USER_AGENT = `Lumpy/${pjson.version}`
 
 export function setClientInstance(client) {
   IPFS_CLIENT = client
@@ -20,7 +24,7 @@ export function initIPFSClient() {
   if (IPFS_CLIENT !== null) return Promise.resolve(IPFS_CLIENT)
 
   // get IPFS client from the main process
-  if(remote){
+  if (remote) {
     const global_client = remote.getGlobal('IPFS_CLIENT')
     if (global_client) {
       setClientInstance(global_client)
@@ -94,8 +98,25 @@ export function addFileFromFSPath(filePath) {
                    */
                   .then(res => resolve([...items, wrapper]))
               )
+            queryGateways(wrapper.hash)
           })
       })
+  })
+}
+
+/**
+ * Query the gateways to help content propagation and
+ * ensure that the file is available in the network.
+ */
+export function queryGateways(hash) {
+  if (!IPFS_CLIENT) return Promise.reject(ERROR_IPFS_UNAVAILABLE)
+
+  gateways.forEach(gateway => {
+    request({
+      uri: `${gateway}/${hash}`,
+      headers: { 'User-Agent': USER_AGENT }
+    })
+      .catch(console.error)
   })
 }
 
@@ -302,7 +323,7 @@ export function resolveName(name) {
   if (!IPFS_CLIENT) return Promise.reject(ERROR_IPFS_UNAVAILABLE)
 
   return IPFS_CLIENT.name.resolve(name)
- }
+}
 
 /**
  * connectTo allows easily to connect to a node by specifying a str multiaddress
@@ -320,22 +341,22 @@ export function connectTo(strMultiddr) {
  */
 export function promiseIPFSReady(timeout, ipfs_api) {
   timeout = timeout ? timeout : 30 // defaults 30 secs
-  ipfs_api = ipfs_api ? ipfs_api: IPFS_CLIENT // allows custom api
+  ipfs_api = ipfs_api ? ipfs_api : IPFS_CLIENT // allows custom api
   let iID // interval id
   let trial = 0
 
   return new Promise((resolve, reject) => {
-    iID = setInterval(()=>{
+    iID = setInterval(() => {
       trial++
-      if(trial >= timeout){
+      if (trial >= timeout) {
         clearInterval(iID)
         return reject(ERROR_IPFS_TIMEOUT)
       }
 
-      return getPeer().then(()=>{
-          clearInterval(iID)
-          return resolve()
-        }).catch(()=>{}) // do nothing in case of errors
+      return getPeer().then(() => {
+        clearInterval(iID)
+        return resolve()
+      }).catch(() => { }) // do nothing in case of errors
     }, 1000) // every second
   })
 }
