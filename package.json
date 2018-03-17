@@ -8,7 +8,7 @@
     "start": "electron-forge start",
     "build-icons": "icon-gen -i ./docs/logo.svg -o ./out/ -m ico,icns,png",
     "package": "yarn build-icons; electron-forge package",
-    "make": "yarn build-icons; electron-forge make"
+    "make": "electron-forge make"
   },
   "repository": "https://github.com/siderus/Lumpy",
   "keywords": [
