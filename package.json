@@ -6,7 +6,7 @@
   "scripts": {
     "test": "jest",
     "start": "electron-forge start",
-    "build-icons": "icon-gen -i ./docs/logo.svg -o ./out/ -m ico,icns,png; cp ./out/app.icns ./docs/ ; cp ./out/app.ico ./docs/",
+    "build-icons": "icon-gen -i ./docs/logo.svg -o ./docs/ -m ico,icns -n ico=logo,icns=logo; cp ./docs/logo.icns ./out/ ; cp ./docs/logo.ico ./out/",
     "package": "yarn build-icons; electron-forge package",
     "make": "electron-forge make"
   },
