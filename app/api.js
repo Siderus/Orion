@@ -40,7 +40,7 @@ export function initIPFSClient() {
 /**
  * This function will allow the user to add a file to the IPFS repo.
  */
-export function addFileFromFSPath(filePath) {
+export function addFileFromFSPath(filePath, _queryGateways = queryGateways) {
   return new Promise((resolve, reject) => {
     if (!IPFS_CLIENT) return reject(ERROR_IPFS_UNAVAILABLE)
 
@@ -98,7 +98,7 @@ export function addFileFromFSPath(filePath) {
                    */
                   .then(res => resolve([...items, wrapper]))
               )
-            queryGateways(wrapper.hash)
+            _queryGateways(wrapper.hash)
           })
       })
   })
@@ -109,14 +109,12 @@ export function addFileFromFSPath(filePath) {
  * ensure that the file is available in the network.
  */
 export function queryGateways(hash) {
-  if (!IPFS_CLIENT) return Promise.reject(ERROR_IPFS_UNAVAILABLE)
-
   gateways.forEach(gateway => {
     request({
       uri: `${gateway}/${hash}`,
       headers: { 'User-Agent': USER_AGENT }
     })
-      .catch(console.error)
+      .catch(err => console.error(`Could not query ${gateway}`))
   })
 }
 
