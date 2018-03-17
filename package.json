@@ -97,5 +97,10 @@
         "name": "lumpy"
       }
     }
+  },
+  "jest": {
+    "modulePathIgnorePatterns": [
+      "out"
+    ]
   }
 }
