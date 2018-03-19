@@ -73,7 +73,13 @@ app.on('ready', () => {
         return Promise.resolve()
       })
       // Connect to Siderus
-      .then(getSiderusPeers)
+      .then(() => {
+        return getSiderusPeers()
+          .catch(err => {
+            console.error('Error while fetching the Siderus Peers: ', err)
+            return Promise.resolve([])
+          })
+      })
       .then(peers => {
         console.log('Connecting to Siderus Network')
         loadingWindow.webContents.send('set-progress', {
@@ -84,10 +90,10 @@ app.on('ready', () => {
         let conn_proms = peers.map(addr => { return connectToCMD(addr) })
         let bootstrap_proms = peers.map(addr => { return addBootstrapAddr(addr) })
         return Promise.all(conn_proms.concat(bootstrap_proms))
-      })
-      .catch(err => {
-        console.error('Error while connecting to Siderus Network: ', err)
-        return Promise.resolve()
+          .catch(err => {
+            console.error('Error while connecting to Siderus Network: ', err)
+            return Promise.resolve()
+          })
       })
       // Log that we are ready
       .then(() => {
