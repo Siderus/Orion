@@ -89,7 +89,7 @@ class DetailsWindow extends React.Component {
 
     return (
       <Window>
-        <Toolbar title='Properties'>
+        <Toolbar>
           <Actionbar>
             <ButtonGroup>
               <Button text="Download" glyph='download' onClick={this.handleDownload} />
