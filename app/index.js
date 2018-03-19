@@ -85,7 +85,10 @@ app.on('ready', () => {
         let bootstrap_proms = peers.map(addr => { return addBootstrapAddr(addr) })
         return Promise.all(conn_proms.concat(bootstrap_proms))
       })
-
+      .catch(err => {
+        console.error('Error while connecting to Siderus Network: ', err)
+        return Promise.resolve()
+      })
       // Log that we are ready
       .then(() => {
         console.log('READY')
