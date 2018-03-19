@@ -236,12 +236,55 @@ describe('api.js', () => {
 
     it('should add the file/dir recursively and query the gateways', () => {
       // arrange
+        // arrange
+        const addFromFsMock = jest.fn()
+        .mockReturnValue(Promise.resolve([
+          {
+            hash: 'QmRgutAxd8t7oGkSm4wmeuByG6M51wcTso6cubDdQtu001',
+            path: 'textfiles/foo.txt',
+            size: 30
+          }, {
+            hash: 'QmRgutAxd8t7oGkSm4wmeuByG6M51wcTso6cubDdQtu002',
+            path: 'textfiles',
+            size: 50
+          }
+        ]))
+
+      const objectPutMock = jest.fn()
+        .mockReturnValue(Promise.resolve({
+          toJSON: () => {
+
+            return {
+              multihash: 'QmRgutAxd8t7oGkSm4wmeuByG6M51wcTso6cubDdQtu003',
+              size: 60
+            }
+          }
+        }))
+
+      const pinAddMock = jest.fn().mockReturnValue(Promise.resolve())
+      const pinRmMock = jest.fn().mockReturnValue(Promise.resolve())
+
+      api.setClientInstance({
+        util: {
+          addFromFs: addFromFsMock
+        },
+        object: {
+          put: objectPutMock
+        },
+        pin: {
+          add: pinAddMock,
+          rm: pinRmMock
+        }
+      })
       const queryGatewaysMock = jest.fn()
       // act
       return api.addFileFromFSPath('./textfiles', queryGatewaysMock)
         .then(result => {
           // assert
+          expect(queryGatewaysMock).toHaveBeenCalledWith('QmRgutAxd8t7oGkSm4wmeuByG6M51wcTso6cubDdQtu001')
+          expect(queryGatewaysMock).toHaveBeenCalledWith('QmRgutAxd8t7oGkSm4wmeuByG6M51wcTso6cubDdQtu002')
           expect(queryGatewaysMock).toHaveBeenCalledWith('QmRgutAxd8t7oGkSm4wmeuByG6M51wcTso6cubDdQtu003')
+          expect(queryGatewaysMock).toHaveBeenCalledTimes(3)
         })
     })
   })

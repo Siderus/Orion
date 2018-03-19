@@ -42,69 +42,71 @@ export function initIPFSClient() {
  * This function will allow the user to add a file to the IPFS repo.
  */
 export function addFileFromFSPath(filePath, _queryGateways = queryGateways) {
-  return new Promise((resolve, reject) => {
-    if (!IPFS_CLIENT) return reject(ERROR_IPFS_UNAVAILABLE)
+  if (!IPFS_CLIENT) return Promise.reject(ERROR_IPFS_UNAVAILABLE)
 
-    const options = { recursive: true }
-    /**
-     * Add the file/directory from fs
-     */
-    IPFS_CLIENT.util.addFromFs(filePath, options)
-      .then(items => {
-        /**
-         * If it was a directory it will be last
-         * Example result:
-         * [{
-         *   hash: "QmRgutAxd8t7oGkSm4wmeuByG6M51wcTso6cubDdQtuEfL"
-         *   path: "ipfs-test-dir/wrappedtext.txt"
-         *   size: 15
-         * }, {
-         *   hash: "QmcysLdK6jV4QAgcdxVZFzTt8TieH4bkyW6kniPKTr2RXp"
-         *   path: "ipfs-test-dir"
-         *   size: 9425451
-         * }]
-         *
-         */
-        const root = items[items.length - 1]
-        const wrapperDag = {
-          Data: new Buffer('\u0008\u0001'),
-          Links: [{
-            Name: root.path,
-            Hash: root.hash,
-            Size: root.size,
-          }],
-        }
+  const options = { recursive: true }
+  /**
+   * Add the file/directory from fs
+   */
+  return IPFS_CLIENT.util.addFromFs(filePath, options)
+    .then(files => {
+      /**
+       * If it was a directory it will be last
+       * Example result:
+       * [{
+       *   hash: "QmRgutAxd8t7oGkSm4wmeuByG6M51wcTso6cubDdQtuEfL"
+       *   path: "ipfs-test-dir/wrappedtext.txt"
+       *   size: 15
+       * }, {
+       *   hash: "QmcysLdK6jV4QAgcdxVZFzTt8TieH4bkyW6kniPKTr2RXp"
+       *   path: "ipfs-test-dir"
+       *   size: 9425451
+       * }]
+       *
+       */
+      const rootFile = files[files.length - 1]
+      const wrapperDag = {
+        Data: new Buffer('\u0008\u0001'),
+        Links: [{
+          Name: rootFile.path,
+          Hash: rootFile.hash,
+          Size: rootFile.size,
+        }]
+      }
 
-        IPFS_CLIENT.object.put(wrapperDag)
-          .then(res => {
-            // res is of type DAGNode
-            // https://github.com/ipld/js-ipld-dag-pb#nodetojson
-            res = res.toJSON()
-            const wrapper = {
-              hash: res.multihash,
-              path: '',
-              size: res.size
-            }
+      return IPFS_CLIENT.object.put(wrapperDag)
+        .then(res => {
+          // res is of type DAGNode
+          // https://github.com/ipld/js-ipld-dag-pb#nodetojson
+          res = res.toJSON()
+          const wrapper = {
+            hash: res.multihash,
+            path: '',
+            size: res.size
+          }
+          files.push(wrapper)
+
+          return Promise.all([
             /**
              * Pin the wrapper directory
+            */
+            IPFS_CLIENT.pin.add(wrapper.hash),
+            /**
+             * Unpin the initial upload
              */
-            IPFS_CLIENT.pin.add(wrapper.hash)
-              .then(res =>
-                /**
-                 * Unpin the initial upload
-                 */
-                IPFS_CLIENT.pin.rm(root.hash)
-                  /**
-                   * Return all items + the wrapper dir
-                   */
-                  .then(res => resolve([...items, wrapper]))
-              )
-            if (!Settings.getSync('skipGatewayQuery')) {
-              _queryGateways(wrapper.hash)
-            }
-          })
-      })
-  })
+            IPFS_CLIENT.pin.rm(rootFile.hash)
+          ])
+            /**
+             * Return all items + the wrapper dir
+             */
+            .then(() => {
+              if (!Settings.getSync('skipGatewayQuery')) {
+                files.forEach(file => _queryGateways(file.hash))
+              }
+              return Promise.resolve(files)
+            })
+        })
+    })
 }
 
 /**
