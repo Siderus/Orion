@@ -13,6 +13,7 @@ import {
   initIPFSClient,
 } from './api'
 
+import LoadingWindow from './windows/Loading/window'
 import StorageWindow from './windows/Storage/window'
 
 // Let's create the main window
@@ -28,46 +29,81 @@ require('./menu')
 require('./singleInstance')
 
 app.on('ready', () => {
-  // Set up crash reports.
-  // Set up the needed stuff as the app launches.
+  const loadingWindow = LoadingWindow.create(app)
+  loadingWindow.on('ready-to-show', () => {
+    console.log('Loading window ready to show')
+    loadingWindow.webContents.send('set-progress', {
+      text: 'Starting IPFS daemon...',
+      percentage: 0
+    })
+    // Set up crash reports.
+    // Set up the needed stuff as the app launches.
 
-  startIPFSDaemon()
-  .then((process) => {
-    console.log("IPFS Daemon started")
-    global.IPFS_PROCESS = process
-    return Promise.resolve()
-  })
+    startIPFSDaemon()
+      .then((process) => {
+        console.log('IPFS Daemon started')
+        global.IPFS_PROCESS = process
+        loadingWindow.webContents.send('set-progress', {
+          text: 'Initializing IPFS client...',
+          percentage: 20
+        })
+        return Promise.resolve()
+      })
 
-  // Start the IPFS API Client
-  .then(initIPFSClient)
-  .then(client => {
-    console.log("Connecting to the IPFS Daemon")
-    global.IPFS_CLIENT = client
-    return Promise.resolve()
-  })
+      // Start the IPFS API Client
+      .then(initIPFSClient)
+      .then(client => {
+        console.log('Connecting to the IPFS Daemon')
+        global.IPFS_CLIENT = client
+        loadingWindow.webContents.send('set-progress', {
+          text: 'Connecting to the IPFS Daemon...',
+          percentage: 40
+        })
+        return Promise.resolve()
+      })
 
-  // Wait for the API to be alive
-  .then(promiseIPFSReady)
+      // Wait for the API to be alive
+      .then(promiseIPFSReady)
 
-  // Connect to Siderus
-  .then(getSiderusPeers)
-  .then(peers => {
-    console.log("Connecting to Siderus Network")
-    // Using the CMD to connect, as the API seems not to work
-    let conn_proms = peers.map(addr => { return connectToCMD(addr) })
-    let bootstrap_proms = peers.map(addr => { return addBootstrapAddr(addr) })
-    return Promise.all(conn_proms.concat(bootstrap_proms))
-  })
+      .then(() => {
+        loadingWindow.webContents.send('set-progress', {
+          text: 'Fetching a list of Siderus nodes...',
+          percentage: 60
+        })
+        return Promise.resolve()
+      })
+      // Connect to Siderus
+      .then(getSiderusPeers)
+      .then(peers => {
+        console.log('Connecting to Siderus Network')
+        loadingWindow.webContents.send('set-progress', {
+          text: 'Connecting to Siderus Network...',
+          percentage: 80
+        })
+        // Using the CMD to connect, as the API seems not to work
+        let conn_proms = peers.map(addr => { return connectToCMD(addr) })
+        let bootstrap_proms = peers.map(addr => { return addBootstrapAddr(addr) })
+        return Promise.all(conn_proms.concat(bootstrap_proms))
+      })
 
-  // Log that we are ready
-  .then(() =>{
-    console.log("READY")
-    app.mainWindow = StorageWindow.create(app)
-  })
-
-  // Catch errors
-  .catch(err =>{
-    dialog.showMessageBox({type: "warning", message: err})
+      // Log that we are ready
+      .then(() => {
+        console.log('READY')
+        loadingWindow.webContents.send('set-progress', {
+          text: 'Ready!',
+          percentage: 100
+        })
+        app.mainWindow = StorageWindow.create(app)
+        app.mainWindow.on('ready-to-show', () => {
+          loadingWindow.close()
+        })
+      })
+      // Catch errors
+      .catch(err => {
+        const message = typeof err === 'string' ? err : JSON.stringify(err)
+        dialog.showMessageBox({ type: 'warning', message })
+        app.quit()
+      })
   })
 })
 

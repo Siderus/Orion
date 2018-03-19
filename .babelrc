@@ -5,6 +5,7 @@
     "react"
   ],
   "plugins": [
-    "transform-decorators-legacy"
+    "transform-decorators-legacy",
+    "inline-react-svg"
   ]
 }
