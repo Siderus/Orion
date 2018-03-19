@@ -2,14 +2,13 @@
   "name": "lumpy",
   "version": "0.1.1",
   "description": "Lumpy is an easy-to-use and KISS IPFS desktop interface",
-  "main": "main.js",
+  "main": "app/index.js",
   "scripts": {
     "test": "jest",
-    "start": "electron .",
-    "build-dev": "electron-packager . Lumpy --overwrite --out=./build",
-    "build-icons": "icon-gen -i ./docs/logo.svg -o ./build/ -m ico,icns,png",
-    "build-app": "electron-packager . Lumpy --overwrite --icon=./build/app.icns --out=./build",
-    "build": "yarn build-icons ; yarn build-app"
+    "start": "electron-forge start",
+    "build-icons": "icon-gen -i ./docs/logo.svg -o ./docs/ -m ico,icns -n ico=logo,icns=logo; cp ./docs/logo.icns ./out/ ; cp ./docs/logo.ico ./out/",
+    "package": "yarn build-icons; electron-forge package",
+    "make": "electron-forge make"
   },
   "repository": "https://github.com/siderus/Lumpy",
   "keywords": [
@@ -22,7 +21,8 @@
   "author": "Lorenzo Setale",
   "license": "GPL-3.0",
   "devDependencies": {
-    "electron-packager": "^8.5.1",
+    "electron-forge": "^5.1.1",
+    "electron-prebuilt-compile": "1.8.3",
     "electron-react-devtools": "^0.5.3",
     "eslint": "^3.14.0",
     "eslint-config-equimper": "^1.3.5",
@@ -38,14 +38,13 @@
     "babel-plugin-transform-decorators-legacy": "^1.3.4",
     "babel-preset-env": "^1.6.1",
     "babel-preset-es2015": "^6.24.1",
-    "babel-preset-react": "^6.22.0",
+    "babel-preset-react": "^6.24.1",
     "babel-preset-stage-0": "^6.22.0",
     "byte-size": "^3.0.0",
     "classnames": "^2.2.5",
-    "electron": "^1.6.0",
-    "electron-compile": "^5.1.3",
-    "electron-compilers": "^5.4.0",
+    "electron-compile": "^6.4.2",
     "electron-settings": "^2.2.2",
+    "electron-squirrel-startup": "^1.0.0",
     "ipfs-api": "git+https://github.com/ipfs/js-ipfs-api.git",
     "is-electron-renderer": "^2.0.1",
     "is-ipfs": "^0.3.0",
@@ -65,5 +64,43 @@
     "request-promise-native": "^1.0.5",
     "styled-components": "^3.1.6",
     "underscore": "^1.8.3"
+  },
+  "config": {
+    "forge": {
+      "make_targets": {
+        "win32": [
+          "squirrel"
+        ],
+        "darwin": [
+          "zip"
+        ],
+        "linux": [
+          "deb",
+          "rpm"
+        ]
+      },
+      "electronPackagerConfig": {
+        "packageManager": "yarn",
+        "icon": "docs/logo.png"
+      },
+      "electronWinstallerConfig": {
+        "name": "lumpy"
+      },
+      "electronInstallerDebian": {},
+      "electronInstallerRedhat": {},
+      "github_repository": {
+        "owner": "",
+        "name": ""
+      },
+      "windowsStoreConfig": {
+        "packageName": "",
+        "name": "lumpy"
+      }
+    }
+  },
+  "jest": {
+    "modulePathIgnorePatterns": [
+      "out"
+    ]
   }
 }
