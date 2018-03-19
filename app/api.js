@@ -4,13 +4,18 @@ import ipfsAPI from 'ipfs-api'
 import { join } from 'path'
 import { createWriteStream, mkdirSync } from 'fs'
 import multiaddr from 'multiaddr'
+import request from 'request-promise-native'
+import pjson from '../package.json'
+import gateways from './gateways.json'
 
+import Settings from 'electron-settings'
 import { getMultiAddrIPFSDaemon } from './daemon'
 
 export const ERROR_IPFS_UNAVAILABLE = 'IPFS NOT AVAILABLE'
 export const ERROR_IPFS_TIMEOUT = 'TIMEOUT'
-
 let IPFS_CLIENT = null
+
+const USER_AGENT = `Lumpy/${pjson.version}`
 
 export function setClientInstance(client) {
   IPFS_CLIENT = client
@@ -20,7 +25,7 @@ export function initIPFSClient() {
   if (IPFS_CLIENT !== null) return Promise.resolve(IPFS_CLIENT)
 
   // get IPFS client from the main process
-  if(remote){
+  if (remote) {
     const global_client = remote.getGlobal('IPFS_CLIENT')
     if (global_client) {
       setClientInstance(global_client)
@@ -36,66 +41,85 @@ export function initIPFSClient() {
 /**
  * This function will allow the user to add a file to the IPFS repo.
  */
-export function addFileFromFSPath(filePath) {
-  return new Promise((resolve, reject) => {
-    if (!IPFS_CLIENT) return reject(ERROR_IPFS_UNAVAILABLE)
+export function addFileFromFSPath(filePath, _queryGateways = queryGateways) {
+  if (!IPFS_CLIENT) return Promise.reject(ERROR_IPFS_UNAVAILABLE)
 
-    const options = { recursive: true }
-    /**
-     * Add the file/directory from fs
-     */
-    IPFS_CLIENT.util.addFromFs(filePath, options)
-      .then(items => {
-        /**
-         * If it was a directory it will be last
-         * Example result:
-         * [{
-         *   hash: "QmRgutAxd8t7oGkSm4wmeuByG6M51wcTso6cubDdQtuEfL"
-         *   path: "ipfs-test-dir/wrappedtext.txt"
-         *   size: 15
-         * }, {
-         *   hash: "QmcysLdK6jV4QAgcdxVZFzTt8TieH4bkyW6kniPKTr2RXp"
-         *   path: "ipfs-test-dir"
-         *   size: 9425451
-         * }]
-         *
-         */
-        const root = items[items.length - 1]
-        const wrapperDag = {
-          Data: new Buffer('\u0008\u0001'),
-          Links: [{
-            Name: root.path,
-            Hash: root.hash,
-            Size: root.size,
-          }],
-        }
+  const options = { recursive: true }
+  /**
+   * Add the file/directory from fs
+   */
+  return IPFS_CLIENT.util.addFromFs(filePath, options)
+    .then(files => {
+      /**
+       * If it was a directory it will be last
+       * Example result:
+       * [{
+       *   hash: "QmRgutAxd8t7oGkSm4wmeuByG6M51wcTso6cubDdQtuEfL"
+       *   path: "ipfs-test-dir/wrappedtext.txt"
+       *   size: 15
+       * }, {
+       *   hash: "QmcysLdK6jV4QAgcdxVZFzTt8TieH4bkyW6kniPKTr2RXp"
+       *   path: "ipfs-test-dir"
+       *   size: 9425451
+       * }]
+       *
+       */
+      const rootFile = files[files.length - 1]
+      const wrapperDag = {
+        Data: new Buffer('\u0008\u0001'),
+        Links: [{
+          Name: rootFile.path,
+          Hash: rootFile.hash,
+          Size: rootFile.size,
+        }]
+      }
 
-        IPFS_CLIENT.object.put(wrapperDag)
-          .then(res => {
-            // res is of type DAGNode
-            // https://github.com/ipld/js-ipld-dag-pb#nodetojson
-            res = res.toJSON()
-            const wrapper = {
-              hash: res.multihash,
-              path: '',
-              size: res.size
-            }
+      return IPFS_CLIENT.object.put(wrapperDag)
+        .then(res => {
+          // res is of type DAGNode
+          // https://github.com/ipld/js-ipld-dag-pb#nodetojson
+          res = res.toJSON()
+          const wrapper = {
+            hash: res.multihash,
+            path: '',
+            size: res.size
+          }
+          files.push(wrapper)
+
+          return Promise.all([
             /**
              * Pin the wrapper directory
+            */
+            IPFS_CLIENT.pin.add(wrapper.hash),
+            /**
+             * Unpin the initial upload
              */
-            IPFS_CLIENT.pin.add(wrapper.hash)
-              .then(res =>
-                /**
-                 * Unpin the initial upload
-                 */
-                IPFS_CLIENT.pin.rm(root.hash)
-                  /**
-                   * Return all items + the wrapper dir
-                   */
-                  .then(res => resolve([...items, wrapper]))
-              )
-          })
-      })
+            IPFS_CLIENT.pin.rm(rootFile.hash)
+          ])
+            /**
+             * Return all items + the wrapper dir
+             */
+            .then(() => {
+              if (!Settings.getSync('skipGatewayQuery')) {
+                files.forEach(file => _queryGateways(file.hash))
+              }
+              return Promise.resolve(files)
+            })
+        })
+    })
+}
+
+/**
+ * Query the gateways to help content propagation and
+ * ensure that the file is available in the network.
+ */
+export function queryGateways(hash) {
+  gateways.forEach(gateway => {
+    request({
+      uri: `${gateway}/${hash}`,
+      headers: { 'User-Agent': USER_AGENT }
+    })
+      .catch(err => console.error(`Could not query ${gateway}`))
   })
 }
 
@@ -302,7 +326,7 @@ export function resolveName(name) {
   if (!IPFS_CLIENT) return Promise.reject(ERROR_IPFS_UNAVAILABLE)
 
   return IPFS_CLIENT.name.resolve(name)
- }
+}
 
 /**
  * connectTo allows easily to connect to a node by specifying a str multiaddress
@@ -320,22 +344,22 @@ export function connectTo(strMultiddr) {
  */
 export function promiseIPFSReady(timeout, ipfs_api) {
   timeout = timeout ? timeout : 30 // defaults 30 secs
-  ipfs_api = ipfs_api ? ipfs_api: IPFS_CLIENT // allows custom api
+  ipfs_api = ipfs_api ? ipfs_api : IPFS_CLIENT // allows custom api
   let iID // interval id
   let trial = 0
 
   return new Promise((resolve, reject) => {
-    iID = setInterval(()=>{
+    iID = setInterval(() => {
       trial++
-      if(trial >= timeout){
+      if (trial >= timeout) {
         clearInterval(iID)
         return reject(ERROR_IPFS_TIMEOUT)
       }
 
-      return getPeer().then(()=>{
-          clearInterval(iID)
-          return resolve()
-        }).catch(()=>{}) // do nothing in case of errors
+      return getPeer().then(() => {
+        clearInterval(iID)
+        return resolve()
+      }).catch(() => { }) // do nothing in case of errors
     }, 1000) // every second
   })
 }

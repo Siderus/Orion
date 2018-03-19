@@ -2,21 +2,40 @@ import * as api from './api'
 import * as daemon from './daemon'
 import ipfsApi from 'ipfs-api'
 import multiaddr from 'multiaddr'
+import request from 'request-promise-native'
+import gateways from './gateways'
+import pjson from '../package'
+import Settings from 'electron-settings'
 
-jest.mock('./daemon', ()=>{
+jest.mock('./daemon', () => {
   return {
     getMultiAddrIPFSDaemon: jest.fn().mockReturnValue('my-address')
   }
 })
-jest.mock('ipfs-api', ()=>{
+jest.mock('ipfs-api', () => {
   return jest.fn().mockReturnValue('new-instance')
+})
+jest.mock('./gateways', () => {
+  return ['mock-gateway-1', 'mock-gateway-2']
+})
+jest.mock('request-promise-native', () => {
+  return jest.fn().mockReturnValue(Promise.resolve())
+})
+jest.mock('electron-settings', () => {
+  const getSyncMock = jest.fn()
+    // getSync('skipGatewayQuery)
+    .mockReturnValueOnce(true)
+    .mockReturnValueOnce(false)
+  return {
+    getSync: getSyncMock
+  }
 })
 
 const ERROR_IPFS_UNAVAILABLE = 'IPFS NOT AVAILABLE'
 
-describe('api.js', ()=>{
-  describe('initIPFSClient', ()=>{
-    it('should return the existing instance if it is defined', ()=>{
+describe('api.js', () => {
+  describe('initIPFSClient', () => {
+    it('should return the existing instance if it is defined', () => {
       // arrange
       api.setClientInstance('existing-instance')
       // act
@@ -27,7 +46,7 @@ describe('api.js', ()=>{
         })
     })
 
-    it('should create a new instance', ()=>{
+    it('should create a new instance', () => {
       // arrange
       api.setClientInstance(null)
       // act
@@ -70,8 +89,8 @@ describe('api.js', ()=>{
     })
   })
 
-  describe('unpinObject', ()=>{
-    it('should reject when IPFS is not started', ()=>{
+  describe('unpinObject', () => {
+    it('should reject when IPFS is not started', () => {
       // arrange
       api.setClientInstance(null)
       // act
@@ -82,7 +101,7 @@ describe('api.js', ()=>{
         })
     })
 
-    it('should unpin the hash recursively', ()=>{
+    it('should unpin the hash recursively', () => {
       // arrange
       const pinRmMock = jest.fn().mockReturnValue(Promise.resolve('removed'))
       api.setClientInstance({
@@ -100,8 +119,8 @@ describe('api.js', ()=>{
     })
   })
 
-  describe('connectTo', ()=>{
-    it('should reject when IPFS is not started', ()=>{
+  describe('connectTo', () => {
+    it('should reject when IPFS is not started', () => {
       api.setClientInstance(null)
       return api.connectTo('/ip4/0.0.0.0/tcp/4001/')
         .catch(err => {
@@ -109,8 +128,8 @@ describe('api.js', ()=>{
         })
     })
 
-    it('should connect to a node given a multiaddr', ()=>{
-      const address = "/ip4/0.0.0.0/tcp/4001/ipfs/QmXbUn6BD4"
+    it('should connect to a node given a multiaddr', () => {
+      const address = '/ip4/0.0.0.0/tcp/4001/ipfs/QmXbUn6BD4'
 
       // mock
       const connect = jest.fn().mockReturnValue(Promise.resolve())
@@ -121,14 +140,14 @@ describe('api.js', ()=>{
       })
 
       // run
-      return api.connectTo(address).then(()=>{
+      return api.connectTo(address).then(() => {
         expect(connect).toHaveBeenCalledWith(multiaddr(address))
       })
     })
   })
 
-  describe('addFileFromFSPath', ()=>{
-    it('should reject when IPFS is not started', ()=>{
+  describe('addFileFromFSPath', () => {
+    it('should reject when IPFS is not started', () => {
       // arrange
       api.setClientInstance(null)
       // act
@@ -139,7 +158,7 @@ describe('api.js', ()=>{
         })
     })
 
-    it('should add the file/dir recursively and with a wrapper', ()=>{
+    it('should add the file/dir recursively and with a wrapper', () => {
       // arrange
       const addFromFsMock = jest.fn()
         .mockReturnValue(Promise.resolve([
@@ -156,7 +175,7 @@ describe('api.js', ()=>{
 
       const objectPutMock = jest.fn()
         .mockReturnValue(Promise.resolve({
-          toJSON: ()=>{
+          toJSON: () => {
 
             return {
               multihash: 'QmRgutAxd8t7oGkSm4wmeuByG6M51wcTso6cubDdQtu003',
@@ -180,8 +199,9 @@ describe('api.js', ()=>{
           rm: pinRmMock
         }
       })
+      const queryGatewaysMock = jest.fn()
       // act
-      return api.addFileFromFSPath('./textfiles')
+      return api.addFileFromFSPath('./textfiles', queryGatewaysMock)
         .then(result => {
           // assert
           expect(addFromFsMock).toHaveBeenCalledWith('./textfiles', { recursive: true })
@@ -195,6 +215,7 @@ describe('api.js', ()=>{
           })
           expect(pinAddMock).toHaveBeenCalledWith('QmRgutAxd8t7oGkSm4wmeuByG6M51wcTso6cubDdQtu003')
           expect(pinRmMock).toHaveBeenCalledWith('QmRgutAxd8t7oGkSm4wmeuByG6M51wcTso6cubDdQtu002')
+          expect(queryGatewaysMock).not.toHaveBeenCalled()
           expect(result).toEqual([
             {
               hash: 'QmRgutAxd8t7oGkSm4wmeuByG6M51wcTso6cubDdQtu001',
@@ -212,25 +233,102 @@ describe('api.js', ()=>{
           ])
         })
     })
+
+    it('should add the file/dir recursively and query the gateways', () => {
+      // arrange
+        // arrange
+        const addFromFsMock = jest.fn()
+        .mockReturnValue(Promise.resolve([
+          {
+            hash: 'QmRgutAxd8t7oGkSm4wmeuByG6M51wcTso6cubDdQtu001',
+            path: 'textfiles/foo.txt',
+            size: 30
+          }, {
+            hash: 'QmRgutAxd8t7oGkSm4wmeuByG6M51wcTso6cubDdQtu002',
+            path: 'textfiles',
+            size: 50
+          }
+        ]))
+
+      const objectPutMock = jest.fn()
+        .mockReturnValue(Promise.resolve({
+          toJSON: () => {
+
+            return {
+              multihash: 'QmRgutAxd8t7oGkSm4wmeuByG6M51wcTso6cubDdQtu003',
+              size: 60
+            }
+          }
+        }))
+
+      const pinAddMock = jest.fn().mockReturnValue(Promise.resolve())
+      const pinRmMock = jest.fn().mockReturnValue(Promise.resolve())
+
+      api.setClientInstance({
+        util: {
+          addFromFs: addFromFsMock
+        },
+        object: {
+          put: objectPutMock
+        },
+        pin: {
+          add: pinAddMock,
+          rm: pinRmMock
+        }
+      })
+      const queryGatewaysMock = jest.fn()
+      // act
+      return api.addFileFromFSPath('./textfiles', queryGatewaysMock)
+        .then(result => {
+          // assert
+          expect(queryGatewaysMock).toHaveBeenCalledWith('QmRgutAxd8t7oGkSm4wmeuByG6M51wcTso6cubDdQtu001')
+          expect(queryGatewaysMock).toHaveBeenCalledWith('QmRgutAxd8t7oGkSm4wmeuByG6M51wcTso6cubDdQtu002')
+          expect(queryGatewaysMock).toHaveBeenCalledWith('QmRgutAxd8t7oGkSm4wmeuByG6M51wcTso6cubDdQtu003')
+          expect(queryGatewaysMock).toHaveBeenCalledTimes(3)
+        })
+    })
   })
 
-  describe('promiseIPFSReady', ()=>{
-    it('It should times out', ()=>{
-      const id = jest.fn().mockImplementation(function() {
+  describe('promiseIPFSReady', () => {
+    it('It should times out', () => {
+      const id = jest.fn().mockImplementation(function () {
         return Promise.reject()
       })
-      api.setClientInstance({id})
+      api.setClientInstance({ id })
       let prom = api.promiseIPFSReady(5)
       expect(prom).rejects.toThrow(api.ERROR_IPFS_TIMEOUT)
     })
 
-    it('It should return if API available', ()=>{
-      const id = jest.fn().mockImplementation(function() {
+    it('It should return if API available', () => {
+      const id = jest.fn().mockImplementation(function () {
         return Promise.resolve()
       })
-      api.setClientInstance({id})
+      api.setClientInstance({ id })
       let prom = api.promiseIPFSReady(5)
       expect(prom).resolves.toBe()
+    })
+  })
+
+  describe('queryGateways', () => {
+    it('should query the gateways', () => {
+      // arrange
+      const USER_AGENT = `Lumpy/${pjson.version}`
+      // act
+      api.queryGateways('fake-hash')
+      // assert
+      expect(request).toHaveBeenCalledTimes(2)
+      expect(request).toHaveBeenCalledWith({
+        'headers': {
+          'User-Agent': USER_AGENT
+        },
+        'uri': 'mock-gateway-1/fake-hash'
+      })
+      expect(request).toHaveBeenCalledWith({
+        'headers': {
+          'User-Agent': USER_AGENT
+        },
+        'uri': 'mock-gateway-2/fake-hash'
+      })
     })
   })
 })
