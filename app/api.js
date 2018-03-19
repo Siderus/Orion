@@ -196,12 +196,8 @@ export function isObjectPinned(hash) {
 
   return IPFS_CLIENT.pin.ls()
     .then(pins => {
-      for (let i = 0; i < pins.length; i++) {
-        if (pins[i].hash === hash) {
-          return Promise.resolve(true)
-        }
-      }
-      return Promise.resolve(false)
+      // find returns the object, we need to cast it to boolean
+      return Promise.resolve(!!pins.find(pin => pin.hash === hash))
     })
 }
 
