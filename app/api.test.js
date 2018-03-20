@@ -89,6 +89,36 @@ describe('api.js', () => {
     })
   })
 
+  describe('pinObject', () => {
+    it('should reject when IPFS is not started', () => {
+      // arrange
+      api.setClientInstance(null)
+      // act
+      return api.pinObject()
+        .catch(err => {
+          // assert
+          expect(err).toBe(ERROR_IPFS_UNAVAILABLE)
+        })
+    })
+
+    it('should pin the hash', () => {
+      // arrange
+      const pinAddMock = jest.fn().mockReturnValue(Promise.resolve('added'))
+      api.setClientInstance({
+        pin: {
+          add: pinAddMock,
+        }
+      })
+      // act
+      return api.pinObject('fake-hash')
+        .then(result => {
+          // assert
+          expect(result).toBe('added')
+          expect(pinAddMock).toHaveBeenCalledWith('fake-hash')
+        })
+    })
+  })
+
   describe('unpinObject', () => {
     it('should reject when IPFS is not started', () => {
       // arrange
@@ -236,8 +266,8 @@ describe('api.js', () => {
 
     it('should add the file/dir recursively and query the gateways', () => {
       // arrange
-        // arrange
-        const addFromFsMock = jest.fn()
+      // arrange
+      const addFromFsMock = jest.fn()
         .mockReturnValue(Promise.resolve([
           {
             hash: 'QmRgutAxd8t7oGkSm4wmeuByG6M51wcTso6cubDdQtu001',
@@ -329,6 +359,57 @@ describe('api.js', () => {
         },
         'uri': 'mock-gateway-2/fake-hash'
       })
+    })
+  })
+
+  describe('isObjectPinned', () => {
+    it('should reject when IPFS is not started', () => {
+      // arrange
+      api.setClientInstance(null)
+      // act
+      return api.isObjectPinned()
+        .catch(err => {
+          // assert
+          expect(err).toBe(ERROR_IPFS_UNAVAILABLE)
+        })
+    })
+
+    it('should return true if the object is pinned', () => {
+      // arrange
+      const pinLsMock = jest.fn().mockReturnValue(Promise.resolve([
+        { hash: 'QmRgutAxd8t7oGkSm4wmeuByG6M51wcTso6cubDdQtu001' },
+        { hash: 'QmRgutAxd8t7oGkSm4wmeuByG6M51wcTso6cubDdQtu002' },
+        { hash: 'QmRgutAxd8t7oGkSm4wmeuByG6M51wcTso6cubDdQtu003' }
+      ]))
+      api.setClientInstance({
+        pin: {
+          ls: pinLsMock,
+        }
+      })
+      // act
+      return api.isObjectPinned('QmRgutAxd8t7oGkSm4wmeuByG6M51wcTso6cubDdQtu002')
+        .then(result => {
+          // assert
+          expect(result).toBe(true)
+        })
+    })
+
+    it('should return false if the object is not pinned', () => {
+      // arrange
+      const pinLsMock = jest.fn().mockReturnValue(Promise.resolve([
+        { hash: 'QmRgutAxd8t7oGkSm4wmeuByG6M51wcTso6cubDdQtu001' },
+      ]))
+      api.setClientInstance({
+        pin: {
+          ls: pinLsMock,
+        }
+      })
+      // act
+      return api.isObjectPinned('QmRgutAxd8t7oGkSm4wmeuByG6M51wcTso6cubDdQtu005')
+        .then(result => {
+          // assert
+          expect(result).toBe(false)
+        })
     })
   })
 })

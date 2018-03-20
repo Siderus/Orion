@@ -134,6 +134,16 @@ export function unpinObject(hash) {
 }
 
 /**
+ * This function will allow the user to pin an object to the IPFS repo.
+ * Used to prevent the Garbage collector from removing it.
+ */
+export function pinObject(hash) {
+  if (!IPFS_CLIENT) return Promise.reject(ERROR_IPFS_UNAVAILABLE)
+
+  return IPFS_CLIENT.pin.add(hash)
+}
+
+/**
  * Provide a promise to get the Repository information. Its RepoSize is actually
  * a byteSize (ex: {value, unit}) to make it human readable
  */
@@ -175,6 +185,20 @@ export function getObjectList() {
   if (!IPFS_CLIENT) return Promise.reject(ERROR_IPFS_UNAVAILABLE)
 
   return IPFS_CLIENT.pin.ls()
+}
+
+/**
+ * Provides a Promise that will resolve with true if the hash is pinned
+ * or resolve with false otherwise
+ */
+export function isObjectPinned(hash) {
+  if (!IPFS_CLIENT) return Promise.reject(ERROR_IPFS_UNAVAILABLE)
+
+  return IPFS_CLIENT.pin.ls()
+    .then(pins => {
+      // find returns the object, we need to cast it to boolean
+      return Promise.resolve(!!pins.find(pin => pin.hash === hash))
+    })
 }
 
 /**
