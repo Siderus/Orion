@@ -320,7 +320,7 @@ describe('api.js', () => {
   describe('promiseIPFSReady', () => {
     it('It should times out', () => {
       const id = jest.fn().mockImplementation(function () {
-        return Promise.reject(Error)
+        return Promise.reject()
       })
       api.setClientInstance({ id })
       let prom = api.promiseIPFSReady(5)

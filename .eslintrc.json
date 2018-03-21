@@ -19,6 +19,7 @@
     "linebreak-style": [
       "error",
       "unix"
-    ]
+    ],
+    "prefer-promise-reject-errors": 0
   }
 }
