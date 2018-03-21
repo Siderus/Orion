@@ -13,3 +13,4 @@ notifications:
 
 script:
   - yarn test --coverage
+  - yarn lint

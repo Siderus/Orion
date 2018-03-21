@@ -21,7 +21,7 @@ export function setClientInstance (client) {
   IPFS_CLIENT = client
 }
 
-export function initIPFSClient () {
+export function initIPFSClient() {
   if (IPFS_CLIENT !== null) return Promise.resolve(IPFS_CLIENT)
 
   // get IPFS client from the main process
