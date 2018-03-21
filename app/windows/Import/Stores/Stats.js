@@ -22,7 +22,7 @@ export class StatStorage {
   @observable wasLoading = false
   @observable importing = false
 
-  reset() {
+  reset () {
     this.hash = ''
     this.peersAmount = 0
     this.stats = {}

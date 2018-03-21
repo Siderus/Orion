@@ -2,15 +2,14 @@ import { app, dialog } from 'electron'
 
 import {
   startIPFSDaemon,
-  setMultiAddrIPFSDaemon,
   getSiderusPeers,
   connectToCMD,
-  addBootstrapAddr,
+  addBootstrapAddr
 } from './daemon'
 
 import {
   promiseIPFSReady,
-  initIPFSClient,
+  initIPFSClient
 } from './api'
 
 import LoadingWindow from './windows/Loading/window'
@@ -87,9 +86,9 @@ app.on('ready', () => {
           percentage: 80
         })
         // Using the CMD to connect, as the API seems not to work
-        let conn_proms = peers.map(addr => { return connectToCMD(addr) })
-        let bootstrap_proms = peers.map(addr => { return addBootstrapAddr(addr) })
-        return Promise.all(conn_proms.concat(bootstrap_proms))
+        let connectPromises = peers.map(addr => { return connectToCMD(addr) })
+        let bootstrapPromises = peers.map(addr => { return addBootstrapAddr(addr) })
+        return Promise.all(connectPromises.concat(bootstrapPromises))
           .catch(err => {
             console.error('Error while connecting to Siderus Network: ', err)
             return Promise.resolve()

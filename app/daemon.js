@@ -1,17 +1,13 @@
-/* eslint no-console:0 */
-
-import { spawn, execSync } from 'child_process'
+import { spawn } from 'child_process'
 import exec from 'promised-exec'
 import request from 'request-promise-native'
-
-const pjson = require('../package.json');
-
 import Settings from 'electron-settings'
+import pjson from '../package.json'
 
 /**
  * getPathIPFSBinary will return the IPFS default path
  */
-export function getPathIPFSBinary() {
+export function getPathIPFSBinary () {
   return Settings.getSync('daemon.pathIPFSBinary') || '/usr/local/bin/ipfs'
 }
 
@@ -19,9 +15,8 @@ export function getPathIPFSBinary() {
  * startIPFSDaemon will start IPFS go daemon, if installed.
  * return a promise with child process of IPFS daemon
  */
-export function startIPFSDaemon() {
-  if (Settings.getSync('daemon.startIPFSAtStartup') === false)
-    return Promise.resolve()
+export function startIPFSDaemon () {
+  if (Settings.getSync('daemon.startIPFSAtStartup') === false) { return Promise.resolve() }
 
   return new Promise((resolve, reject) => {
     const binaryPath = getPathIPFSBinary()
@@ -38,7 +33,7 @@ export function startIPFSDaemon() {
 /**
  * Returns the multiAddr usable to connect to the local dameon via API
  */
-export function getMultiAddrIPFSDaemon() {
+export function getMultiAddrIPFSDaemon () {
   // If the user specified a value in the multiaddrAPI
   const settingsAddress = Settings.getSync('daemon.multiAddrAPI')
   if (settingsAddress) return settingsAddress
@@ -54,7 +49,7 @@ export function getMultiAddrIPFSDaemon() {
  * It restores it to /ip4/127.0.0.1/tcp/5001
  * returns a promise.
  */
-export function setMultiAddrIPFSDaemon() {
+export function setMultiAddrIPFSDaemon () {
   const binaryPath = getPathIPFSBinary()
   return exec(`${binaryPath} config Addresses.API /ip4/127.0.0.1/tcp/5001`)
 }
@@ -64,7 +59,7 @@ export function setMultiAddrIPFSDaemon() {
  * multiaddress. example: connectToCMD("/ip4/192.168.0.22/tcp/4001/ipfs/Qm...")
  * returns a promise
  */
-export function connectToCMD(strMultiddr) {
+export function connectToCMD (strMultiddr) {
   const binaryPath = getPathIPFSBinary()
   return exec(`${binaryPath} swarm connect ${strMultiddr}`)
 }
@@ -74,7 +69,7 @@ export function connectToCMD(strMultiddr) {
  * example: addBootstrapAddr("/ip4/192.168.0.22/tcp/4001/ipfs/Qm...")
  * returns a promise
  */
-export function addBootstrapAddr(strMultiddr) {
+export function addBootstrapAddr (strMultiddr) {
   const binaryPath = getPathIPFSBinary()
   return exec(`${binaryPath} bootstrap add ${strMultiddr}`)
 }
@@ -83,16 +78,16 @@ export function addBootstrapAddr(strMultiddr) {
  * getSiderusPeers returns a Promise that will download and return a list of
  * multiaddress (as str) of IPFS nodes from Siderus Network.
  */
-export function getSiderusPeers() {
+export function getSiderusPeers () {
   return request({
-    uri: "https://meta.siderus.io/ipfs/peers.txt",
+    uri: 'https://meta.siderus.io/ipfs/peers.txt',
     headers: { 'User-Agent': `Lumpy/${pjson.version}` }
-  }).then( res => {
+  }).then(res => {
     let peers
     // split the file by endlines
     peers = res.split(/\r?\n/)
     // remove empty lines
-    peers = peers.filter(el => el.length > 0 )
+    peers = peers.filter(el => el.length > 0)
     return Promise.resolve(peers)
   })
 }

@@ -10,7 +10,7 @@ const { app, dialog, shell } = remote
  *
  * ToDo: add loading messages/feedback
  */
-export function addFilesPaths(paths) {
+export function addFilesPaths (paths) {
   const buttons = ['Close', 'Open in the browser']
   const successMessageOption = {
     type: 'info',
@@ -62,7 +62,7 @@ export function addFilesPaths(paths) {
  * This functuon will setup the document and body events to add a file on drag
  * and drop action.
  */
-export function setupAddAppOnDrop() {
+export function setupAddAppOnDrop () {
   document.ondragover = document.ondrop = (ev) => {
     ev.preventDefault()
   }
@@ -86,7 +86,7 @@ export function setupAddAppOnDrop() {
  * Prompt the user if he is sure that we should remove a file
  * return a Promise
  */
-export function proptAndRemoveObjects(hashes) {
+export function proptAndRemoveObjects (hashes) {
   const buttons = ['Abort', 'Of course, Duh!']
   const opts = {
     title: 'Continue?',
@@ -110,7 +110,7 @@ export function proptAndRemoveObjects(hashes) {
 /**
  * Open hashes in a browser
  */
-export function openInBrowser(hashes) {
+export function openInBrowser (hashes) {
   const gatewayURL = Settings.getSync('gatewayURL') || 'https://siderus.io'
   hashes.forEach(hash => {
     shell.openExternal(`${gatewayURL}/ipfs/${hash}`)
