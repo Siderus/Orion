@@ -20,7 +20,7 @@ if (isRenderer) {
 
 module.exports = {}
 
-module.exports.create = function createDetailsWindow(app, hash) {
+module.exports.create = function createDetailsWindow (app, hash) {
   // Create the browser modal window.
   let thisWindow = new BrowserWindowClass({
     title: 'Properties ' + hash,
@@ -35,7 +35,7 @@ module.exports.create = function createDetailsWindow(app, hash) {
     resizable: true,
     fullscreenable: false,
 
-    show: false,
+    show: false
   })
 
   // Show the window only when ready

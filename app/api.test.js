@@ -3,9 +3,9 @@ import * as daemon from './daemon'
 import ipfsApi from 'ipfs-api'
 import multiaddr from 'multiaddr'
 import request from 'request-promise-native'
-import gateways from './gateways'
+// import gateways from './gateways'
 import pjson from '../package'
-import Settings from 'electron-settings'
+// import Settings from 'electron-settings'
 
 jest.mock('./daemon', () => {
   return {
@@ -76,7 +76,7 @@ describe('api.js', () => {
       const resolveNameMock = jest.fn().mockReturnValue(Promise.resolve('ipfs-hash'))
       api.setClientInstance({
         name: {
-          resolve: resolveNameMock,
+          resolve: resolveNameMock
         }
       })
       // act
@@ -106,7 +106,7 @@ describe('api.js', () => {
       const pinAddMock = jest.fn().mockReturnValue(Promise.resolve('added'))
       api.setClientInstance({
         pin: {
-          add: pinAddMock,
+          add: pinAddMock
         }
       })
       // act
@@ -136,7 +136,7 @@ describe('api.js', () => {
       const pinRmMock = jest.fn().mockReturnValue(Promise.resolve('removed'))
       api.setClientInstance({
         pin: {
-          rm: pinRmMock,
+          rm: pinRmMock
         }
       })
       // act
@@ -206,7 +206,6 @@ describe('api.js', () => {
       const objectPutMock = jest.fn()
         .mockReturnValue(Promise.resolve({
           toJSON: () => {
-
             return {
               multihash: 'QmRgutAxd8t7oGkSm4wmeuByG6M51wcTso6cubDdQtu003',
               size: 60
@@ -236,7 +235,7 @@ describe('api.js', () => {
           // assert
           expect(addFromFsMock).toHaveBeenCalledWith('./textfiles', { recursive: true })
           expect(objectPutMock).toHaveBeenCalledWith({
-            Data: new Buffer('\u0008\u0001'),
+            Data: Buffer.from('\u0008\u0001'),
             Links: [{
               Hash: 'QmRgutAxd8t7oGkSm4wmeuByG6M51wcTso6cubDdQtu002',
               Name: 'textfiles',
@@ -283,7 +282,6 @@ describe('api.js', () => {
       const objectPutMock = jest.fn()
         .mockReturnValue(Promise.resolve({
           toJSON: () => {
-
             return {
               multihash: 'QmRgutAxd8t7oGkSm4wmeuByG6M51wcTso6cubDdQtu003',
               size: 60
@@ -383,7 +381,7 @@ describe('api.js', () => {
       ]))
       api.setClientInstance({
         pin: {
-          ls: pinLsMock,
+          ls: pinLsMock
         }
       })
       // act
@@ -397,11 +395,11 @@ describe('api.js', () => {
     it('should return false if the object is not pinned', () => {
       // arrange
       const pinLsMock = jest.fn().mockReturnValue(Promise.resolve([
-        { hash: 'QmRgutAxd8t7oGkSm4wmeuByG6M51wcTso6cubDdQtu001' },
+        { hash: 'QmRgutAxd8t7oGkSm4wmeuByG6M51wcTso6cubDdQtu001' }
       ]))
       api.setClientInstance({
         pin: {
-          ls: pinLsMock,
+          ls: pinLsMock
         }
       })
       // act

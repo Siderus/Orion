@@ -14,9 +14,9 @@ export class InformationStore {
 
   loadData () {
     const promises = []
-    promises.push(getPeer().then(peer => this.peer = peer))
-    promises.push(getPeersInfo().then(peers => this.peers = peers))
-    promises.push(getRepoInfo().then(stats => this.repoStats = stats))
+    promises.push(getPeer().then(peer => { this.peer = peer }))
+    promises.push(getPeersInfo().then(peers => { this.peers = peers }))
+    promises.push(getRepoInfo().then(stats => { this.repoStats = stats }))
 
     return Promise.all(promises).then((data) => {
       this.loaded = true

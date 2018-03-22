@@ -34,8 +34,7 @@ describe('daemon.js', () => {
     it('should download list of peers, not empty', () => {
       const prom = daemon.getSiderusPeers()
 
-      expect(prom).resolves.not.toContain("")// removes empty lines
+      expect(prom).resolves.not.toContain('')// removes empty lines
     })
   })
-
 })

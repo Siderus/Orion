@@ -17,18 +17,18 @@ let IPFS_CLIENT = null
 
 const USER_AGENT = `Lumpy/${pjson.version}`
 
-export function setClientInstance(client) {
+export function setClientInstance (client) {
   IPFS_CLIENT = client
 }
 
-export function initIPFSClient() {
+export function initIPFSClient () {
   if (IPFS_CLIENT !== null) return Promise.resolve(IPFS_CLIENT)
 
   // get IPFS client from the main process
   if (remote) {
-    const global_client = remote.getGlobal('IPFS_CLIENT')
-    if (global_client) {
-      setClientInstance(global_client)
+    const globalClient = remote.getGlobal('IPFS_CLIENT')
+    if (globalClient) {
+      setClientInstance(globalClient)
       return Promise.resolve(IPFS_CLIENT)
     }
   }
@@ -41,7 +41,7 @@ export function initIPFSClient() {
 /**
  * This function will allow the user to add a file to the IPFS repo.
  */
-export function addFileFromFSPath(filePath, _queryGateways = queryGateways) {
+export function addFileFromFSPath (filePath, _queryGateways = queryGateways) {
   if (!IPFS_CLIENT) return Promise.reject(ERROR_IPFS_UNAVAILABLE)
 
   const options = { recursive: true }
@@ -66,11 +66,11 @@ export function addFileFromFSPath(filePath, _queryGateways = queryGateways) {
        */
       const rootFile = files[files.length - 1]
       const wrapperDag = {
-        Data: new Buffer('\u0008\u0001'),
+        Data: Buffer.from('\u0008\u0001'),
         Links: [{
           Name: rootFile.path,
           Hash: rootFile.hash,
-          Size: rootFile.size,
+          Size: rootFile.size
         }]
       }
 
@@ -113,13 +113,13 @@ export function addFileFromFSPath(filePath, _queryGateways = queryGateways) {
  * Query the gateways to help content propagation and
  * ensure that the file is available in the network.
  */
-export function queryGateways(hash) {
+export function queryGateways (hash) {
   gateways.forEach(gateway => {
     request({
       uri: `${gateway}/${hash}`,
       headers: { 'User-Agent': USER_AGENT }
     })
-      .catch(err => console.error(`Could not query ${gateway}`))
+      .catch(err => console.error(`Could not query ${gateway}. Error: ${err}`))
   })
 }
 
@@ -127,7 +127,7 @@ export function queryGateways(hash) {
  * This function will allow the user to unpin an object from the IPFS repo.
  * Used to remove the file from the repo, if combined with the GC.
  */
-export function unpinObject(hash) {
+export function unpinObject (hash) {
   if (!IPFS_CLIENT) return Promise.reject(ERROR_IPFS_UNAVAILABLE)
   const options = { recursive: true }
   return IPFS_CLIENT.pin.rm(hash, options)
@@ -137,7 +137,7 @@ export function unpinObject(hash) {
  * This function will allow the user to pin an object to the IPFS repo.
  * Used to prevent the Garbage collector from removing it.
  */
-export function pinObject(hash) {
+export function pinObject (hash) {
   if (!IPFS_CLIENT) return Promise.reject(ERROR_IPFS_UNAVAILABLE)
 
   return IPFS_CLIENT.pin.add(hash)
@@ -147,7 +147,7 @@ export function pinObject(hash) {
  * Provide a promise to get the Repository information. Its RepoSize is actually
  * a byteSize (ex: {value, unit}) to make it human readable
  */
-export function getRepoInfo() {
+export function getRepoInfo () {
   if (!IPFS_CLIENT) return Promise.reject(ERROR_IPFS_UNAVAILABLE)
 
   return IPFS_CLIENT.repo.stat({ human: false })
@@ -162,7 +162,7 @@ export function getRepoInfo() {
  * Provides a Promise that will resolve the peers list (in the future that can
  * be manipualted)
  */
-export function getPeersInfo() {
+export function getPeersInfo () {
   if (!IPFS_CLIENT) return Promise.reject(ERROR_IPFS_UNAVAILABLE)
 
   return IPFS_CLIENT.swarm.peers()
@@ -171,7 +171,7 @@ export function getPeersInfo() {
 /**
  * Provides a Promise that will resolve the peer info (id, pubkye etc..)
  */
-export function getPeer() {
+export function getPeer () {
   if (!IPFS_CLIENT) return Promise.reject(ERROR_IPFS_UNAVAILABLE)
 
   return IPFS_CLIENT.id()
@@ -181,7 +181,7 @@ export function getPeer() {
  * Provide a Promise that will resolve into the Pin's object, with an hash key
  * containing its hash.
  */
-export function getObjectList() {
+export function getObjectList () {
   if (!IPFS_CLIENT) return Promise.reject(ERROR_IPFS_UNAVAILABLE)
 
   return IPFS_CLIENT.pin.ls()
@@ -191,7 +191,7 @@ export function getObjectList() {
  * Provides a Promise that will resolve with true if the hash is pinned
  * or resolve with false otherwise
  */
-export function isObjectPinned(hash) {
+export function isObjectPinned (hash) {
   if (!IPFS_CLIENT) return Promise.reject(ERROR_IPFS_UNAVAILABLE)
 
   return IPFS_CLIENT.pin.ls()
@@ -205,7 +205,7 @@ export function isObjectPinned(hash) {
  * Provides using a Promise the stat of an IPFS object. Note: All the Size
  * values are a byteSize object (ex: {value, unit}) to make it human readable
  */
-export function getObjectStat(objectMultiHash) {
+export function getObjectStat (objectMultiHash) {
   return new Promise((resolve, reject) => {
     if (!IPFS_CLIENT) return reject(ERROR_IPFS_UNAVAILABLE)
 
@@ -224,7 +224,7 @@ export function getObjectStat(objectMultiHash) {
 /**
  * Provides using a Promise the serialized dag of an IPFS object.
  */
-export function getObjectDag(objectMultiHash) {
+export function getObjectDag (objectMultiHash) {
   return new Promise((resolve, reject) => {
     if (!IPFS_CLIENT) return reject(ERROR_IPFS_UNAVAILABLE)
 
@@ -247,7 +247,7 @@ export function getObjectDag(objectMultiHash) {
  * isDagDirectory will return a boolean value based on the content of the dag:
  * If it contains a IPFS "directory" structure, then returns true
  */
-export function isDagDirectory(dag) {
+export function isDagDirectory (dag) {
   return dag.data.length === 2 && dag.data.toString() === '\u0008\u0001'
 }
 
@@ -255,7 +255,7 @@ export function isDagDirectory(dag) {
  * Returns a Promise that resolves a fully featured StorageList with more
  * details, ex: Sizes, Links, Hash, Data. Used by the Interface to render the table
  */
-export function getStorageList(pins) {
+export function getStorageList (pins) {
   return new Promise((resolve, reject) => {
     // Filter out the indirect objects. Required to reduce API Calls
     pins = pins.filter(pin => pin.type !== 'indirect')
@@ -289,7 +289,7 @@ export function getStorageList(pins) {
  * This function will return a promise that wants to provide the peers that
  * are owning a specific hash.
  */
-export function getPeersWithObjectbyHash(hash) {
+export function getPeersWithObjectbyHash (hash) {
   if (!IPFS_CLIENT) return Promise.reject(ERROR_IPFS_UNAVAILABLE)
   return IPFS_CLIENT.dht.findprovs(hash)
 }
@@ -298,7 +298,7 @@ export function getPeersWithObjectbyHash(hash) {
  * importObjectByHash will "import" an object recursively, by pinning it to the
  * repository.
  */
-export function importObjectByHash(hash) {
+export function importObjectByHash (hash) {
   if (!IPFS_CLIENT) return Promise.reject(ERROR_IPFS_UNAVAILABLE)
   const options = { recursive: true }
   return IPFS_CLIENT.pin.add(hash, options)
@@ -310,7 +310,7 @@ export function importObjectByHash(hash) {
  *
  * See: https://github.com/ipfs/interface-ipfs-core/tree/master/API/files#get
  */
-export function saveFileToPath(hash, dest) {
+export function saveFileToPath (hash, dest) {
   return new Promise((resolve, reject) => {
     if (!IPFS_CLIENT) return reject(ERROR_IPFS_UNAVAILABLE)
 
@@ -338,7 +338,7 @@ export function saveFileToPath(hash, dest) {
  * This will just run the garbage collector to clean the repo for unused and
  * Unpinned objects.
  */
-export function runGarbageCollector() {
+export function runGarbageCollector () {
   if (!IPFS_CLIENT) return Promise.reject(ERROR_IPFS_UNAVAILABLE)
   return IPFS_CLIENT.repo.gc()
 }
@@ -346,7 +346,7 @@ export function runGarbageCollector() {
 /**
  * Resolves an IPNS name to an IPFS hash.
  */
-export function resolveName(name) {
+export function resolveName (name) {
   if (!IPFS_CLIENT) return Promise.reject(ERROR_IPFS_UNAVAILABLE)
 
   return IPFS_CLIENT.name.resolve(name)
@@ -356,7 +356,7 @@ export function resolveName(name) {
  * connectTo allows easily to connect to a node by specifying a str multiaddress
  * example: connectTo("/ip4/192.168.0.22/tcp/4001/ipfs/Qm...")
  */
-export function connectTo(strMultiddr) {
+export function connectTo (strMultiddr) {
   if (!IPFS_CLIENT) return Promise.reject(ERROR_IPFS_UNAVAILABLE)
   const addr = multiaddr(strMultiddr)
   return IPFS_CLIENT.swarm.connect(addr)
@@ -366,9 +366,9 @@ export function connectTo(strMultiddr) {
  * promiseIPFSReady is a function that will waint and resolve the promise
  * only when the IPFS is accepting IPFS API. Reject after timeout in sec
  */
-export function promiseIPFSReady(timeout, ipfs_api) {
-  timeout = timeout ? timeout : 30 // defaults 30 secs
-  ipfs_api = ipfs_api ? ipfs_api : IPFS_CLIENT // allows custom api
+export function promiseIPFSReady (timeout, ipfsApiInstance) {
+  timeout = timeout || 30 // defaults 30 secs
+  ipfsApiInstance = ipfsApiInstance || IPFS_CLIENT // allows custom api
   let iID // interval id
   let trial = 0
 

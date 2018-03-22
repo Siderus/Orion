@@ -5,6 +5,7 @@
   "main": "app/index.js",
   "scripts": {
     "test": "jest",
+    "lint": "eslint app/",
     "start": "electron-forge start",
     "build-icons": "icon-gen -i ./docs/logo.svg -o ./docs/ -m ico,icns -n ico=logo,icns=logo; cp ./docs/logo.icns ./out/ ; cp ./docs/logo.ico ./out/",
     "package": "yarn build-icons; electron-forge package",
@@ -21,18 +22,20 @@
   "author": "Lorenzo Setale",
   "license": "GPL-3.0",
   "devDependencies": {
+    "babel-eslint": "^8.2.2",
     "babel-plugin-inline-react-svg": "^0.5.2",
     "electron-forge": "^5.1.1",
     "electron-prebuilt-compile": "1.8.3",
     "electron-react-devtools": "^0.5.3",
-    "eslint": "^3.14.0",
-    "eslint-config-equimper": "^1.3.5",
-    "eslint-plugin-promise": "^3.4.2",
-    "eslint-plugin-react": "^6.9.0",
-    "eslint-plugin-standard": "^2.0.1",
+    "eslint": "^4.19.0",
+    "eslint-config-standard": "^11.0.0",
+    "eslint-plugin-import": "^2.9.0",
+    "eslint-plugin-node": "^6.0.1",
+    "eslint-plugin-promise": "^3.7.0",
+    "eslint-plugin-react": "^7.7.0",
+    "eslint-plugin-standard": "^3.0.1",
     "icon-gen": "^1.0.7",
-    "jest": "^22.4.2",
-    "standard": "^8.6.0"
+    "jest": "^22.4.2"
   },
   "dependencies": {
     "babel-cli": "^6.22.2",
