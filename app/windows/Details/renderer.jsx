@@ -18,7 +18,7 @@ import { Toolbar, Actionbar, Button, ButtonGroup } from 'react-photonkit'
 
 // Load Components
 import {
-  Window,
+  Window
 } from 'react-photonkit'
 
 import InformationTab from './Components/InformationTab'
@@ -35,7 +35,7 @@ class DetailsWindow extends React.Component {
     currentTab: 0
   }
 
-  constructor(props) {
+  constructor (props) {
     super(props)
 
     this.handleDownload = this.handleDownload.bind(this)
@@ -44,7 +44,7 @@ class DetailsWindow extends React.Component {
     this.handleUnpin = this.handleUnpin.bind(this)
   }
 
-  componentDidMount() {
+  componentDidMount () {
     Promise.all([
       getObjectStat(hash),
       getObjectDag(hash),
@@ -57,7 +57,7 @@ class DetailsWindow extends React.Component {
       }))
   }
 
-  handleDownload() {
+  handleDownload () {
     const options = {
       title: 'Where should I save?',
       properties: ['openDirectory'],
@@ -72,19 +72,19 @@ class DetailsWindow extends React.Component {
     }
   }
 
-  handleOpenInBrowser() {
+  handleOpenInBrowser () {
     openInBrowser([hash])
   }
 
-  handlePin() {
+  handlePin () {
     pinObject(hash).then(result => this.setState({ isPinned: true }))
   }
 
-  handleUnpin() {
+  handleUnpin () {
     unpinObject(hash).then(result => this.setState({ isPinned: false }))
   }
 
-  render() {
+  render () {
     const { currentTab, isPinned, stat, dag } = this.state
 
     return (

@@ -9,8 +9,7 @@ import { getObjectStat } from '../../../api'
 
 @observer
 class Footer extends React.Component {
-
-  _handleCheckButton() {
+  _handleCheckButton () {
     const storage = this.props.statsStore
 
     // Prepare the promise to check the Peers
@@ -33,13 +32,13 @@ class Footer extends React.Component {
     storage.wasLoadingStats = true
     // Now race! The first one shows stuff!
     Promise.race([pPeers, pStats])
-    .catch(err => {
-      storage.isLoading = false
-      remote.dialog.showErrorBox('Gurl, an error occurred', `${err}`)
-    })
+      .catch(err => {
+        storage.isLoading = false
+        remote.dialog.showErrorBox('Gurl, an error occurred', `${err}`)
+      })
   }
 
-  _handleImportButton() {
+  _handleImportButton () {
     const storage = this.props.statsStore
 
     storage.isLoading = true
@@ -49,22 +48,19 @@ class Footer extends React.Component {
       storage.importing = false
       window.close()
     })
-    .catch(err => {
-      storage.isLoading = false
-      remote.dialog.showErrorBox('Gurl, an error occurred!', `${err}`)
-    })
+      .catch(err => {
+        storage.isLoading = false
+        remote.dialog.showErrorBox('Gurl, an error occurred!', `${err}`)
+      })
   }
 
-
-  render() {
+  render () {
     const storage = this.props.statsStore
     let rightButton = null
 
-    if (!storage.isLoading && storage.isValid)
-      {rightButton = <Button onClick={this._handleCheckButton.bind(this)} text="Check" ptStyle="primary" pullRight/>}
+    if (!storage.isLoading && storage.isValid) { rightButton = <Button onClick={this._handleCheckButton.bind(this)} text="Check" ptStyle="primary" pullRight/> }
 
-    if (!storage.isLoading && storage.wasLoadingStats)
-      {rightButton = <Button onClick={this._handleImportButton.bind(this)} text="Import" ptStyle="primary" pullRight/>}
+    if (!storage.isLoading && storage.wasLoadingStats) { rightButton = <Button onClick={this._handleImportButton.bind(this)} text="Import" ptStyle="primary" pullRight/> }
 
     return (
       <Toolbar ptType="footer">

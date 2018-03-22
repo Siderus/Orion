@@ -7,7 +7,7 @@ import ResponsiveTable from '../../../components/ResponsiveTable'
 
 @observer
 class StorageList extends React.Component {
-  render() {
+  render () {
     if (!this.props.storageStore) return <Table />
 
     let { elements, filters } = this.props.storageStore

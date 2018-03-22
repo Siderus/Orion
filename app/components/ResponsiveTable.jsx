@@ -20,6 +20,6 @@ const ResponsiveTable = styled(Table)`
   th:nth-child(4) {
     width: 100%;
   }
-`;
+`
 
 export default ResponsiveTable

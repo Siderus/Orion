@@ -14,7 +14,7 @@ const GatewayEnum = {
  */
 @observer
 class ConnectivityPanel extends React.Component {
-  constructor(props) {
+  constructor (props) {
     super(props)
 
     this.state = {
@@ -26,7 +26,7 @@ class ConnectivityPanel extends React.Component {
     this._handleSkipGatewayQueryChange = this._handleSkipGatewayQueryChange.bind(this)
   }
 
-  componentWillMount() {
+  componentWillMount () {
     /**
      * Retrieve settings from persistent storage
      */
@@ -41,7 +41,7 @@ class ConnectivityPanel extends React.Component {
       }))
   }
 
-  _handleSkipGatewayQueryChange(event) {
+  _handleSkipGatewayQueryChange (event) {
     const value = !this.state.skipGatewayQuery
     /**
      * Save setting persistently
@@ -55,7 +55,7 @@ class ConnectivityPanel extends React.Component {
     })
   }
 
-  _handleGatewayChange(event) {
+  _handleGatewayChange (event) {
     const { value } = event.target
     /**
      * Save setting persistently
@@ -69,11 +69,11 @@ class ConnectivityPanel extends React.Component {
     })
   }
 
-  _handelOnSubit(event) {
+  _handelOnSubit (event) {
 
   }
 
-  render() {
+  render () {
     if (this.props.navigationStore.selected !== 1) return null
     if (!this.props.informationStore) return null
     if (!this.props.informationStore.loaded) return null
@@ -116,11 +116,11 @@ class ConnectivityPanel extends React.Component {
             onChange={this._handleSkipGatewayQueryChange}
           />
 
-          {/*<TextArea
+          {/* <TextArea
             label="Peers connected"
             value={peers}
             placeholder="Hey girl..." readOnly>
-          </TextArea>*/}
+          </TextArea> */}
         </form>
       </Pane>
     )

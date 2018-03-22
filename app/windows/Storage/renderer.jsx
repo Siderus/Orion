@@ -10,7 +10,7 @@ import {
   getRepoInfo,
   getStorageList,
   getObjectList,
-  promiseIPFSReady,
+  promiseIPFSReady
 } from '../../api'
 import { setupAddAppOnDrop } from './fileIntegration'
 
@@ -28,32 +28,32 @@ setupAddAppOnDrop()
 initIPFSClient()
 
 class App extends React.Component {
-  componentDidMount() {
+  componentDidMount () {
     // Runs multiple promises for gathering the content
     Promise.all([
       // get peers info
       getPeersInfo()
-      .then((peers) => {
-        StatusStore.peers = peers
-      }),
+        .then((peers) => {
+          StatusStore.peers = peers
+        }),
       // Get the repository (pins)
       getRepoInfo()
-      .then((stats) => {
-        StatusStore.stats = stats
-      }),
+        .then((stats) => {
+          StatusStore.stats = stats
+        }),
       // Get the objects lists and sorted
       getObjectList()
-      .then(pins => getStorageList(pins))
-      .then((pins) => {
-        StorageStore.elements = pins
-      }),
+        .then(pins => getStorageList(pins))
+        .then((pins) => {
+          StorageStore.elements = pins
+        })
     ])
-    .catch((err) => {
-      alert(err)
-    })
+      .catch((err) => {
+        alert(err)
+      })
   }
 
-  render() {
+  render () {
     return (
       <Window>
         <Header storageStore={StorageStore} />

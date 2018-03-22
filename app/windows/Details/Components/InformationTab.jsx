@@ -6,7 +6,7 @@ import { Content } from 'react-photonkit'
  * i.e. id, data, number of links, cumulative size
  *
  */
-function InformationTab({ stat, hash }) {
+function InformationTab ({ stat, hash }) {
   return (
     <Content>
       <h5 className='nav-group-title'>Information</h5>

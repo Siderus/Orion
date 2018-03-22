@@ -4,11 +4,10 @@ import { observer } from 'mobx-react'
 
 @observer
 class Footer extends React.Component {
-  render() {
+  render () {
     let title = 'Waiting for IPFS... Is the daemon enabled in the settings?'
     if (this.props.statusStore) {
-      if (this.props.statusStore.peers.length > 0)
-        {title = "Connected"}
+      if (this.props.statusStore.peers.length > 0) { title = 'Connected' }
     }
 
     return (

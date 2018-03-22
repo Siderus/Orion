@@ -13,7 +13,7 @@ import {
 import DetailsWindow from '../../Details/window'
 
 class StorageElement extends React.Component {
-  constructor(props) {
+  constructor (props) {
     super(props)
 
     this.hideMenu = props.hideMenu ? props.hideMenu : false
@@ -56,23 +56,23 @@ class StorageElement extends React.Component {
         click: (item) => {
           DetailsWindow.create(remote.app, this.props.element.hash)
         }
-      },
+      }
     ]
   }
 
   // Setup the Menu
-  componentWillMount() {
-    if(this.hideMenu === false){
+  componentWillMount () {
+    if (this.hideMenu === false) {
       this.menu = remote.Menu.buildFromTemplate(this.menuTemplate)
     }
   }
 
-  _handleContextMenu(event) {
+  _handleContextMenu (event) {
     event.preventDefault()
     this.menu.popup()
   }
 
-  _handleCheckboxOnClick(element, proxy, event) {
+  _handleCheckboxOnClick (element, proxy, event) {
     if (!this.props.storageStore) return
 
     if (this.props.storageStore.selected.find((el) => isEqual(el, element))) {
@@ -82,19 +82,19 @@ class StorageElement extends React.Component {
     }
   }
 
-  render() {
+  render () {
     const el = this.props.element
     return (
       <tr key={el.hash} onContextMenu={this._handleContextMenu.bind(this)}>
 
-        { this.props.storageStore ?
-        <td>
-          <input
-            onClick={this._handleCheckboxOnClick.bind(this, el)}
-            type='checkbox'
-          />
-        </td>
-        : <td></td> }
+        { this.props.storageStore
+          ? <td>
+            <input
+              onClick={this._handleCheckboxOnClick.bind(this, el)}
+              type='checkbox'
+            />
+          </td>
+          : <td></td> }
 
         <td>
           {

@@ -1,7 +1,7 @@
 import React from 'react'
 
 import {
-  getStorageList,
+  getStorageList
 } from '../../../api'
 
 import ResponsiveTable from '../../../components/ResponsiveTable'
@@ -12,14 +12,14 @@ import StorageElement from '../../Storage/Components/StorageElement'
  * this information includes: id, name and size
  */
 class FilesTab extends React.Component {
-  constructor(props) {
+  constructor (props) {
     super(props)
 
     this.state = {}
     this.state.formattedLinks = []
   }
 
-  componentDidMount(){
+  componentDidMount () {
     // Check all the links/dags
     const newLinks = this.props.links.map(el => {
       return {
@@ -33,7 +33,7 @@ class FilesTab extends React.Component {
     })
   }
 
-  render(){
+  render () {
     return (
       <ResponsiveTable>
         <thead>

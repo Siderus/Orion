@@ -50,15 +50,15 @@ class LoadingWindow extends React.Component {
     percentage: 0
   }
 
-  componentWillMount() {
+  componentWillMount () {
     ipcRenderer.on('set-progress', (event, data) => this.setState(data))
   }
 
-  componentWillUnmount() {
+  componentWillUnmount () {
     ipcRenderer.removeAllListeners('set-progress')
   }
 
-  render() {
+  render () {
     return (
       <Window>
         <Lumpy>
