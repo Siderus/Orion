@@ -9,8 +9,7 @@ import {
   getPeersInfo,
   getRepoInfo,
   getStorageList,
-  getObjectList,
-  promiseIPFSReady
+  getObjectList
 } from '../../api'
 import { setupAddAppOnDrop } from './fileIntegration'
 

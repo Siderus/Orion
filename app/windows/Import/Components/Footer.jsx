@@ -1,11 +1,10 @@
 import { remote } from 'electron'
 
 import React from 'react'
-import { Toolbar, Actionbar, Button, ButtonGroup } from 'react-photonkit'
+import { Toolbar, Actionbar, Button } from 'react-photonkit'
 import { observer } from 'mobx-react'
 
-import { getPeersWithObjectbyHash, importObjectByHash } from '../../../api'
-import { getObjectStat } from '../../../api'
+import { getObjectStat, getPeersWithObjectbyHash, importObjectByHash } from '../../../api'
 
 @observer
 class Footer extends React.Component {

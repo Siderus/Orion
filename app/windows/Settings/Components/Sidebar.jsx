@@ -14,7 +14,6 @@ class Sidebar extends React.Component {
   }
 
   render () {
-    const selected = this.props.navigationStore.selected
     return (
       <Pane sidebar ptSize="sm">
         <NavGroup onSelect={this._handleSelect.bind(this)}>

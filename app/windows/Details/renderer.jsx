@@ -14,13 +14,9 @@ import { openInBrowser } from '../Storage/fileIntegration'
 import { remote } from 'electron'
 import queryString from 'query-string'
 import cx from 'classnames'
-import { Toolbar, Actionbar, Button, ButtonGroup } from 'react-photonkit'
+import { Window, Toolbar, Actionbar, Button, ButtonGroup } from 'react-photonkit'
 
 // Load Components
-import {
-  Window
-} from 'react-photonkit'
-
 import InformationTab from './Components/InformationTab'
 import FilesTab from './Components/FilesTab'
 

@@ -21,7 +21,7 @@ class DaemonPanel extends React.Component {
   }
 
   componentDidMount () {
-    Settings.get('daemon').then(val => this.settings = val)
+    Settings.get('daemon').then(val => { this.settings = val })
   }
 
   // When the multiAddr of the IPFS API changes, update the settings

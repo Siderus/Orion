@@ -5,7 +5,6 @@ import styled from 'styled-components'
 
 import 'react-photonkit'
 import ProgressBar from '../../components/ProgressBar'
-import DetailsWindow from '../Details/window'
 import LumpyLogo from '../../../docs/logo.svg'
 import SiderusLogo from '../../../docs/siderus-logo.svg'
 

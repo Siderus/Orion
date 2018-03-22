@@ -12,8 +12,7 @@ import {
   Input,
   Toolbar,
   Actionbar,
-  Button,
-  ButtonGroup
+  Button
 } from 'react-photonkit'
 import ProgressOverlay from '../../components/ProgressOverlay'
 import CircularProgress from '../../components/CircularProgress'

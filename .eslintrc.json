@@ -6,7 +6,8 @@
     "jest": true
   },
   "extends": [
-    "standard"
+    "standard",
+    "plugin:react/recommended"
   ],
   "plugins": [
     "react"
@@ -20,6 +21,7 @@
       "error",
       "unix"
     ],
-    "prefer-promise-reject-errors": 0
+    "prefer-promise-reject-errors": 0,
+    "react/prop-types": 0
   }
 }

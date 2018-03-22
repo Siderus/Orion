@@ -2,22 +2,22 @@ import React from 'react'
 import styled from 'styled-components'
 
 const CircularProgressRoot = styled.div`
-	height: 50px;
-	width: 50px;
-	animation: spin 1s steps(12, end) infinite;
+  height: 50px;
+  width: 50px;
+  animation: spin 1s steps(12, end) infinite;
 
-	i {
-		height: 12px;
-		width: 4px;
-		margin-left: -2px;
-		display: block;
-		position: absolute;
-		left: 50%;
-		transform-origin: center 25px;
-		background: #000;
-		box-shadow: 0 0 3px rgba(255, 255, 255, .7);
-		border-radius: 3px;
-	}
+  i {
+    height: 12px;
+    width: 4px;
+    margin-left: -2px;
+    display: block;
+    position: absolute;
+    left: 50%;
+    transform-origin: center 25px;
+    background: #000;
+    box-shadow: 0 0 3px rgba(255, 255, 255, .7);
+    border-radius: 3px;
+  }
 
   & i:nth-child(1) { opacity: .08000; }
   & i:nth-child(2) { opacity: 0.1670; transform:rotate(30deg); }

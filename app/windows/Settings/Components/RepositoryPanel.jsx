@@ -1,7 +1,7 @@
 import React from 'react'
 import { observer } from 'mobx-react'
 
-import { Pane, Input, TextArea, Button } from 'react-photonkit'
+import { Pane, Input, Button } from 'react-photonkit'
 
 import { runGarbageCollector } from '../../../api'
 
