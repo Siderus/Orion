@@ -12,8 +12,7 @@ import {
   Input,
   Toolbar,
   Actionbar,
-  Button,
-  ButtonGroup
+  Button
 } from 'react-photonkit'
 import ProgressOverlay from '../../components/ProgressOverlay'
 import CircularProgress from '../../components/CircularProgress'
@@ -24,12 +23,12 @@ class ResolveIPNSWindow extends React.Component {
     loading: false
   }
 
-  constructor() {
+  constructor () {
     super()
     this.handleSubmit = this.handleSubmit.bind(this)
   }
 
-  handleSubmit(event) {
+  handleSubmit (event) {
     event.preventDefault()
     this.setState({ loading: true })
     const name = event.target[0].value
@@ -55,7 +54,7 @@ class ResolveIPNSWindow extends React.Component {
       })
   }
 
-  render() {
+  render () {
     return (
       <form onSubmit={this.handleSubmit}>
         <Window>

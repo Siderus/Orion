@@ -5,7 +5,6 @@ import styled from 'styled-components'
 
 import 'react-photonkit'
 import ProgressBar from '../../components/ProgressBar'
-import DetailsWindow from '../Details/window'
 import LumpyLogo from '../../../docs/logo.svg'
 import SiderusLogo from '../../../docs/siderus-logo.svg'
 
@@ -50,15 +49,15 @@ class LoadingWindow extends React.Component {
     percentage: 0
   }
 
-  componentWillMount() {
+  componentWillMount () {
     ipcRenderer.on('set-progress', (event, data) => this.setState(data))
   }
 
-  componentWillUnmount() {
+  componentWillUnmount () {
     ipcRenderer.removeAllListeners('set-progress')
   }
 
-  render() {
+  render () {
     return (
       <Window>
         <Lumpy>

@@ -5,7 +5,7 @@
   "main": "app/index.js",
   "scripts": {
     "test": "jest",
-    "lint": "eslint app/",
+    "lint": "eslint app/ --ext .jsx --ext .js",
     "start": "electron-forge start",
     "build-icons": "icon-gen -i ./docs/logo.svg -o ./docs/ -m ico,icns -n ico=logo,icns=logo; cp ./docs/logo.icns ./out/ ; cp ./docs/logo.ico ./out/",
     "package": "yarn build-icons; electron-forge package",

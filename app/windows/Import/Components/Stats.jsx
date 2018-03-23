@@ -3,19 +3,20 @@ import { observer } from 'mobx-react'
 
 @observer
 class Stats extends React.Component {
-  render() {
+  render () {
     const store = this.props.statsStore
 
     // ToDo: show a different message when importing
-    if (store.isLoading || store.importing) {return (
-      <div>
+    if (store.isLoading || store.importing) {
+      return (
+        <div>
         Loading... this may take a while depending how distributed is the hash in
         the network and the speed of the nodes having it.
-      </div>
-    )}
+        </div>
+      )
+    }
 
-    if (!store.isValid || !store.wasLoadingStats)
-      {return <div></div>}
+    if (!store.isValid || !store.wasLoadingStats) { return <div></div> }
 
     const DefaultCumSize = { value: 'Loading...', unit: '' }
 

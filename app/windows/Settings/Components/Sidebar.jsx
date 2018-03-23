@@ -9,12 +9,11 @@ import { Pane, NavGroup, NavTitle, NavGroupItem } from 'react-photonkit'
 
 @observer
 class Sidebar extends React.Component {
-  _handleSelect(selected) {
+  _handleSelect (selected) {
     this.props.navigationStore.selected = selected
   }
 
-  render() {
-    const selected = this.props.navigationStore.selected
+  render () {
     return (
       <Pane sidebar ptSize="sm">
         <NavGroup onSelect={this._handleSelect.bind(this)}>

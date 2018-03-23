@@ -8,53 +8,48 @@ import { Pane, Input, CheckBox } from 'react-photonkit'
 
 import { getMultiAddrIPFSDaemon, getPathIPFSBinary } from '../../../daemon'
 
-
 /**
  * Daemon Panel
  */
 
 @observer
 class DaemonPanel extends React.Component {
-  constructor(props) {
+  constructor (props) {
     super(props)
 
     this.settings = {}
   }
 
-  componentDidMount() {
-    Settings.get('daemon').then(val => this.settings = val)
+  componentDidMount () {
+    Settings.get('daemon').then(val => { this.settings = val })
   }
 
   // When the multiAddr of the IPFS API changes, update the settings
-  _handleChangeMultiAddrIPFSDaemon(event) {
+  _handleChangeMultiAddrIPFSDaemon (event) {
     const addr = event.target.value
-    if (addr.length > 5)
-      {Settings.set('daemon.multiAddrAPI', addr)}
+    if (addr.length > 5) { Settings.set('daemon.multiAddrAPI', addr) }
   }
 
   // When the user select target value
-  _handleChangeStartDaemon(event) {
+  _handleChangeStartDaemon (event) {
     Settings.set('daemon.startIPFSAtStartup', event.target.checked)
     this.settings.startIPFSAtStartup = event.target.checked
     this.forceUpdate()
   }
 
-  _handleChangePathIPFSBinary(event) {
+  _handleChangePathIPFSBinary (event) {
     const ipfsPath = event.target.value
 
     access(ipfsPath, constants.R_OK | constants.X_OK, (err) => {
-      if (!err)
-        {Settings.set('daemon.pathIPFSBinary', ipfsPath)}
-      else
-        {console.log(`${ipfsPath} does not exist or has wrong permissions`)}
+      if (!err) { Settings.set('daemon.pathIPFSBinary', ipfsPath) } else { console.log(`${ipfsPath} does not exist or has wrong permissions`) }
     })
   }
 
-  _handelOnSubit(event) {
+  _handelOnSubit (event) {
 
   }
 
-  render() {
+  render () {
     if (this.props.navigationStore.selected !== 2) return null
     const data = this.settings || {}
 

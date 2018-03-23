@@ -12,7 +12,6 @@ import { Toolbar, Actionbar, Button, ButtonGroup } from 'react-photonkit'
 import SettingsWindow from '../../Settings/window'
 
 class Header extends React.Component {
-
   /**
    * Handle the add button click by adding a new file into the repository.
    */
@@ -22,7 +21,7 @@ class Header extends React.Component {
       properties: ['openFile', 'multiSelections']
     }
 
-    if(process.platform === 'darwin') {
+    if (process.platform === 'darwin') {
       selectOptions.properties.push('openDirectory')
     }
 
@@ -43,10 +42,10 @@ class Header extends React.Component {
     const hashes = this.props.storageStore.selected.map(el => el.hash)
 
     proptAndRemoveObjects(hashes)
-    .then(() => {
-      this.props.storageStore.selected.clear()
-      this.props.storageStore.elements.clear()
-    })
+      .then(() => {
+        this.props.storageStore.selected.clear()
+        this.props.storageStore.elements.clear()
+      })
   }
 
   /**

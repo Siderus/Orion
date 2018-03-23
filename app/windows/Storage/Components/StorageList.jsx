@@ -1,5 +1,4 @@
 import React from 'react'
-import { isEqual } from 'underscore'
 import { observer } from 'mobx-react'
 
 import StorageElement from './StorageElement'
@@ -7,8 +6,8 @@ import ResponsiveTable from '../../../components/ResponsiveTable'
 
 @observer
 class StorageList extends React.Component {
-  render() {
-    if (!this.props.storageStore) return <Table />
+  render () {
+    if (!this.props.storageStore) return <ResponsiveTable />
 
     let { elements, filters } = this.props.storageStore
 
