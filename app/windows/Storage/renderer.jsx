@@ -26,30 +26,44 @@ import StatusStore from './Stores/Status'
 setupAddAppOnDrop()
 initIPFSClient()
 
+// This will store the loop's timeout ID
+window.loopTimeoutID = null
+
+function startLoop () {
+  // Runs multiple promises for gathering the content
+  Promise.all([
+    // get peers info
+    getPeersInfo()
+      .then((peers) => {
+        StatusStore.peers = peers
+      }),
+    // Get the repository (pins)
+    getRepoInfo()
+      .then((stats) => {
+        StatusStore.stats = stats
+      }),
+    // Get the objects lists and sorted
+    getObjectList()
+      .then(getStorageList)
+      .then((pins) => {
+        StorageStore.elements = pins
+      })
+  ])
+    .then(() => {
+      window.loopTimeoutID = setTimeout(startLoop, 1 * 1000)
+    })
+    .catch((err) => {
+      alert(err)
+    })
+}
+
 class App extends React.Component {
   componentDidMount () {
-    // Runs multiple promises for gathering the content
-    Promise.all([
-      // get peers info
-      getPeersInfo()
-        .then((peers) => {
-          StatusStore.peers = peers
-        }),
-      // Get the repository (pins)
-      getRepoInfo()
-        .then((stats) => {
-          StatusStore.stats = stats
-        }),
-      // Get the objects lists and sorted
-      getObjectList()
-        .then(pins => getStorageList(pins))
-        .then((pins) => {
-          StorageStore.elements = pins
-        })
-    ])
-      .catch((err) => {
-        alert(err)
-      })
+    startLoop()
+  }
+
+  componentWillUnmount () {
+    clearTimeout(window.loopTimeoutID)
   }
 
   render () {
