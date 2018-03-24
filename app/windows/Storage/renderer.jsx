@@ -62,6 +62,10 @@ class App extends React.Component {
     startLoop()
   }
 
+  componentWillUnmount () {
+    clearTimeout(window.loopTimeoutID)
+  }
+
   render () {
     return (
       <Window>
