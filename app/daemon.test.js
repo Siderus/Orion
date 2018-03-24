@@ -18,7 +18,7 @@ describe('daemon.js', () => {
       const path = daemon.getPathIPFSBinary()
       // assert
       expect(Settings.getSync).toHaveBeenCalledWith('daemon.pathIPFSBinary')
-      expect(path).toBe('/usr/local/bin/ipfs')
+      expect(path).toBe('ipfs')
     })
 
     it('should return the setting when it is defined', () => {

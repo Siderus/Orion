@@ -70,7 +70,7 @@ class DaemonPanel extends React.Component {
             type="text"
             defaultValue={data.pathIPFSBinary || getPathIPFSBinary()}
             onChange={this._handleChangePathIPFSBinary}
-            placeholder="/usr/local/bin/ipfs duh"
+            placeholder="ipfs"
           />
 
           <CheckBox
