@@ -35,6 +35,7 @@ module.exports.create = function createImportModal (app) {
     maximizable: false,
     resizable: true,
     fullscreenable: false,
+    icon: path.join(__dirname, '../../../docs/logo.png'),
 
     show: false
   })

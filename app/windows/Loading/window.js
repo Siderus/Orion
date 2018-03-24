@@ -26,6 +26,7 @@ module.exports.create = function createResolveIPNSWindow (app) {
     maximizable: false,
     resizable: false,
     fullscreenable: false,
+    icon: path.join(__dirname, '../../../docs/logo.png'),
 
     show: false
   })

@@ -34,6 +34,7 @@ module.exports.create = function createDetailsWindow (app, hash) {
     maximizable: false,
     resizable: true,
     fullscreenable: false,
+    icon: path.join(__dirname, '../../../docs/logo.png'),
 
     show: false
   })
