@@ -26,9 +26,11 @@ module.exports.create = function createStorageWindow (app) {
     height: 450,
     minWidth: 400,
     minHeight: 300,
+    // The transparency will make it feel more native
     titleBarStyle: 'hidden',
     fullscreenable: false,
-    // The transparency will make it feel more native
+    icon: path.join(__dirname, '../../../docs/logo.png'),
+
     show: false
   })
 
