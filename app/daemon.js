@@ -8,7 +8,7 @@ import pjson from '../package.json'
  * getPathIPFSBinary will return the IPFS default path
  */
 export function getPathIPFSBinary () {
-  return Settings.getSync('daemon.pathIPFSBinary') || '/usr/local/bin/ipfs'
+  return Settings.getSync('daemon.pathIPFSBinary') || 'ipfs'
 }
 
 /**
@@ -16,10 +16,13 @@ export function getPathIPFSBinary () {
  * return a promise with child process of IPFS daemon
  */
 export function startIPFSDaemon () {
+  // TODO: the default of this is undefined, therefore the default is to start the daemon
   if (Settings.getSync('daemon.startIPFSAtStartup') === false) { return Promise.resolve() }
 
   return new Promise((resolve, reject) => {
     const binaryPath = getPathIPFSBinary()
+    // TODO: this promise should reject on error
+    // https://nodejs.org/docs/latest/api/child_process.html#child_process_event_error
     const ipfsProcess = spawn(binaryPath, ['daemon'])
 
     ipfsProcess.stdout.on('data', (data) => console.log(`IPFS: ${data}`))
