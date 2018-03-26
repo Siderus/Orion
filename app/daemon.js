@@ -8,7 +8,8 @@ import pjson from '../package.json'
  * getPathIPFSBinary will return the IPFS default path
  */
 export function getPathIPFSBinary () {
-  return Settings.getSync('daemon.pathIPFSBinary') || 'ipfs'
+  const defaultPath = process.platform === 'darwin' ? '/usr/local/bin/ipfs' : 'ipfs'
+  return Settings.getSync('daemon.pathIPFSBinary') || defaultPath
 }
 
 /**
