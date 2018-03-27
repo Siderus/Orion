@@ -29,6 +29,10 @@ require('./menu')
 require('./singleInstance')
 
 app.on('ready', () => {
+  /**
+   * This will check GitHub for new releases and if there is a new release
+   * it will immediately download the update, then install it when the app quits
+   */
   autoUpdater.checkForUpdatesAndNotify()
   
   const loadingWindow = LoadingWindow.create(app)
