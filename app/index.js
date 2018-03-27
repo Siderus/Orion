@@ -34,7 +34,7 @@ app.on('ready', () => {
    * it will immediately download the update, then install it when the app quits
    */
   autoUpdater.checkForUpdatesAndNotify()
-  
+
   const loadingWindow = LoadingWindow.create(app)
   loadingWindow.on('ready-to-show', () => {
     console.log('Loading window ready to show')
