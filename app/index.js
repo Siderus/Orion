@@ -1,4 +1,5 @@
 import { app, dialog } from 'electron'
+import { autoUpdater } from 'electron-updater'
 
 import {
   startIPFSDaemon,
@@ -28,6 +29,8 @@ require('./menu')
 require('./singleInstance')
 
 app.on('ready', () => {
+  autoUpdater.checkForUpdatesAndNotify()
+  
   const loadingWindow = LoadingWindow.create(app)
   loadingWindow.on('ready-to-show', () => {
     console.log('Loading window ready to show')
