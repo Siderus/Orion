@@ -47,4 +47,4 @@ You can contribute by checking what should be done in the
 [Issue Board](https://dev.siderus.io/projects/Orion/agile/board).
 
 If you need to report something, please send an email to [hello@siderus.io](mailto:hello@siderus.io) or
-contact us directly in the [chatroom on Matrix](https://riot.im/app/#/room/#Orion:matrix.org)!
+contact us directly in the [chatroom on Matrix](https://riot.im/app/#/room/#orion:matrix.org)!
