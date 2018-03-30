@@ -1,6 +1,6 @@
 {
   "name": "lumpy",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "description": "Lumpy is an easy-to-use and KISS IPFS desktop interface",
   "main": "app/index.js",
   "scripts": {
@@ -49,6 +49,7 @@
     "electron-compile": "^6.4.2",
     "electron-settings": "^2.2.2",
     "electron-squirrel-startup": "^1.0.0",
+    "electron-updater": "^2.21.4",
     "ipfs-api": "git+https://github.com/ipfs/js-ipfs-api.git",
     "is-electron-renderer": "^2.0.1",
     "is-ipfs": "^0.3.0",
