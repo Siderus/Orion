@@ -1,5 +1,6 @@
-import { app, dialog } from 'electron'
+import { app, dialog, shell } from 'electron'
 import { autoUpdater } from 'electron-updater'
+import pjson from '../package.json'
 
 import {
   startIPFSDaemon,
@@ -29,11 +30,20 @@ require('./menu')
 require('./singleInstance')
 
 app.on('ready', () => {
-  /**
-   * This will check GitHub for new releases and if there is a new release
-   * it will immediately download the update, then install it when the app quits
-   */
-  autoUpdater.checkForUpdatesAndNotify()
+  // Ask github whether there is an update
+  autoUpdater.checkForUpdates()
+  autoUpdater.on('update-available', (info) => {
+    const btnId = dialog.showMessageBox({
+      type: 'info',
+      message: 'A newer version is available!',
+      buttons: ['Remind me next time', 'Open release page'],
+      cancelId: 0,
+      defaultId: 1
+    })
+    if (btnId === 1) {
+      shell.openExternal(`${pjson.repository}/releases/latest`)
+    }
+  })
 
   const loadingWindow = LoadingWindow.create(app)
   loadingWindow.on('ready-to-show', () => {
