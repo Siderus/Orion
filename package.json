@@ -32,7 +32,6 @@
     "babel-eslint": "^8.2.2",
     "babel-plugin-inline-react-svg": "^0.5.2",
     "electron-builder": "^20.8.1",
-    "electron-forge": "^5.1.1",
     "electron-prebuilt-compile": "1.8.3",
     "electron-react-devtools": "^0.5.3",
     "eslint": "^4.19.0",
@@ -89,8 +88,7 @@
     },
     "linux": {
       "target": [
-        "deb",
-        "rpm"
+        "deb"
       ]
     },
     "mac": {
