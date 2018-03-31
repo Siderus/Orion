@@ -12,7 +12,7 @@ yarn-test:
   tags:
     - docker
   script:
-    - docker run -i -t --rm -v ${PWD}:/project electronuserland/builder:wine /bin/bash -c "yarn && yarn test"
+    - docker run --rm -v ${PWD}:/project electronuserland/builder:wine /bin/bash -c "yarn && yarn test"
   only:
     - master
 
@@ -21,6 +21,6 @@ yarn-release:
   tags:
     - docker
   script:
-    - docker run -i -t --rm -e GH_TOKEN="${GH_TOKEN}" -v ${PWD}:/project electronuserland/builder:wine /bin/bash -c "yarn --link-duplicates --pure-lockfile && yarn release-all"
+    - docker run --rm -e GH_TOKEN="${GH_TOKEN}" -v ${PWD}:/project electronuserland/builder:wine /bin/bash -c "yarn --link-duplicates --pure-lockfile && yarn release-all"
   only:
     - master
