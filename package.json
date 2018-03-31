@@ -21,7 +21,8 @@
     "ipfs",
     "file",
     "p2p",
-    "upload"
+    "sharing",
+    "siderus"
   ],
   "author": {
     "name": "Siderus OU",
