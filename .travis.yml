@@ -28,7 +28,10 @@ jobs:
       script:
         - yarn test --coverage
         - yarn lint
-    - stage: deploy
+    - stage: release
+      on:
+        tags: true
+        all_branches: true
       script:
         - |
           if [ "$TRAVIS_OS_NAME" == "linux" ]; then
