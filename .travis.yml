@@ -20,6 +20,7 @@ jobs:
   include:
     - stage: test
       script:
+        - yarn
         - yarn test --coverage
         - yarn lint
     - stage: release
@@ -27,6 +28,7 @@ jobs:
         tags: true
         all_branches: true
       script:
+        - yarn
         - |
           if [ "$TRAVIS_OS_NAME" == "linux" ]; then
             docker run --rm \
