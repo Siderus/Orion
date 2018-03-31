@@ -14,3 +14,14 @@ notifications:
 script:
   - yarn test --coverage
   - yarn lint
+
+before_deploy:
+  - yarn make
+
+deploy:
+  provider: releases
+  api_key: $GITHUB_TOKEN
+  file: out/make/*
+  skip_cleanup: true
+  on:
+    tags: true
