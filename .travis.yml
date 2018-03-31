@@ -1,16 +1,4 @@
-matrix:
-  include:
-  - os: linux
-    services: docker
-    language: generic
-  - os: osx
-    osx_image: xcode9.2
-    language: node_js
-    node_js: "9"
-    env:
-      - ELECTRON_CACHE=$HOME/.cache/electron
-      - ELECTRON_BUILDER_CACHE=$HOME/.cache/electron-builder
-
+language: node_js
 notifications:
   email: false
 
@@ -23,10 +11,24 @@ jobs:
         - yarn
         - yarn test --coverage
         - yarn lint
+      os: linux
+      language: node_js
     - stage: release
       on:
         tags: true
         all_branches: true
+      matrix:
+        include:
+        - os: linux
+          services: docker
+          language: generic
+        - os: osx
+          osx_image: xcode9.2
+          language: node_js
+          node_js: "9"
+          env:
+            - ELECTRON_CACHE=$HOME/.cache/electron
+            - ELECTRON_BUILDER_CACHE=$HOME/.cache/electron-builder
       script:
         - yarn
         - |
