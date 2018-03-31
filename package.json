@@ -10,7 +10,7 @@
     "build-icons": "icon-gen -i ./docs/logo.svg -o ./docs/ -m ico,icns -n ico=logo,icns=logo; cp ./docs/logo.icns ./out/ ; cp ./docs/logo.ico ./out/",
     "prepackage": "mkdir out; yarn build-icons; NODE_ENV=production electron-compile app",
     "package": "yarn prepackage && build --dir",
-    "make": "yarn prepackage && build"
+    "make": "yarn prepackage && build -mwl --publish always"
   },
   "repository": "https://github.com/siderus/Orion",
   "keywords": [
@@ -95,6 +95,9 @@
       "target": [
         "zip"
       ]
+    },
+    "windows": {
+      "icon": "out/logo.ico"
     }
   },
   "jest": {
