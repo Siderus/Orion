@@ -91,6 +91,7 @@
       ]
     },
     "mac": {
+      "icon": "out/logo.icns",
       "target": [
         "zip"
       ]
