@@ -7,13 +7,13 @@
     "test": "jest",
     "lint": "eslint app/ --ext .jsx --ext .js",
     "start": "electron .",
-    "build-icons": "icon-gen -i ./docs/logo.svg -o ./docs/ -m ico,icns -n ico=logo,icns=logo; cp ./docs/logo.icns ./out/ ; cp ./docs/logo.ico ./out/",
-    "prepackage": "mkdir out; yarn build-icons; NODE_ENV=production electron-compile app",
+    "build-icons": "icon-gen -i ./docs/logo.svg -o ./docs/ -m ico,icns -n ico=logo,icns=logo",
+    "prepackage": "mkdir out; cp ./docs/logo.icns ./out/ ; cp ./docs/logo.ico ./out/ ; NODE_ENV=production electron-compile app",
     "package": "yarn prepackage && build --dir",
     "make": "yarn prepackage && build",
     "make-all": "yarn prepackage && build -mwl",
     "release": "yarn prepackage && build --publish always",
-    "release-all": "yarn prepackage && build -mwl --publish always"
+    "release-all": "yarn prepackage && build -mwl --publish onTagOrDraft"
   },
   "repository": "https://github.com/siderus/Orion",
   "keywords": [
@@ -21,16 +21,22 @@
     "ipfs",
     "file",
     "p2p",
-    "upload"
+    "sharing",
+    "siderus"
   ],
   "author": {
-    "name": "Lorenzo Setale",
-    "email": "lorenzo.setale@siderus.io"
+    "name": "Siderus OU",
+    "email": "hello@siderus.io"
   },
   "license": "GPL-3.0",
   "devDependencies": {
     "babel-eslint": "^8.2.2",
+    "babel-plugin-transform-decorators-legacy": "^1.3.4",
     "babel-plugin-inline-react-svg": "^0.5.2",
+    "babel-preset-env": "^1.6.1",
+    "babel-preset-es2015": "^6.24.1",
+    "babel-preset-react": "^6.24.1",
+    "babel-preset-stage-0": "^6.22.0",
     "electron-builder": "^20.8.1",
     "electron-prebuilt-compile": "1.8.3",
     "electron-react-devtools": "^0.5.3",
@@ -45,17 +51,10 @@
     "jest": "^22.4.2"
   },
   "dependencies": {
-    "babel-cli": "^6.22.2",
-    "babel-plugin-transform-decorators-legacy": "^1.3.4",
-    "babel-preset-env": "^1.6.1",
-    "babel-preset-es2015": "^6.24.1",
-    "babel-preset-react": "^6.24.1",
-    "babel-preset-stage-0": "^6.22.0",
     "byte-size": "^3.0.0",
     "classnames": "^2.2.5",
     "electron-compile": "^6.4.2",
     "electron-settings": "^2.2.2",
-    "electron-squirrel-startup": "^1.0.0",
     "electron-updater": "^2.21.4",
     "ipfs-api": "git+https://github.com/ipfs/js-ipfs-api.git",
     "is-electron-renderer": "^2.0.1",
@@ -63,12 +62,10 @@
     "mobx": "^3.0.2",
     "mobx-react": "^4.1.0",
     "multiaddr": "^3.0.2",
-    "nedb": "^1.8.0",
     "photon": "git+https://github.com/connors/photon.git",
     "promised-exec": "^1.0.1",
     "query-string": "^5.1.0",
     "react": "^15.4.2",
-    "react-desktop": "^0.2.17",
     "react-dom": "^15.4.2",
     "react-photonkit": "git+https://github.com/react-photonkit/react-photonkit.git",
     "request": "^2.83.0",
