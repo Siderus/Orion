@@ -13,7 +13,7 @@
     "make": "yarn prepackage && build",
     "make-all": "yarn prepackage && build -mwl",
     "release": "yarn prepackage && build --publish always",
-    "release-all": "yarn prepackage && build -mwl --publish always"
+    "release-all": "yarn prepackage && build -mwl --publish onTagOrDraft"
   },
   "repository": "https://github.com/siderus/Orion",
   "keywords": [
