@@ -96,7 +96,7 @@
         "zip"
       ]
     },
-    "windows": {
+    "win": {
       "icon": "out/logo.ico"
     }
   },
