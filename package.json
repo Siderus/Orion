@@ -2,14 +2,18 @@
   "name": "Orion",
   "version": "0.2.0",
   "description": "Orion is an easy-to-use and KISS IPFS desktop interface",
-  "main": "app/index.js",
+  "main": "app/entry.js",
   "scripts": {
     "test": "jest",
     "lint": "eslint app/ --ext .jsx --ext .js",
-    "start": "electron-forge start",
+    "start": "electron .",
     "build-icons": "icon-gen -i ./docs/logo.svg -o ./docs/ -m ico,icns -n ico=logo,icns=logo; cp ./docs/logo.icns ./out/ ; cp ./docs/logo.ico ./out/",
-    "package": "yarn build-icons; electron-forge package",
-    "make": "electron-forge make"
+    "prepackage": "mkdir out; yarn build-icons; NODE_ENV=production electron-compile app",
+    "package": "yarn prepackage && build --dir",
+    "make": "yarn prepackage && build",
+    "make-all": "yarn prepackage && build -mwl",
+    "release": "yarn prepackage && build --publish always",
+    "release-all": "yarn prepackage && build -mwl --publish always"
   },
   "repository": "https://github.com/siderus/Orion",
   "keywords": [
@@ -19,12 +23,15 @@
     "p2p",
     "upload"
   ],
-  "author": "Lorenzo Setale",
+  "author": {
+    "name": "Lorenzo Setale",
+    "email": "lorenzo.setale@siderus.io"
+  },
   "license": "GPL-3.0",
   "devDependencies": {
     "babel-eslint": "^8.2.2",
     "babel-plugin-inline-react-svg": "^0.5.2",
-    "electron-forge": "^5.1.1",
+    "electron-builder": "^20.8.1",
     "electron-prebuilt-compile": "1.8.3",
     "electron-react-devtools": "^0.5.3",
     "eslint": "^4.19.0",
@@ -59,7 +66,6 @@
     "nedb": "^1.8.0",
     "photon": "git+https://github.com/connors/photon.git",
     "promised-exec": "^1.0.1",
-    "q-sqlite3": "^0.1.3",
     "query-string": "^5.1.0",
     "react": "^15.4.2",
     "react-desktop": "^0.2.17",
@@ -70,37 +76,29 @@
     "styled-components": "^3.1.6",
     "underscore": "^1.8.3"
   },
-  "config": {
-    "forge": {
-      "make_targets": {
-        "win32": [
-          "squirrel"
-        ],
-        "darwin": [
-          "zip"
-        ],
-        "linux": [
-          "deb",
-          "rpm"
-        ]
-      },
-      "electronPackagerConfig": {
-        "packageManager": "yarn",
-        "icon": "docs/logo.png"
-      },
-      "electronWinstallerConfig": {
-        "name": "Orion"
-      },
-      "electronInstallerDebian": {},
-      "electronInstallerRedhat": {},
-      "github_repository": {
-        "owner": "",
-        "name": ""
-      },
-      "windowsStoreConfig": {
-        "packageName": "",
-        "name": "Orion"
-      }
+  "build": {
+    "appId": "io.siderus.orion",
+    "files": [
+      "app/**/*",
+      "docs/**",
+      ".cache/**/*"
+    ],
+    "directories": {
+      "output": "out"
+    },
+    "linux": {
+      "target": [
+        "deb"
+      ]
+    },
+    "mac": {
+      "icon": "out/logo.icns",
+      "target": [
+        "zip"
+      ]
+    },
+    "win": {
+      "icon": "out/logo.ico"
     }
   },
   "jest": {
