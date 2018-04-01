@@ -15,7 +15,6 @@ case "$1" in
       msys*)    PLATFORM="windows";;
       cygwin*)    PLATFORM="windows";;
       *) # could not detect platform nor it was provided
-          echo "HELP" $OSTYPE $PLATFORM
           echo "Could not detect the operating system... \n"
           echo "    Try: $0 --platform \n"
           echo "    Where platform is exactly one of ['win','mac','linux']"
@@ -42,8 +41,5 @@ else
   unzip $ZIPPED_BINARY
 fi
 
-# mv ./go-ipfs/ipfs node_modules/.bin/ipfs
-# echo "Binary moved to node_modules/.bin/orion-ipfs"
-
-rm -rf ./$ZIPPED_BINARY # ./go-ipfs
+rm -rf ./$ZIPPED_BINARY
 echo "Cleanup complete"
