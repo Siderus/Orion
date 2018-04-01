@@ -1,17 +1,21 @@
 {
   "name": "Orion",
   "version": "0.2.0",
+  "ipfsVersion": "v0.4.14",
   "description": "Orion is an easy-to-use and KISS IPFS desktop interface",
   "main": "app/entry.js",
   "scripts": {
+    "postinstall": "bash ./download-ipfs-binary.bash",
     "test": "jest",
     "lint": "eslint app/ --ext .jsx --ext .js",
     "start": "electron .",
     "build-icons": "icon-gen -i ./docs/logo.svg -o ./docs/ -m ico,icns -n ico=logo,icns=logo",
     "prepackage": "mkdir out; cp ./docs/logo.icns ./out/ ; cp ./docs/logo.ico ./out/ ; NODE_ENV=production electron-compile app",
     "package": "yarn prepackage && build --dir",
-    "make": "yarn prepackage && build",
-    "make-all": "yarn prepackage && build -mwl",
+    "make": "yarn prepackage && bash ./download-ipfs-binary.bash && build",
+    "make-win": "yarn prepackage && bash ./download-ipfs-binary.bash --win && build -w",
+    "make-linux": "yarn prepackage && bash ./download-ipfs-binary.bash --linux && build -l",
+    "make-mac": "yarn prepackage && bash ./download-ipfs-binary.bash --mac && build -m",
     "release": "yarn prepackage && build --publish always",
     "release-all": "yarn prepackage && build -mwl --publish onTagOrDraft"
   },
@@ -31,8 +35,8 @@
   "license": "GPL-3.0",
   "devDependencies": {
     "babel-eslint": "^8.2.2",
-    "babel-plugin-transform-decorators-legacy": "^1.3.4",
     "babel-plugin-inline-react-svg": "^0.5.2",
+    "babel-plugin-transform-decorators-legacy": "^1.3.4",
     "babel-preset-env": "^1.6.1",
     "babel-preset-es2015": "^6.24.1",
     "babel-preset-react": "^6.24.1",
@@ -51,6 +55,7 @@
     "jest": "^22.4.2"
   },
   "dependencies": {
+    "app-root-dir": "^1.0.2",
     "byte-size": "^3.0.0",
     "classnames": "^2.2.5",
     "electron-compile": "^6.4.2",
@@ -78,7 +83,8 @@
     "files": [
       "app/**/*",
       "docs/**",
-      ".cache/**/*"
+      ".cache/**/*",
+      "go-ipfs/**"
     ],
     "directories": {
       "output": "out"

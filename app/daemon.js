@@ -3,15 +3,17 @@ import exec from 'promised-exec'
 import request from 'request-promise-native'
 import Settings from 'electron-settings'
 import pjson from '../package.json'
+import { get as getAppRoot } from 'app-root-dir'
 
 /**
  * getPathIPFSBinary will return the IPFS default path
  */
 export function getPathIPFSBinary () {
-  // on macOS the default should be /usr/local/bin/ipfs
-  // on windows and linux the binary is assumed to be in the PATH
-  const defaultPath = process.platform === 'darwin' ? '/usr/local/bin/ipfs' : 'ipfs'
-  return Settings.getSync('daemon.pathIPFSBinary') || defaultPath
+  return Settings.getSync('daemon.pathIPFSBinary') || getDefaultIPFSPath()
+}
+
+export function getDefaultIPFSPath () {
+  return `${getAppRoot()}/go-ipfs/ipfs`
 }
 
 /**
