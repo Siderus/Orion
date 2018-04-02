@@ -12,8 +12,8 @@ case "$1" in
     case "$OSTYPE" in
       darwin*)  PLATFORM="darwin";;
       linux*)   PLATFORM="linux";;
-      msys*)    PLATFORM="windows";;
-      cygwin*)    PLATFORM="windows";;
+      msys*)    PLATFORM="windows" BINARY_EXT=".zip";;
+      cygwin*)    PLATFORM="windows" BINARY_EXT=".zip";;
       *) # could not detect platform nor it was provided
           echo "Could not detect the operating system... \n"
           echo "    Try: $0 --platform \n"
@@ -35,7 +35,7 @@ echo "Download complete"
 
 rm -rf ./go-ipfs
 
-if [ $BINARY_EXT == 'tar.gz' ]; then
+if [ "$BINARY_EXT" == "tar.gz" ]; then
   tar xf $ZIPPED_BINARY
 else
   unzip $ZIPPED_BINARY
