@@ -4,11 +4,17 @@ import Settings from 'electron-settings'
 jest.mock('electron-settings', () => {
   const getSyncMock = jest.fn()
     .mockReturnValueOnce(null)
-    .mockReturnValueOnce(null)
     .mockReturnValueOnce('/custom/path/to/ipfs')
 
   return {
     getSync: getSyncMock
+  }
+})
+jest.mock('app-root-dir', () => {
+  const getAppRootMock = jest.fn().mockReturnValue('root-dir')
+
+  return {
+    get: getAppRootMock
   }
 })
 
@@ -16,26 +22,11 @@ describe('daemon.js', () => {
   describe('getPathIPFSBinary', () => {
     it('should return the default value when the setting is not defined', () => {
       // arrange
-      Object.defineProperty(process, 'platform', {
-        value: 'win32'
-      })
       // act
       const path = daemon.getPathIPFSBinary()
       // assert
       expect(Settings.getSync).toHaveBeenCalledWith('daemon.pathIPFSBinary')
-      expect(path).toBe('ipfs')
-    })
-
-    it('should return the default value for darwin', () => {
-      // arrange
-      Object.defineProperty(process, 'platform', {
-        value: 'darwin'
-      })
-      // act
-      const path = daemon.getPathIPFSBinary()
-      // assert
-      expect(Settings.getSync).toHaveBeenCalledWith('daemon.pathIPFSBinary')
-      expect(path).toBe('/usr/local/bin/ipfs')
+      expect(path).toBe('root-dir/go-ipfs/ipfs')
     })
 
     it('should return the setting when it is defined', () => {
