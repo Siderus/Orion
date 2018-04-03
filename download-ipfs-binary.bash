@@ -1,5 +1,5 @@
 #!/bin/bash
-set -e
+set -e -x
 
 PLATFORM=""
 BINARY_EXT=".tar.gz"
