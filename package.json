@@ -11,13 +11,15 @@
     "start": "electron .",
     "build-icons": "icon-gen -i ./docs/logo.svg -o ./docs/ -m ico,icns -n ico=logo,icns=logo",
     "prepackage": "mkdir out; cp ./docs/logo.icns ./out/ ; cp ./docs/logo.ico ./out/ ; NODE_ENV=production electron-compile app",
-    "package": "yarn prepackage && build --dir",
+    "package": "yarn prepackage && bash ./download-ipfs-binary.bash && build --dir",
     "make": "yarn prepackage && bash ./download-ipfs-binary.bash && build",
     "make-win": "yarn prepackage && bash ./download-ipfs-binary.bash --win && build -w",
     "make-linux": "yarn prepackage && bash ./download-ipfs-binary.bash --linux && build -l",
     "make-mac": "yarn prepackage && bash ./download-ipfs-binary.bash --mac && build -m",
-    "release": "yarn prepackage && build --publish always",
-    "release-all": "yarn prepackage && build -mwl --publish onTagOrDraft"
+    "release": "yarn prepackage && bash ./download-ipfs-binary.bash && build --publish always",
+    "release-win": "yarn prepackage && bash ./download-ipfs-binary.bash --win && build -w --publish onTagOrDraft",
+    "release-linux": "yarn prepackage && bash ./download-ipfs-binary.bash --linux && build -l --publish onTagOrDraft",
+    "release-mac": "yarn prepackage && bash ./download-ipfs-binary.bash --mac && build -m --publish onTagOrDraft"
   },
   "repository": "https://github.com/siderus/Orion",
   "keywords": [
@@ -86,6 +88,7 @@
       ".cache/**/*",
       "go-ipfs/**"
     ],
+    "asar": false,
     "directories": {
       "output": "out"
     },

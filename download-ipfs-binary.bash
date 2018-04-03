@@ -1,12 +1,11 @@
 #!/bin/bash
-set -e -x
+set -e
 
 PLATFORM=""
 BINARY_EXT=".tar.gz"
-ORIGINAL_DIR="${PWD}"
 IPFS_VERSION=`node -p "require('./package.json').ipfsVersion"`
-BINARY_URL="https://dist.ipfs.io/go-ipfs/${IPFS_VERSION}/go-ipfs_${IPFS_VERSION}_${PLATFORM}-amd64${BINARY_EXT}"
-ZIPPED_BINARY="go-ipfs${BINARY_EXT}"
+BINARY_URL=""
+ZIPPED_BINARY=""
 
 # one flag is expected
 case "$1" in
@@ -28,17 +27,18 @@ case "$1" in
     esac
 esac
 
-echo "Downloading ipfs binary" $IPFS_VERSION "for" $PLATFORM
 # Updating the variables with the right content
 BINARY_URL="https://dist.ipfs.io/go-ipfs/${IPFS_VERSION}/go-ipfs_${IPFS_VERSION}_${PLATFORM}-amd64${BINARY_EXT}"
 ZIPPED_BINARY="go-ipfs${BINARY_EXT}"
-mkdir -p node_modules
 
 # download the binary and save it as go-ipfs.zip or go-ipfs.tar.gz
+echo "Downloading ipfs binary" $IPFS_VERSION "for" $PLATFORM
 curl -o ./$ZIPPED_BINARY $BINARY_URL
 echo "Download complete"
 
+# cleanup previous download
 rm -rf ./go-ipfs
+# unzip the binary
 case "$ZIPPED_BINARY" in
   *tar.gz*)
     tar xf $ZIPPED_BINARY
