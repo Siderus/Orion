@@ -45,7 +45,7 @@ dep:
 	yarn --link-duplicates --pure-lockfile
 .PHONY: dep
 
-run: dep
+run: dep prepare_ipfs_bin
 	yarn start
 .PHONY: run
 
