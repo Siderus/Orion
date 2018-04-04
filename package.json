@@ -97,7 +97,7 @@
   },
   "jest": {
     "modulePathIgnorePatterns": [
-      "build"
+      "./build"
     ]
   }
 }

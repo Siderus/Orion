@@ -50,11 +50,11 @@ run: dep prepare_ipfs_bin
 .PHONY: run
 
 lint: dep
-	./node_modules/.bin/eslint app/ --ext .jsx --ext .js
+	yarn lint
 .PHONY: lint
 
 test: dep
-	./node_modules/.bin/jest --roots=${PWD}/app
+	yarn test
 .PHONY: test
 
 # Building the packages for multiple platforms
