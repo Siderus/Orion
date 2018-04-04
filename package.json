@@ -94,10 +94,5 @@
     "win": {
       "icon": "build/logo.ico"
     }
-  },
-  "jest": {
-    "modulePathIgnorePatterns": [
-      "./build"
-    ]
   }
 }
