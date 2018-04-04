@@ -6,7 +6,7 @@ notifications:
   email: false
 
 script:
-  - make test
+  - make lint test
 
 cache:
   yarn: true
