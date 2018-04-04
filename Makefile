@@ -54,7 +54,7 @@ lint: dep
 .PHONY: lint
 
 test: dep
-	./node_modules/.bin/jest
+	./node_modules/.bin/jest --roots=${PWD}/app
 .PHONY: test
 
 # Building the packages for multiple platforms
