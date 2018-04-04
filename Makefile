@@ -64,7 +64,6 @@ build_icons: dep
 
 # uses electron-compile to build the app and ensures icons are there
 _prepkg: dep _test_variables
-	rm -rf build
 	mkdir -p build
 	cp ./docs/logo.icns ./build/
 	cp ./docs/logo.ico ./build/
