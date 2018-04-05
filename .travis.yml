@@ -6,8 +6,7 @@ notifications:
   email: false
 
 script:
-  - yarn test --coverage
-  - yarn lint
+  - make lint test
 
 cache:
   yarn: true

@@ -5,21 +5,9 @@
   "description": "Orion is an easy-to-use and KISS IPFS desktop interface",
   "main": "app/entry.js",
   "scripts": {
-    "postinstall": "bash ./download-ipfs-binary.bash",
     "test": "jest",
     "lint": "eslint app/ --ext .jsx --ext .js",
-    "start": "electron .",
-    "build-icons": "icon-gen -i ./docs/logo.svg -o ./docs/ -m ico,icns -n ico=logo,icns=logo",
-    "prepackage": "mkdir out; cp ./docs/logo.icns ./out/ ; cp ./docs/logo.ico ./out/ ; NODE_ENV=production electron-compile app",
-    "package": "yarn prepackage && bash ./download-ipfs-binary.bash && build --dir",
-    "make": "yarn prepackage && bash ./download-ipfs-binary.bash && build",
-    "make-win": "yarn prepackage && bash ./download-ipfs-binary.bash --win && build -w",
-    "make-linux": "yarn prepackage && bash ./download-ipfs-binary.bash --linux && build -l",
-    "make-mac": "yarn prepackage && bash ./download-ipfs-binary.bash --mac && build -m",
-    "release": "yarn prepackage && bash ./download-ipfs-binary.bash && build --publish always",
-    "release-win": "yarn prepackage && bash ./download-ipfs-binary.bash --win && build -w --publish onTagOrDraft",
-    "release-linux": "yarn prepackage && bash ./download-ipfs-binary.bash --linux && build -l --publish onTagOrDraft",
-    "release-mac": "yarn prepackage && bash ./download-ipfs-binary.bash --mac && build -m --publish onTagOrDraft"
+    "start": "electron ."
   },
   "repository": "https://github.com/siderus/Orion",
   "keywords": [
@@ -90,7 +78,7 @@
     ],
     "asar": false,
     "directories": {
-      "output": "out"
+      "output": "build"
     },
     "linux": {
       "target": [
@@ -98,18 +86,13 @@
       ]
     },
     "mac": {
-      "icon": "out/logo.icns",
+      "icon": "build/logo.icns",
       "target": [
         "zip"
       ]
     },
     "win": {
-      "icon": "out/logo.ico"
+      "icon": "build/logo.ico"
     }
-  },
-  "jest": {
-    "modulePathIgnorePatterns": [
-      "out"
-    ]
   }
 }
