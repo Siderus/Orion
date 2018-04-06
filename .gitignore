@@ -5,4 +5,4 @@ Orion*
 .cache
 coverage
 yarn-error.log
-go-ipfs
+go-ipfs*

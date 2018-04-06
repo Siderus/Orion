@@ -1,7 +1,9 @@
 import { spawn } from 'child_process'
+import { createWriteStream } from 'fs'
 import exec from 'promised-exec'
+import { fileSync as tmpFileSync } from 'tmp'
 import request from 'request-promise-native'
-import Settings from 'electron-settings'
+import { app, dialog } from 'electron'
 import pjson from '../package.json'
 import { get as getAppRoot } from 'app-root-dir'
 
@@ -17,20 +19,38 @@ export function getPathIPFSBinary () {
  * return a promise with child process of IPFS daemon
  */
 export function startIPFSDaemon () {
-  // TODO: the default of this is undefined, therefore the default is to start the daemon
-  if (Settings.getSync('daemon.startIPFSAtStartup') === false) { return Promise.resolve() }
-
   return new Promise((resolve, reject) => {
     const binaryPath = getPathIPFSBinary()
     // TODO: this promise should reject on error
     // https://nodejs.org/docs/latest/api/child_process.html#child_process_event_error
     const ipfsProcess = spawn(binaryPath, ['daemon'])
 
-    ipfsProcess.stdout.on('data', (data) => console.log(`IPFS: ${data}`))
-    ipfsProcess.stderr.on('data', (data) => console.log(`IPFS Error: ${data}`))
-    ipfsProcess.on('close', (exit) => console.log(`IPFS Closed: ${exit}`))
+    // Prepare temporary file for logging:
+    const tmpLog = tmpFileSync({keep: true})
+    const tmpLogPipe = createWriteStream(tmpLog.name)
 
-    return resolve(ipfsProcess)
+    console.log(`Logging IPFS logs in: ${tmpLog.name}`)
+
+    ipfsProcess.stdout.on('data', (data) => console.log(`IPFS: ${data}`))
+    ipfsProcess.stdout.pipe(tmpLogPipe)
+
+    ipfsProcess.stderr.on('data', (data) => console.log(`IPFS Error: ${data}`))
+    ipfsProcess.stderr.pipe(tmpLogPipe)
+
+    ipfsProcess.on('close', (exit) => {
+      if (exit !== 0) {
+        let msg = `IPFS Daemon was closed with exit code ${exit}. `
+        msg += 'The app will be closed. '
+        msg += `Log file: ${tmpLog.name}`
+
+        dialog.showErrorBox('IPFS was closed, the app will quit', msg)
+        app.quit()
+      }
+      console.log(`IPFS Closed: ${exit}`)
+    })
+
+    // Resolves the process after 1 second
+    setTimeout(() => { resolve(ipfsProcess) }, 1 * 1000)
   })
 }
 
@@ -38,11 +58,7 @@ export function startIPFSDaemon () {
  * Returns the multiAddr usable to connect to the local dameon via API
  */
 export function getMultiAddrIPFSDaemon () {
-  // If the user specified a value in the multiaddrAPI
-  const settingsAddress = Settings.getSync('daemon.multiAddrAPI')
-  if (settingsAddress) return settingsAddress
-
-  // Otherwise ask the binary wich one to use
+  // Other option: ask the binary wich one to use
   // const binaryPath = getPathIPFSBinary()
   // const multiAddr = execSync(`${binaryPath} config Addresses.API`)
   return '/ip4/127.0.0.1/tcp/5001'
