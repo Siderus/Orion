@@ -28,20 +28,17 @@ export function startIPFSDaemon () {
     // https://nodejs.org/docs/latest/api/child_process.html#child_process_event_error
     const ipfsProcess = spawn(binaryPath, ['daemon'])
 
-    // Prepare temporary files for logging:
-    let tmpErr = tmpFileSync({keep: true})
-    const tmpErrPipe = createWriteStream(tmpErr.name)
-    let tmpLog = tmpFileSync({keep: true})
+    // Prepare temporary file for logging:
+    const tmpLog = tmpFileSync({keep: true})
     const tmpLogPipe = createWriteStream(tmpLog.name)
 
-    console.log(`Logging IPFS errors in: ${tmpErr.name}`)
     console.log(`Logging IPFS logs in: ${tmpLog.name}`)
 
     ipfsProcess.stdout.on('data', (data) => console.log(`IPFS: ${data}`))
     ipfsProcess.stdout.pipe(tmpLogPipe)
 
     ipfsProcess.stderr.on('data', (data) => console.log(`IPFS Error: ${data}`))
-    ipfsProcess.stderr.pipe(tmpErrPipe)
+    ipfsProcess.stderr.pipe(tmpLogPipe)
 
     ipfsProcess.on('close', (exit) => {
       console.log(`IPFS Closed: ${exit}`)
