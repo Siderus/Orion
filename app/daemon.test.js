@@ -17,6 +17,15 @@ jest.mock('app-root-dir', () => {
   }
 })
 
+jest.mock('electron', () => {
+  const fakeDir = jest.fn().mockReturnValue('not-existing-dir')
+  return {
+    app: {
+      getPath: fakeDir
+    }
+  }
+})
+
 describe('daemon.js', () => {
   describe('getPathIPFSBinary', () => {
     it('should always return the default value', () => {
@@ -25,6 +34,13 @@ describe('daemon.js', () => {
       const path = daemon.getPathIPFSBinary()
       // assert
       expect(path).toBe('root-dir/go-ipfs/ipfs')
+    })
+  })
+
+  describe('isIPFSInitialised', () => {
+    it('will correctly return if a repo conf does not exist', () => {
+      const bool = daemon.isIPFSInitialised()
+      expect(bool).toBe(false)
     })
   })
 

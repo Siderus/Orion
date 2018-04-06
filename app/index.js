@@ -4,6 +4,7 @@ import pjson from '../package.json'
 
 import {
   startIPFSDaemon,
+  ensuresIPFSInitialised,
   getSiderusPeers,
   connectToCMD,
   addBootstrapAddr
@@ -54,8 +55,8 @@ app.on('ready', () => {
     })
     // Set up crash reports.
     // Set up the needed stuff as the app launches.
-
-    startIPFSDaemon()
+    ensuresIPFSInitialised()
+      .then(startIPFSDaemon)
       .then((process) => {
         console.log('IPFS Daemon started')
         global.IPFS_PROCESS = process
