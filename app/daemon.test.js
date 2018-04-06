@@ -1,5 +1,4 @@
 import * as daemon from './daemon'
-import Settings from 'electron-settings'
 
 jest.mock('electron-settings', () => {
   const getSyncMock = jest.fn()
