@@ -1,5 +1,7 @@
 import { spawn } from 'child_process'
+import { createWriteStream } from 'fs'
 import exec from 'promised-exec'
+import { fileSync as tmpFileSync } from 'tmp'
 import request from 'request-promise-native'
 import Settings from 'electron-settings'
 import pjson from '../package.json'
@@ -26,9 +28,24 @@ export function startIPFSDaemon () {
     // https://nodejs.org/docs/latest/api/child_process.html#child_process_event_error
     const ipfsProcess = spawn(binaryPath, ['daemon'])
 
+    // Prepare temporary files for logging:
+    let tmpErr = tmpFileSync({keep: true})
+    const tmpErrPipe = createWriteStream(tmpErr.name)
+    let tmpLog = tmpFileSync({keep: true})
+    const tmpLogPipe = createWriteStream(tmpLog.name)
+
+    console.log(`Logging IPFS errors in: ${tmpErr.name}`)
+    console.log(`Logging IPFS logs in: ${tmpLog.name}`)
+
     ipfsProcess.stdout.on('data', (data) => console.log(`IPFS: ${data}`))
+    ipfsProcess.stdout.pipe(tmpLogPipe)
+
     ipfsProcess.stderr.on('data', (data) => console.log(`IPFS Error: ${data}`))
-    ipfsProcess.on('close', (exit) => console.log(`IPFS Closed: ${exit}`))
+    ipfsProcess.stderr.pipe(tmpErrPipe)
+
+    ipfsProcess.on('close', (exit) => {
+      console.log(`IPFS Closed: ${exit}`)
+    })
 
     return resolve(ipfsProcess)
   })
