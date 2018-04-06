@@ -18,8 +18,8 @@ class Sidebar extends React.Component {
       <Pane sidebar ptSize="sm">
         <NavGroup onSelect={this._handleSelect.bind(this)}>
           <NavTitle>Settings and Info</NavTitle>
-          <NavGroupItem glyph="database" text="Repository" eventKey={0} />
-          <NavGroupItem glyph="rss" text="Connectivity" eventKey={1} />
+          <NavGroupItem glyph="rss" text="Connectivity" eventKey={0} />
+          <NavGroupItem glyph="database" text="Repository" eventKey={1} />
         </NavGroup>
       </Pane>
     )

@@ -74,7 +74,7 @@ class ConnectivityPanel extends React.Component {
   }
 
   render () {
-    if (this.props.navigationStore.selected !== 1) return null
+    if (this.props.navigationStore.selected !== 0) return null
     if (!this.props.informationStore) return null
     if (!this.props.informationStore.loaded) return null
 

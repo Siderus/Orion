@@ -23,7 +23,7 @@ class RepositoryPanel extends React.Component {
   }
 
   render () {
-    if (this.props.navigationStore.selected !== 0) return null
+    if (this.props.navigationStore.selected !== 1) return null
     if (!this.props.informationStore) return null
     if (!this.props.informationStore.loaded) return null
 
@@ -33,13 +33,6 @@ class RepositoryPanel extends React.Component {
     return (
       <Pane className="settings">
         <form onSubmit={this._handelOnSubit.bind(this)}>
-
-          <Input
-            label="Path of the Repository"
-            type="text"
-            value={data.RepoPath || "$HOME... maybe? Whatever, it's 2009!"}
-            placeholder="Hey girl..." readOnly
-          />
 
           <Input
             label="Repository Size:"

@@ -34,11 +34,12 @@ class SettingsWindow extends React.Component {
           <PaneGroup>
             <Sidebar navigationStore={NavigationStore} />
 
-            <RepositoryPanel
+            <ConnectivityPanel
               informationStore={InformationStore}
               navigationStore={NavigationStore}
             />
-            <ConnectivityPanel
+
+            <RepositoryPanel
               informationStore={InformationStore}
               navigationStore={NavigationStore}
             />
