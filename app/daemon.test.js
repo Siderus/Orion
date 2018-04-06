@@ -20,21 +20,12 @@ jest.mock('app-root-dir', () => {
 
 describe('daemon.js', () => {
   describe('getPathIPFSBinary', () => {
-    it('should return the default value when the setting is not defined', () => {
+    it('should always return the default value', () => {
       // arrange
       // act
       const path = daemon.getPathIPFSBinary()
       // assert
-      expect(Settings.getSync).toHaveBeenCalledWith('daemon.pathIPFSBinary')
       expect(path).toBe('root-dir/go-ipfs/ipfs')
-    })
-
-    it('should return the setting when it is defined', () => {
-      // act
-      const path = daemon.getPathIPFSBinary()
-      // assert
-      expect(Settings.getSync).toHaveBeenCalledWith('daemon.pathIPFSBinary')
-      expect(path).toBe('/custom/path/to/ipfs')
     })
   })
 
