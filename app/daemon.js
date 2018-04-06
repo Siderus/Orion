@@ -9,10 +9,6 @@ import { get as getAppRoot } from 'app-root-dir'
  * getPathIPFSBinary will return the IPFS default path
  */
 export function getPathIPFSBinary () {
-  return Settings.getSync('daemon.pathIPFSBinary') || getDefaultIPFSPath()
-}
-
-export function getDefaultIPFSPath () {
   return `${getAppRoot()}/go-ipfs/ipfs`
 }
 
