@@ -53,7 +53,10 @@ export function startIPFSDaemon () {
       console.log(`IPFS Closed: ${exit}`)
     })
 
-    return resolve(ipfsProcess)
+    // Resolves the process after 1 second
+    setTimeout(function () {
+      resolve(ipfsProcess)
+    }, 1*1000)
   })
 }
 
