@@ -101,7 +101,6 @@ export function ensuresIPFSInitialised () {
   })
 }
 
-
 /**
  * Returns the multiAddr usable to connect to the local dameon via API
  */
