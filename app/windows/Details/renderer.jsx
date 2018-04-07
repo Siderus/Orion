@@ -88,7 +88,7 @@ class DetailsWindow extends React.Component {
         <Toolbar>
           <Actionbar>
             <ButtonGroup>
-              <Button text="Download" glyph='download' onClick={this.handleDownload} />
+              <Button text="Save on disk" glyph='download' onClick={this.handleDownload} />
               {
                 isPinned
                   ? <Button text="Unpin" glyph='minus-circled' onClick={this.handleUnpin} />
