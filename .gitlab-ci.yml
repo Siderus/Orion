@@ -18,6 +18,7 @@ yarn-test:
 
 yarn-release:
   stage: release
+  when: manual
   tags:
     - docker
   script:
