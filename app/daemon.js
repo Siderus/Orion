@@ -1,5 +1,6 @@
 import { spawn } from 'child_process'
-import { createWriteStream } from 'fs'
+import { createWriteStream, existsSync } from 'fs'
+import { join as pathJoin } from 'path'
 import exec from 'promised-exec'
 import { fileSync as tmpFileSync } from 'tmp'
 import request from 'request-promise-native'
@@ -21,8 +22,6 @@ export function getPathIPFSBinary () {
 export function startIPFSDaemon () {
   return new Promise((resolve, reject) => {
     const binaryPath = getPathIPFSBinary()
-    // TODO: this promise should reject on error
-    // https://nodejs.org/docs/latest/api/child_process.html#child_process_event_error
     const ipfsProcess = spawn(binaryPath, ['daemon'])
 
     // Prepare temporary file for logging:
@@ -40,7 +39,7 @@ export function startIPFSDaemon () {
     ipfsProcess.on('close', (exit) => {
       if (exit !== 0) {
         let msg = `IPFS Daemon was closed with exit code ${exit}. `
-        msg += 'The app will be closed. '
+        msg += 'The app will be closed. Try again. '
         msg += `Log file: ${tmpLog.name}`
 
         dialog.showErrorBox('IPFS was closed, the app will quit', msg)
@@ -51,6 +50,54 @@ export function startIPFSDaemon () {
 
     // Resolves the process after 1 second
     setTimeout(() => { resolve(ipfsProcess) }, 1 * 1000)
+  })
+}
+
+/**
+ * isIPFSInitialised returns a boolean if the repository config file is present
+ * in the default path (~/.ipfs/config)
+ */
+export function isIPFSInitialised () {
+  const confFile = pathJoin(app.getPath('home'), '.ipfs', 'config')
+  return existsSync(confFile)
+}
+
+/**
+ * ensuresIPFSInitialised will ensure that the repository is initialised
+ * correctly in the home directory (by running `ipfs init`)
+ */
+export function ensuresIPFSInitialised () {
+  if (isIPFSInitialised()) return Promise.resolve()
+  console.log('Initialising IPFS repository...')
+  return new Promise((resolve, reject) => {
+    const binaryPath = getPathIPFSBinary()
+    const ipfsProcess = spawn(binaryPath, ['init'])
+
+    // Prepare temporary file for logging:
+    const tmpLog = tmpFileSync({keep: true})
+    const tmpLogPipe = createWriteStream(tmpLog.name)
+
+    console.log(`Logging IPFS init logs in: ${tmpLog.name}`)
+
+    ipfsProcess.stdout.on('data', (data) => console.log(`IPFS Init: ${data}`))
+    ipfsProcess.stdout.pipe(tmpLogPipe)
+
+    ipfsProcess.stderr.on('data', (data) => console.log(`IPFS Init Error: ${data}`))
+    ipfsProcess.stderr.pipe(tmpLogPipe)
+
+    ipfsProcess.on('close', (exit) => {
+      if (exit !== 0) {
+        let msg = `IPFS init failed with exit code ${exit}. `
+        msg += 'The app will be closed. Try again. '
+        msg += `Log file: ${tmpLog.name}`
+
+        dialog.showErrorBox('IPFS init failed. The app will quit', msg)
+        app.quit()
+        reject()
+      }
+
+      resolve()
+    })
   })
 }
 
