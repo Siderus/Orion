@@ -35,9 +35,9 @@ files/directory, not just CID)
 ## Learn more
 You can find more documentation in the following pages:
 
- * [How to run Orion](https://github.com/Siderus/Orion/tree/master/docs/RUN.md)
- * [How to build Orion standalone App](https://github.com/Siderus/Orion/tree/master/docs/BUILD.md)
- * ...More in [docs directory](https://github.com/Siderus/Orion/tree/master/docs)
+ * [How to run Orion](docs/RUN.md)
+ * [How to build Orion standalone App](docs/BUILD.md)
+ * ...More in [docs directory](https://github.com/Siderus/Orion/tree/master/docs/)
 
 ## How To Help
 Note: This project is not ready for a stable use. Help is needed!
