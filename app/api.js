@@ -311,6 +311,8 @@ export function importObjectByHash (hash) {
  * See: https://github.com/ipfs/interface-ipfs-core/tree/master/API/files#get
  */
 export function saveFileToPath (hash, dest) {
+  // ToDo: Move this into a worker or exec `ipfs get` to prevent the UI from
+  // hanging in case of large files.
   return new Promise((resolve, reject) => {
     if (!IPFS_CLIENT) return reject(ERROR_IPFS_UNAVAILABLE)
 
@@ -320,12 +322,15 @@ export function saveFileToPath (hash, dest) {
       const finalDest = join(dest, file.path)
 
       // First make all the directories
-      if (!file.content) {
+      if (file.type === 'dir' || !file.content) {
         mkdirSync(finalDest)
       } else {
         // Pipe the file content into an actual write stream
         const writeStream = createWriteStream(finalDest)
-        file.content.pipe(writeStream)
+        file.content.on('data', (data) => {
+          writeStream.write(data)
+        })
+        file.content.resume()
       }
     })
 
