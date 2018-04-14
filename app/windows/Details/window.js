@@ -38,6 +38,10 @@ module.exports.create = function createDetailsWindow (app, hash) {
     show: false
   })
 
+  if(process.platform === 'win32') {
+    thisWindow.setMenu(null)
+  }
+
   // Show the window only when ready
   thisWindow.once('ready-to-show', () => {
     thisWindow.show()
