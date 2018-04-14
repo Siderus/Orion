@@ -38,7 +38,7 @@ module.exports.create = function createDetailsWindow (app, hash) {
     show: false
   })
 
-  if(process.platform === 'win32') {
+  if (process.platform === 'win32') {
     thisWindow.setMenu(null)
   }
 
