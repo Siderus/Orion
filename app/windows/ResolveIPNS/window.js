@@ -40,6 +40,9 @@ module.exports.create = function createResolveIPNSWindow (app) {
     show: false
   })
 
+  // Show menu only on StorageList
+  thisWindow.setMenu(null)
+
   // Show the window only when ready
   thisWindow.once('ready-to-show', () => {
     thisWindow.show()
