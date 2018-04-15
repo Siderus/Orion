@@ -14,7 +14,8 @@ import { openInBrowser } from '../Storage/fileIntegration'
 import { remote } from 'electron'
 import queryString from 'query-string'
 import cx from 'classnames'
-import { Window, Toolbar, Actionbar, Button, ButtonGroup } from 'react-photonkit'
+import { Window, Toolbar, Actionbar, ButtonGroup } from 'react-photonkit'
+import Button from '../../components/Button'
 
 // Load Components
 import InformationTab from './Components/InformationTab'
@@ -64,7 +65,14 @@ class DetailsWindow extends React.Component {
     const response = remote.dialog.showOpenDialog(remote.app.mainWindow, options)
     if (response) {
       const destination = response[0]
+
+      this.setState({ isSavingOnDisk: true })
       saveFileToPath(hash, destination)
+        .then(result => this.setState({ isSavingOnDisk: false }))
+        .catch(err => {
+          remote.dialog.showErrorBox('Saving to disk has failed', err.message)
+          this.setState({ isSavingOnDisk: false })
+        })
     }
   }
 
@@ -73,26 +81,56 @@ class DetailsWindow extends React.Component {
   }
 
   handlePin () {
-    pinObject(hash).then(result => this.setState({ isPinned: true }))
+    this.setState({ isUpdatingPin: true })
+    pinObject(hash)
+      .then(result => this.setState({ isPinned: true, isUpdatingPin: false }))
+      .catch(err => {
+        remote.dialog.showErrorBox('Pinning has failed', err.message)
+        this.setState({ isUpdatingPin: false })
+      })
   }
 
   handleUnpin () {
-    unpinObject(hash).then(result => this.setState({ isPinned: false }))
+    this.setState({ isUpdatingPin: true })
+    unpinObject(hash)
+      .then(result => this.setState({ isPinned: false, isUpdatingPin: false }))
+      .catch(err => {
+        remote.dialog.showErrorBox('Unpinning has failed', err.message)
+        this.setState({ isUpdatingPin: false })
+      })
   }
 
   render () {
-    const { currentTab, isPinned, stat, dag } = this.state
+    const { currentTab, isPinned, isSavingOnDisk, isUpdatingPin, stat, dag } = this.state
 
     return (
       <Window>
         <Toolbar>
           <Actionbar>
             <ButtonGroup>
-              <Button text="Save on disk" glyph='download' onClick={this.handleDownload} />
+              <Button
+                loading={isSavingOnDisk}
+                loadingText='Saving on disk...'
+                text='Save on disk'
+                glyph='download'
+                onClick={this.handleDownload}
+              />
               {
                 isPinned
-                  ? <Button text="Unpin" glyph='minus-circled' onClick={this.handleUnpin} />
-                  : <Button text="Pin" glyph='plus-circled' onClick={this.handlePin} />
+                  ? <Button
+                    loading={isUpdatingPin}
+                    loadingText='Unpinning...'
+                    text='Unpin'
+                    glyph='minus-circled'
+                    onClick={this.handleUnpin}
+                  />
+                  : <Button
+                    loading={isUpdatingPin}
+                    loadingText='Pinning...'
+                    text='Pin'
+                    glyph='plus-circled'
+                    onClick={this.handlePin}
+                  />
               }
             </ButtonGroup>
             <Button

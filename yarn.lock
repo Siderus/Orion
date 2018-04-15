@@ -6157,6 +6157,12 @@ react-dom@^15.4.2:
     classnames "^2.2.5"
     sortablejs "^1.4.2"
 
+react-spin@^0.6.2:
+  version "0.6.2"
+  resolved "https://registry.yarnpkg.com/react-spin/-/react-spin-0.6.2.tgz#e7af9cad158b8c601d83aaad5db4abd1bf42b8c9"
+  dependencies:
+    spin.js "^2.0.1"
+
 react@^15.4.2:
   version "15.6.2"
   resolved "https://registry.yarnpkg.com/react/-/react-15.6.2.tgz#dba0434ab439cfe82f108f0f511663908179aa72"
@@ -6854,6 +6860,10 @@ spdx-license-ids@^3.0.0:
 speedometer@~0.1.2:
   version "0.1.4"
   resolved "https://registry.yarnpkg.com/speedometer/-/speedometer-0.1.4.tgz#9876dbd2a169d3115402d48e6ea6329c8816a50d"
+
+spin.js@^2.0.1:
+  version "2.3.2"
+  resolved "https://registry.yarnpkg.com/spin.js/-/spin.js-2.3.2.tgz#6caa56d520673450fd5cfbc6971e6d0772c37a1a"
 
 split-string@^3.0.1, split-string@^3.0.2:
   version "3.1.0"
