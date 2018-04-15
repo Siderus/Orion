@@ -7,11 +7,13 @@ import {
 
 import { saveFileToPath } from '../../../api'
 
-import { Toolbar, Actionbar, Button, ButtonGroup } from 'react-photonkit'
+import { Toolbar, Actionbar, ButtonGroup } from 'react-photonkit'
+import Button from '../../../components/Button'
 
 import SettingsWindow from '../../Settings/window'
 
 class Header extends React.Component {
+  state = {}
   /**
    * Handle the add button click by adding a new file into the repository.
    */
@@ -41,10 +43,16 @@ class Header extends React.Component {
 
     const hashes = this.props.storageStore.selected.map(el => el.hash)
 
+    this.setState({ isRemoving: true })
     proptAndRemoveObjects(hashes)
       .then(() => {
         this.props.storageStore.selected.clear()
         this.props.storageStore.elements.clear()
+        this.setState({ isRemoving: false })
+      })
+      .catch(err => {
+        remote.dialog.showErrorBox('Removing the file(s) has failed', err.message)
+        this.setState({ isRemoving: false })
       })
   }
 
@@ -61,22 +69,29 @@ class Header extends React.Component {
     const selected = this.props.storageStore.selected
     const opts = { title: 'Where should I save?' }
 
+    let promises
     // More than one object/element
     if (selected.length > 1) {
       opts.properties = ['openDirectory', 'createDirectory']
       opts.buttonLabel = 'Save everything here'
       const destDir = remote.dialog.showOpenDialog(remote.app.mainWindow, opts)[0]
 
-      const promises = selected.map(element => saveFileToPath(element.hash, destDir))
-      // ToDo: Handle failure
-      Promise.all(promises)
+      promises = selected.map(element => saveFileToPath(element.hash, destDir))
     } else {
       // selected.length === 1
       opts.properties = ['openDirectory']
       opts.buttonLabel = 'Save here'
       const dest = remote.dialog.showOpenDialog(remote.app.mainWindow, opts)
-      saveFileToPath(selected[0].hash, dest[0])
+      promises = [saveFileToPath(selected[0].hash, dest[0])]
     }
+
+    this.setState({ isSavingOnDisk: true })
+    Promise.all(promises)
+      .then(result => this.setState({ isSavingOnDisk: false }))
+      .catch(err => {
+        remote.dialog.showErrorBox('Saving to disk has failed', err.message)
+        this.setState({ isSavingOnDisk: false })
+      })
   }
 
   /**
@@ -88,13 +103,22 @@ class Header extends React.Component {
   }
 
   render () {
+    const { isSavingOnDisk, isRemoving } = this.state
     return (
       <Toolbar title='Storage'>
         <Actionbar>
           <ButtonGroup>
             <Button glyph='plus-circled' onClick={this._handleAddButtonClick.bind(this)} />
-            <Button glyph='minus-circled' onClick={this._handleRemoveButtonClick.bind(this)} />
-            <Button glyph='download' onClick={this._handleDownloadButtonClick.bind(this)} />
+            <Button
+              loading={isRemoving}
+              glyph='minus-circled'
+              onClick={this._handleRemoveButtonClick.bind(this)}
+            />
+            <Button
+              loading={isSavingOnDisk}
+              glyph='download'
+              onClick={this._handleDownloadButtonClick.bind(this)}
+            />
           </ButtonGroup>
 
           <Button glyph='cog' pullRight onClick={this._handleSettingsButtonClick.bind(this)} />
