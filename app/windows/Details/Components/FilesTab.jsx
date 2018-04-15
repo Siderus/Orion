@@ -1,4 +1,5 @@
 import React from 'react'
+import styled from 'styled-components'
 
 import {
   getStorageList
@@ -6,6 +7,11 @@ import {
 
 import ResponsiveTable from '../../../components/ResponsiveTable'
 import StorageElement from '../../Storage/Components/StorageElement'
+
+const TableContainer = styled.div`
+  overflow-y: auto;
+  flex: 1;
+`
 
 /**
  * Files tab shows the objects links within a table,
@@ -29,33 +35,35 @@ class FilesTab extends React.Component {
     })
 
     getStorageList(newLinks).then(list => {
-      this.setState({formattedLinks: list})
+      this.setState({ formattedLinks: list })
     })
   }
 
   render () {
     return (
-      <ResponsiveTable>
-        <thead>
-          <tr>
-            <th></th>
-            <th>ID</th>
-            <th>Size</th>
-            <th>Name</th>
-          </tr>
-        </thead>
-        <tbody>
-          {
-            this.state.formattedLinks.map((el) => (
-              <StorageElement
-                element={el}
-                key={el.hash}
-              />
-            ))
-          }
-        </tbody>
+      <TableContainer>
+        <ResponsiveTable>
+          <thead>
+            <tr>
+              <th></th>
+              <th>ID</th>
+              <th>Size</th>
+              <th>Name</th>
+            </tr>
+          </thead>
+          <tbody>
+            {
+              this.state.formattedLinks.map((el) => (
+                <StorageElement
+                  element={el}
+                  key={el.hash}
+                />
+              ))
+            }
+          </tbody>
 
-      </ResponsiveTable>
+        </ResponsiveTable>
+      </TableContainer>
     )
   }
 }

@@ -24,7 +24,6 @@ module.exports.create = function createDetailsWindow (app, hash) {
   // Create the browser modal window.
   let thisWindow = new BrowserWindowClass({
     title: 'Properties ' + hash,
-    parent: app.mainWindow,
 
     width: 650,
     height: 350,
@@ -38,6 +37,10 @@ module.exports.create = function createDetailsWindow (app, hash) {
 
     show: false
   })
+
+  if (process.platform === 'win32') {
+    thisWindow.setMenu(null)
+  }
 
   // Show the window only when ready
   thisWindow.once('ready-to-show', () => {

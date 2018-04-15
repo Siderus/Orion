@@ -46,7 +46,7 @@ dep:
 .PHONY: dep
 
 run: dep
-	test -s go-ipfs/ipfs || $(MAKE) prepare_ipfs_bin
+	test -s go-ipfs/ipfs || "$(MAKE)" prepare_ipfs_bin
 	rm -rf .cache
 	yarn start
 .PHONY: run
