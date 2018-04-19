@@ -9,6 +9,7 @@ import { observable } from 'mobx'
  * This is used by the API and React
  */
 export class StatusStorage {
+  @observable connected = false
   @observable peers = []
   @observable stats = []
 }

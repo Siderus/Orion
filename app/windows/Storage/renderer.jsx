@@ -50,6 +50,7 @@ function startLoop () {
       })
   ])
     .then(() => {
+      StatusStore.connected = true
       window.loopTimeoutID = setTimeout(startLoop, 1 * 1000)
     })
     .catch((err) => {
