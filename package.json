@@ -66,6 +66,7 @@
     "react-spin": "^0.6.2",
     "request": "^2.83.0",
     "request-promise-native": "^1.0.5",
+    "spin.js": "^2.3.2",
     "styled-components": "^3.1.6",
     "tmp": "^0.0.33",
     "underscore": "^1.8.3"
