@@ -31,7 +31,10 @@ module.exports.create = function createStorageWindow (app) {
     fullscreenable: false,
     icon: path.join(__dirname, '../../../docs/logo.png'),
 
-    show: false
+    show: false,
+    webPreferences: {
+      preload: path.join(__dirname, '../../report.js')
+    }
   })
 
   theWindow.once('ready-to-show', () => {

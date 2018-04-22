@@ -28,7 +28,10 @@ module.exports.create = function createResolveIPNSWindow (app) {
     fullscreenable: false,
     icon: path.join(__dirname, '../../../docs/logo.png'),
 
-    show: false
+    show: false,
+    webPreferences: {
+      preload: path.join(__dirname, '../../report.js')
+    }
   })
 
   // Show menu only on StorageList
