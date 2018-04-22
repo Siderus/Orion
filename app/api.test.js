@@ -9,7 +9,7 @@ import pjson from '../package'
 
 jest.mock('./daemon', () => {
   return {
-    getMultiAddrIPFSDaemon: jest.fn().mockReturnValue('my-address')
+    getApiMultiAddress: jest.fn().mockReturnValue(Promise.resolve('my-address'))
   }
 })
 jest.mock('ipfs-api', () => {
@@ -53,7 +53,7 @@ describe('api.js', () => {
       return api.initIPFSClient()
         .then(result => {
           // assert
-          expect(daemon.getMultiAddrIPFSDaemon).toHaveBeenCalled()
+          expect(daemon.getApiMultiAddress).toHaveBeenCalled()
           expect(ipfsApi).toBeCalledWith('my-address')
           expect(result).toBe('new-instance')
         })

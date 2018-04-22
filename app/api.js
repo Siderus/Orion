@@ -9,7 +9,7 @@ import pjson from '../package.json'
 import gateways from './gateways.json'
 
 import Settings from 'electron-settings'
-import { getMultiAddrIPFSDaemon } from './daemon'
+import { getApiMultiAddress } from './daemon'
 
 export const ERROR_IPFS_UNAVAILABLE = 'IPFS NOT AVAILABLE'
 export const ERROR_IPFS_TIMEOUT = 'TIMEOUT'
@@ -33,9 +33,12 @@ export function initIPFSClient () {
     }
   }
 
-  const apiMultiaddr = getMultiAddrIPFSDaemon()
-  setClientInstance(ipfsAPI(apiMultiaddr))
-  return Promise.resolve(IPFS_CLIENT)
+  // this fails because of the repo lock
+  return getApiMultiAddress()
+    .then(apiMultiaddr => {
+      setClientInstance(ipfsAPI(apiMultiaddr))
+      return Promise.resolve(IPFS_CLIENT)
+    })
 }
 
 /**

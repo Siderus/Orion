@@ -8,11 +8,76 @@ import { app, dialog } from 'electron'
 import pjson from '../package.json'
 import { get as getAppRoot } from 'app-root-dir'
 
+const ORION_API_PORT = 5101
+const ORION_GATEWAY_PORT = 8180
+const ORION_SWARM_PORT = 4101
+
+let customRepoPath
+let customBinaryPath
+
+export function setCustomRepoPath (repoPath = pathJoin(app.getPath('home'), '.ipfs')) {
+  customRepoPath = repoPath
+}
+
+export function setCustomBinaryPath (binaryPath = 'ipfs') {
+  customBinaryPath = binaryPath
+}
+
+export function getIPFSRepoPath () {
+  return customRepoPath || pathJoin(app.getPath('userData'), '.ipfs')
+}
+
 /**
- * getPathIPFSBinary will return the IPFS default path
+ * getPathIPFSBinary will return the IPFS path of our own binary or the custom one if set
  */
 export function getPathIPFSBinary () {
-  return `${getAppRoot()}/go-ipfs/ipfs`
+  return customBinaryPath || `${getAppRoot()}/go-ipfs/ipfs`
+}
+
+/**
+ * Resolves true if a connection to the api could be made, false otherwise
+ * @returns Promise<Boolean>
+ */
+export function checkApiConnection () {
+  return getAPIVersion()
+    .then(version => {
+      if (version === pjson.ipfsVersion ||
+        version === pjson.ipfsVersion.replace('v', '')) {
+        return Promise.resolve(true)
+      } else {
+        // show alert
+      }
+      return Promise.resolve(false)
+    })
+    .catch(err => {
+      console.error('API not available', err.message)
+      return Promise.resolve(false)
+    })
+}
+
+/**
+ *
+ * Example:
+ * ```
+ * ApiVersionResult {
+ *   Version: "0.4.14",
+ *   Commit: "",
+ *   Repo: "6",
+ *   System: "amd64/linux",
+ *   Golang: "go1.10"
+ * }
+ * ```
+ * @returns Promise<ApiVersionResult>
+ */
+export function getAPIVersion () {
+  return request({
+    // what if it's running on a different port?
+    uri: 'http://localhost:5001/api/v0/version',
+    headers: { 'User-Agent': `Orion/${pjson.version}` }
+  }).then(res => {
+    res = JSON.parse(res)
+    return Promise.resolve(res.Version)
+  })
 }
 
 /**
@@ -22,18 +87,23 @@ export function getPathIPFSBinary () {
 export function startIPFSDaemon () {
   return new Promise((resolve, reject) => {
     const binaryPath = getPathIPFSBinary()
-    const ipfsProcess = spawn(binaryPath, ['daemon'])
+    const options = {
+      env: {
+        IPFS_PATH: getIPFSRepoPath()
+      }
+    }
+    const ipfsProcess = spawn(binaryPath, ['daemon'], options)
 
     // Prepare temporary file for logging:
-    const tmpLog = tmpFileSync({keep: true})
+    const tmpLog = tmpFileSync({ keep: true })
     const tmpLogPipe = createWriteStream(tmpLog.name)
 
-    console.log(`Logging IPFS logs in: ${tmpLog.name}`)
+    console.log(`Logging IPFS Daemon logs in: ${tmpLog.name}`)
 
-    ipfsProcess.stdout.on('data', (data) => console.log(`IPFS: ${data}`))
+    ipfsProcess.stdout.on('data', (data) => console.log(`IPFS Daemon: ${data}`))
     ipfsProcess.stdout.pipe(tmpLogPipe)
 
-    ipfsProcess.stderr.on('data', (data) => console.log(`IPFS Error: ${data}`))
+    ipfsProcess.stderr.on('data', (data) => console.log(`IPFS Daemon Error: ${data}`))
     ipfsProcess.stderr.pipe(tmpLogPipe)
 
     ipfsProcess.on('close', (exit) => {
@@ -48,8 +118,7 @@ export function startIPFSDaemon () {
       console.log(`IPFS Closed: ${exit}`)
     })
 
-    // Resolves the process after 1 second
-    setTimeout(() => { resolve(ipfsProcess) }, 1 * 1000)
+    resolve(ipfsProcess)
   })
 }
 
@@ -58,7 +127,7 @@ export function startIPFSDaemon () {
  * in the default path (~/.ipfs/config)
  */
 export function isIPFSInitialised () {
-  const confFile = pathJoin(app.getPath('home'), '.ipfs', 'config')
+  const confFile = pathJoin(getIPFSRepoPath(), 'config')
   return existsSync(confFile)
 }
 
@@ -71,10 +140,15 @@ export function ensuresIPFSInitialised () {
   console.log('Initialising IPFS repository...')
   return new Promise((resolve, reject) => {
     const binaryPath = getPathIPFSBinary()
-    const ipfsProcess = spawn(binaryPath, ['init'])
+    const options = {
+      env: {
+        IPFS_PATH: getIPFSRepoPath()
+      }
+    }
+    const ipfsProcess = spawn(binaryPath, ['init'], options)
 
     // Prepare temporary file for logging:
-    const tmpLog = tmpFileSync({keep: true})
+    const tmpLog = tmpFileSync({ keep: true })
     const tmpLogPipe = createWriteStream(tmpLog.name)
 
     console.log(`Logging IPFS init logs in: ${tmpLog.name}`)
@@ -101,24 +175,42 @@ export function ensuresIPFSInitialised () {
   })
 }
 
-/**
- * Returns the multiAddr usable to connect to the local dameon via API
- */
-export function getMultiAddrIPFSDaemon () {
-  // Other option: ask the binary wich one to use
-  // const binaryPath = getPathIPFSBinary()
-  // const multiAddr = execSync(`${binaryPath} config Addresses.API`)
-  return '/ip4/127.0.0.1/tcp/5001'
+export function ensureAddressesConfigured () {
+  return getApiMultiAddress()
+    .then(apiMultiAddr => {
+      const isDefaultAddr = apiMultiAddr && apiMultiAddr.indexOf(ORION_API_PORT)
+
+      if (isDefaultAddr) {
+        return setOrionAddresses()
+      }
+
+      return Promise.resolve()
+    })
 }
 
 /**
- * Set the multiAddr usable to connect to the local dameon via API.
- * It restores it to /ip4/127.0.0.1/tcp/5001
- * returns a promise.
+ * 5001 -> 5101
+ * 4001 -> 4101
+ * 8080 -> 8180
  */
-export function setMultiAddrIPFSDaemon () {
+export function setOrionAddresses () {
+  console.log('Setting Orion custom addresses for API, Gateway and Swarm')
   const binaryPath = getPathIPFSBinary()
-  return exec(`${binaryPath} config Addresses.API /ip4/127.0.0.1/tcp/5001`)
+  const ipfsRepoPath = `IPFS_PATH=${getIPFSRepoPath()}`
+
+  return exec(`${ipfsRepoPath} ${binaryPath} config Addresses.API /ip4/127.0.0.1/tcp/${ORION_API_PORT}`)
+    .then(() => exec(`${ipfsRepoPath} ${binaryPath} config Addresses.Gateway /ip4/127.0.0.1/tcp/${ORION_GATEWAY_PORT}`))
+    .then(() => exec(`${ipfsRepoPath} ${binaryPath} config Addresses.Swarm --json '["/ip4/0.0.0.0/tcp/${ORION_SWARM_PORT}", "/ip6/::/tcp/${ORION_SWARM_PORT}"]'`))
+}
+
+/**
+ * Returns the multiAddr usable to connect to the local dameon via API
+ */
+export function getApiMultiAddress () {
+  // Other option: ask the binary wich one to use
+  const binaryPath = getPathIPFSBinary()
+  const ipfsRepoPath = `IPFS_PATH=${getIPFSRepoPath()}`
+  return exec(`${ipfsRepoPath} ${binaryPath} config Addresses.API`)
 }
 
 /**
@@ -128,7 +220,8 @@ export function setMultiAddrIPFSDaemon () {
  */
 export function connectToCMD (strMultiddr) {
   const binaryPath = getPathIPFSBinary()
-  return exec(`${binaryPath} swarm connect ${strMultiddr}`)
+  const ipfsRepoPath = `IPFS_PATH=${getIPFSRepoPath()}`
+  return exec(`${ipfsRepoPath} ${binaryPath} swarm connect ${strMultiddr}`)
 }
 
 /**
@@ -138,7 +231,8 @@ export function connectToCMD (strMultiddr) {
  */
 export function addBootstrapAddr (strMultiddr) {
   const binaryPath = getPathIPFSBinary()
-  return exec(`${binaryPath} bootstrap add ${strMultiddr}`)
+  const ipfsRepoPath = `IPFS_PATH=${getIPFSRepoPath()}`
+  return exec(`${ipfsRepoPath} ${binaryPath} bootstrap add ${strMultiddr}`)
 }
 
 /**
@@ -156,5 +250,24 @@ export function getSiderusPeers () {
     // remove empty lines
     peers = peers.filter(el => el.length > 0)
     return Promise.resolve(peers)
+  })
+}
+
+export function promiseRepoUnlocked (timeout = 30) {
+  let iID // interval id
+  let trial = 0
+  return new Promise((resolve, reject) => {
+    iID = setInterval(() => {
+      trial++
+      if (trial >= timeout) {
+        clearInterval(iID)
+        return reject('TIMEOUT')
+      }
+
+      return getApiMultiAddress().then(() => {
+        clearInterval(iID)
+        return resolve()
+      }).catch(() => { }) // do nothing in case of errors
+    }, 1000) // every second
   })
 }

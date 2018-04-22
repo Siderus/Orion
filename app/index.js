@@ -6,9 +6,14 @@ import './report'
 import {
   startIPFSDaemon,
   ensuresIPFSInitialised,
+  ensureAddressesConfigured,
   getSiderusPeers,
   connectToCMD,
-  addBootstrapAddr
+  addBootstrapAddr,
+  promiseRepoUnlocked,
+  checkApiConnection,
+  setCustomBinaryPath,
+  setCustomRepoPath
 } from './daemon'
 
 import {
@@ -56,18 +61,43 @@ app.on('ready', () => {
     })
     // Set up crash reports.
     // Set up the needed stuff as the app launches.
-    ensuresIPFSInitialised()
-      .then(startIPFSDaemon)
-      .then((process) => {
-        console.log('IPFS Daemon started')
-        global.IPFS_PROCESS = process
-        loadingWindow.webContents.send('set-progress', {
-          text: 'Initializing IPFS client...',
-          percentage: 20
-        })
-        return Promise.resolve()
-      })
 
+    checkApiConnection()
+      .then(connectionStatus => {
+        // Api available
+        if (connectionStatus) {
+          const btnId = dialog.showMessageBox({
+            type: 'info',
+            message: `An IPFS instance is already up!
+                      \nWould you like Orion to connect to the available node, instead of using its own?`,
+            buttons: ['No', 'Yes'],
+            cancelId: 0,
+            defaultId: 1
+          })
+          if (btnId === 1) {
+            // Use running node, skip starting the daemon
+            setCustomRepoPath()
+            setCustomBinaryPath()
+            return Promise.resolve()
+          }
+        }
+
+        return ensuresIPFSInitialised()
+          .then(ensureAddressesConfigured)
+          .then(startIPFSDaemon)
+          .then((process) => {
+            console.log('IPFS Daemon: Starting')
+            global.IPFS_PROCESS = process
+            loadingWindow.webContents.send('set-progress', {
+              text: 'Initializing the IPFS Daemon...',
+              percentage: 20
+            })
+            return Promise.resolve()
+          })
+          // Wait for the repo to be unlocked
+          // (usually ipfs daemon needs some time before it releases the lock)
+          .then(promiseRepoUnlocked)
+      })
       // Start the IPFS API Client
       .then(initIPFSClient)
       .then(client => {
@@ -127,7 +157,14 @@ app.on('ready', () => {
       })
       // Catch errors
       .catch(err => {
-        const message = typeof err === 'string' ? err : JSON.stringify(err)
+        let message
+        if (typeof err === 'string') {
+          message = err
+        } else if (err.message) {
+          message = err.message
+        } else {
+          message = JSON.stringify(err)
+        }
         dialog.showMessageBox({ type: 'warning', message })
         app.quit()
       })
