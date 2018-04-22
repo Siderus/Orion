@@ -1,7 +1,7 @@
 import { app, dialog, shell } from 'electron'
 import { autoUpdater } from 'electron-updater'
 import pjson from '../package.json'
-import report from './report'
+import './report'
 
 import {
   startIPFSDaemon,

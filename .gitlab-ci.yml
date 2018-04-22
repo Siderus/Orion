@@ -12,7 +12,7 @@ yarn-test:
   tags:
     - docker
   script:
-    - docker run --rm -v ${PWD}:/project electronuserland/builder:wine /bin/bash -c "make lint test"
+    - docker run --rm -v ${PWD}:/project electronuserland/builder:wine /bin/bash -c "make lint test -e NODE_ENV=production"
   only:
     - master
 
@@ -22,6 +22,6 @@ yarn-release:
   tags:
     - docker
   script:
-    - docker run --rm -e GH_TOKEN="${GH_TOKEN}" -v ${PWD}:/project electronuserland/builder:wine /bin/bash -c "make release_all"
+    - docker run --rm -e GH_TOKEN="${GH_TOKEN}" -v ${PWD}:/project electronuserland/builder:wine /bin/bash -c "make release_all -e NODE_ENV=production"
   only:
     - master
