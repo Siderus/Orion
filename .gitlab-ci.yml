@@ -22,6 +22,6 @@ yarn-release:
   tags:
     - docker
   script:
-    - docker run --rm -e GH_TOKEN="${GH_TOKEN}" -v ${PWD}:/project electronuserland/builder:wine /bin/bash -c "make release_all -e NODE_ENV=production"
+    - docker run --rm -e GH_TOKEN="${GH_TOKEN}" -v ${PWD}:/project electronuserland/builder:wine /bin/bash -c "make release_all"
   only:
     - master
