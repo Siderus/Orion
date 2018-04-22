@@ -45,6 +45,7 @@
     "jest": "^22.4.2"
   },
   "dependencies": {
+    "@sentry/electron": "^0.5.2",
     "app-root-dir": "^1.0.2",
     "byte-size": "^3.0.0",
     "classnames": "^2.2.5",

@@ -1,7 +1,7 @@
 IPFS_VERSION := $(shell node -p "require('./package.json').ipfsVersion")
 IPFS_BINARY_NAME ?= go-ipfs_${IPFS_VERSION}_${TARGET}-amd64${BINARY_EXT}
 BINARY_URL ?= https://dist.ipfs.io/go-ipfs/${IPFS_VERSION}/${IPFS_BINARY_NAME}
-NODE_ENV ?= production
+NODE_ENV ?= development
 GH_TOKEN ?=
 
 ifeq ($(OS),Windows_NT)
