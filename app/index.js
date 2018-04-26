@@ -11,7 +11,7 @@ import {
   connectToCMD,
   addBootstrapAddr,
   promiseRepoUnlocked,
-  checkApiConnection,
+  getAPIVersion,
   setCustomBinaryPath,
   skipRepoPath
 } from './daemon'
@@ -62,16 +62,23 @@ app.on('ready', () => {
     // Set up crash reports.
     // Set up the needed stuff as the app launches.
 
-    checkApiConnection()
-      .then(connectionStatus => {
+    getAPIVersion()
+      .then(apiVersion => {
         let customPorts = false
 
         // An api is already available on port 5001
-        if (connectionStatus) {
+        if (apiVersion !== null) {
+          let alertMessage = 'An IPFS instance is already up!'
+          alertMessage += '\n\nWould you like Orion to connect to the available node, instead of using its own?'
+
+          if (apiVersion !== pjson.ipfsVersion) {
+            alertMessage += `\n\nPlease note: Orion was design with IPFS ${pjson.ipfsVersion} in mind, `
+            alertMessage += `while the available API is running ${apiVersion}.`
+          }
+
           const btnId = dialog.showMessageBox({
             type: 'info',
-            message: `An IPFS instance is already up!
-                      \nWould you like Orion to connect to the available node, instead of using its own?`,
+            message: alertMessage,
             buttons: ['No', 'Yes'],
             cancelId: 0,
             defaultId: 1

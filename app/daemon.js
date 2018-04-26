@@ -38,49 +38,36 @@ export function spawnIPFSCommand (command) {
 }
 
 /**
- * Resolves true if a connection to the api could be made, false otherwise
- * @returns Promise<Boolean>
- */
-export function checkApiConnection () {
-  return getAPIVersion()
-    .then(version => {
-      if (version === pjson.ipfsVersion ||
-        version === pjson.ipfsVersion.replace('v', '')) {
-        return Promise.resolve(true)
-      } else {
-        // show alert
-      }
-      return Promise.resolve(true)
-    })
-    .catch(err => {
-      console.error('API not available', err.message)
-      return Promise.resolve(false)
-    })
-}
-
-/**
  *
- * Example:
- * ```
- * ApiVersionResult {
- *   Version: "0.4.14",
- *   Commit: "",
- *   Repo: "6",
- *   System: "amd64/linux",
- *   Golang: "go1.10"
- * }
- * ```
- * @returns Promise<ApiVersionResult>
+ * Returns the version of the currently running API.
+ * If no API is available returns `null`.
+ *
+ * Example: 'v0.4.14'
+ * @returns Promise<string>
  */
 export function getAPIVersion () {
   return request({
     // what if it's running on a different port?
     uri: 'http://localhost:5001/api/v0/version',
     headers: { 'User-Agent': `Orion/${pjson.version}` }
-  }).then(res => {
-    res = JSON.parse(res)
-    return Promise.resolve(res.Version)
   })
+    .then(res => {
+      /**
+       * ApiVersionResult {
+       *   Version: "0.4.14",
+       *   Commit: "",
+       *   Repo: "6",
+       *   System: "amd64/linux",
+       *   Golang: "go1.10"
+       * }
+       */
+      res = JSON.parse(res)
+      return Promise.resolve(`v${res.Version}`)
+    })
+    .catch(err => {
+      console.error('API not available', err.message)
+      return Promise.resolve(null)
+    })
 }
 
 /**
