@@ -86,7 +86,7 @@
     },
     "linux": {
       "target": [
-        "deb"
+        "deb", "rpm", "pacman", "apk"
       ]
     },
     "mac": {
