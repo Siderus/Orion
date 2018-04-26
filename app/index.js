@@ -13,7 +13,7 @@ import {
   promiseRepoUnlocked,
   checkApiConnection,
   setCustomBinaryPath,
-  setCustomRepoPath
+  skipRepoPath
 } from './daemon'
 
 import {
@@ -64,7 +64,9 @@ app.on('ready', () => {
 
     checkApiConnection()
       .then(connectionStatus => {
-        // Api available
+        let customPorts = false
+
+        // An api is already available on port 5001
         if (connectionStatus) {
           const btnId = dialog.showMessageBox({
             type: 'info',
@@ -76,14 +78,19 @@ app.on('ready', () => {
           })
           if (btnId === 1) {
             // Use running node, skip starting the daemon
-            setCustomRepoPath()
-            setCustomBinaryPath()
+            // Set repository path to null so it's ignored and not passed as IPFS_PATH
+            // Set binary path to `ipfs` to use the client's binary
+            skipRepoPath()
+            setCustomBinaryPath('ipfs')
             return Promise.resolve()
+          } else {
+            // Use our own daemon, but on different ports
+            customPorts = true
           }
         }
 
         return ensuresIPFSInitialised()
-          .then(ensureAddressesConfigured)
+          .then(() => ensureAddressesConfigured(customPorts))
           .then(startIPFSDaemon)
           .then((process) => {
             console.log('IPFS Daemon: Starting')

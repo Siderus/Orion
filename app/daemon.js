@@ -8,30 +8,33 @@ import { app, dialog } from 'electron'
 import pjson from '../package.json'
 import { get as getAppRoot } from 'app-root-dir'
 
-const ORION_API_PORT = 5101
-const ORION_GATEWAY_PORT = 8180
-const ORION_SWARM_PORT = 4101
+const CUSTOM_API_PORT = 5101
+const CUSTOM_GATEWAY_PORT = 8180
+const CUSTOM_SWARM_PORT = 4101
 
-let customRepoPath
-let customBinaryPath
+export let binaryPath = `${getAppRoot()}/go-ipfs/ipfs`
+let skipRepo = false
 
-export function setCustomRepoPath (repoPath = pathJoin(app.getPath('home'), '.ipfs')) {
-  customRepoPath = repoPath
+export function skipRepoPath () {
+  skipRepo = true
 }
 
-export function setCustomBinaryPath (binaryPath = 'ipfs') {
-  customBinaryPath = binaryPath
+export function getRepoPath () {
+  return pathJoin(app.getPath('userData'), '.ipfs')
 }
 
-export function getIPFSRepoPath () {
-  return customRepoPath || pathJoin(app.getPath('userData'), '.ipfs')
+export function setCustomBinaryPath (path) {
+  binaryPath = path
 }
 
-/**
- * getPathIPFSBinary will return the IPFS path of our own binary or the custom one if set
- */
-export function getPathIPFSBinary () {
-  return customBinaryPath || `${getAppRoot()}/go-ipfs/ipfs`
+export function executeIPFSCommand (command) {
+  const env = skipRepo ? '' : `IPFS_PATH=${getRepoPath()}`
+  return exec(`${env} ${binaryPath} ${command}`)
+}
+
+export function spawnIPFSCommand (command) {
+  const options = skipRepo ? undefined : { env: { IPFS_PATH: getRepoPath() } }
+  return spawn(binaryPath, [command], options)
 }
 
 /**
@@ -47,7 +50,7 @@ export function checkApiConnection () {
       } else {
         // show alert
       }
-      return Promise.resolve(false)
+      return Promise.resolve(true)
     })
     .catch(err => {
       console.error('API not available', err.message)
@@ -86,13 +89,7 @@ export function getAPIVersion () {
  */
 export function startIPFSDaemon () {
   return new Promise((resolve, reject) => {
-    const binaryPath = getPathIPFSBinary()
-    const options = {
-      env: {
-        IPFS_PATH: getIPFSRepoPath()
-      }
-    }
-    const ipfsProcess = spawn(binaryPath, ['daemon'], options)
+    const ipfsProcess = spawnIPFSCommand('daemon')
 
     // Prepare temporary file for logging:
     const tmpLog = tmpFileSync({ keep: true })
@@ -124,10 +121,13 @@ export function startIPFSDaemon () {
 
 /**
  * isIPFSInitialised returns a boolean if the repository config file is present
- * in the default path (~/.ipfs/config)
+ * in the default path (i.e. userData)
+ * (~/.config/Electron/.ipfs/config) in development
+ *
+ * https://github.com/electron/electron/blob/master/docs/api/app.md#appgetpathname
  */
 export function isIPFSInitialised () {
-  const confFile = pathJoin(getIPFSRepoPath(), 'config')
+  const confFile = pathJoin(getRepoPath(), 'config')
   return existsSync(confFile)
 }
 
@@ -139,14 +139,7 @@ export function ensuresIPFSInitialised () {
   if (isIPFSInitialised()) return Promise.resolve()
   console.log('Initialising IPFS repository...')
   return new Promise((resolve, reject) => {
-    const binaryPath = getPathIPFSBinary()
-    const options = {
-      env: {
-        IPFS_PATH: getIPFSRepoPath()
-      }
-    }
-    const ipfsProcess = spawn(binaryPath, ['init'], options)
-
+    const ipfsProcess = spawnIPFSCommand('init')
     // Prepare temporary file for logging:
     const tmpLog = tmpFileSync({ keep: true })
     const tmpLogPipe = createWriteStream(tmpLog.name)
@@ -175,42 +168,33 @@ export function ensuresIPFSInitialised () {
   })
 }
 
-export function ensureAddressesConfigured () {
-  return getApiMultiAddress()
-    .then(apiMultiAddr => {
-      const isDefaultAddr = apiMultiAddr && apiMultiAddr.indexOf(ORION_API_PORT)
-
-      if (isDefaultAddr) {
-        return setOrionAddresses()
-      }
-
-      return Promise.resolve()
-    })
-}
-
 /**
  * 5001 -> 5101
- * 4001 -> 4101
  * 8080 -> 8180
+ * 4001 -> 4101
  */
-export function setOrionAddresses () {
-  console.log('Setting Orion custom addresses for API, Gateway and Swarm')
-  const binaryPath = getPathIPFSBinary()
-  const ipfsRepoPath = `IPFS_PATH=${getIPFSRepoPath()}`
+export function ensureAddressesConfigured (customPorts = false) {
+  let apiPort = '5001'
+  let gatewayPort = '8080'
+  let swarmPort = '4001'
 
-  return exec(`${ipfsRepoPath} ${binaryPath} config Addresses.API /ip4/127.0.0.1/tcp/${ORION_API_PORT}`)
-    .then(() => exec(`${ipfsRepoPath} ${binaryPath} config Addresses.Gateway /ip4/127.0.0.1/tcp/${ORION_GATEWAY_PORT}`))
-    .then(() => exec(`${ipfsRepoPath} ${binaryPath} config Addresses.Swarm --json '["/ip4/0.0.0.0/tcp/${ORION_SWARM_PORT}", "/ip6/::/tcp/${ORION_SWARM_PORT}"]'`))
+  if (customPorts) {
+    console.log('Setting custom addresses for API, Gateway and Swarm')
+    apiPort = CUSTOM_API_PORT
+    gatewayPort = CUSTOM_GATEWAY_PORT
+    swarmPort = CUSTOM_SWARM_PORT
+  }
+
+  return executeIPFSCommand(`config Addresses.API /ip4/127.0.0.1/tcp/${apiPort}`)
+    .then(() => executeIPFSCommand(`config Addresses.Gateway /ip4/127.0.0.1/tcp/${gatewayPort}`))
+    .then(() => executeIPFSCommand(`config Addresses.Swarm --json '["/ip4/0.0.0.0/tcp/${swarmPort}", "/ip6/::/tcp/${swarmPort}"]'`))
 }
 
 /**
  * Returns the multiAddr usable to connect to the local dameon via API
  */
 export function getApiMultiAddress () {
-  // Other option: ask the binary wich one to use
-  const binaryPath = getPathIPFSBinary()
-  const ipfsRepoPath = `IPFS_PATH=${getIPFSRepoPath()}`
-  return exec(`${ipfsRepoPath} ${binaryPath} config Addresses.API`)
+  return executeIPFSCommand(`config Addresses.API`)
 }
 
 /**
@@ -219,9 +203,7 @@ export function getApiMultiAddress () {
  * returns a promise
  */
 export function connectToCMD (strMultiddr) {
-  const binaryPath = getPathIPFSBinary()
-  const ipfsRepoPath = `IPFS_PATH=${getIPFSRepoPath()}`
-  return exec(`${ipfsRepoPath} ${binaryPath} swarm connect ${strMultiddr}`)
+  return executeIPFSCommand(`swarm connect ${strMultiddr}`)
 }
 
 /**
@@ -230,9 +212,7 @@ export function connectToCMD (strMultiddr) {
  * returns a promise
  */
 export function addBootstrapAddr (strMultiddr) {
-  const binaryPath = getPathIPFSBinary()
-  const ipfsRepoPath = `IPFS_PATH=${getIPFSRepoPath()}`
-  return exec(`${ipfsRepoPath} ${binaryPath} bootstrap add ${strMultiddr}`)
+  return executeIPFSCommand(`bootstrap add ${strMultiddr}`)
 }
 
 /**

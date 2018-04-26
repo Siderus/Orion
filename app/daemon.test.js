@@ -31,7 +31,7 @@ describe('daemon.js', () => {
     it('should always return the default value', () => {
       // arrange
       // act
-      const path = daemon.getPathIPFSBinary()
+      const path = daemon.binaryPath
       // assert
       expect(path).toBe('root-dir/go-ipfs/ipfs')
     })
