@@ -36,6 +36,32 @@ require('./menu')
 // Make sure we have a single instance
 require('./singleInstance')
 
+/**
+ * Returns `true` if the user wants to use the running node and
+ * `false`, if the user wants to use own node
+ *
+ * @returns {boolean}
+ */
+function askWhichNodeToUse (apiVersion) {
+  let alertMessage = 'An IPFS instance is already up!'
+  alertMessage += '\n\nWould you like Orion to connect to the available node, instead of using its own?'
+
+  if (apiVersion !== pjson.ipfsVersion) {
+    alertMessage += `\n\nPlease note: Orion was design with IPFS ${pjson.ipfsVersion} in mind, `
+    alertMessage += `while the available API is running ${apiVersion}.`
+  }
+
+  const btnId = dialog.showMessageBox({
+    type: 'info',
+    message: alertMessage,
+    buttons: ['No', 'Yes'],
+    cancelId: 0,
+    defaultId: 1
+  })
+
+  return btnId === 1
+}
+
 app.on('ready', () => {
   // Ask github whether there is an update
   autoUpdater.checkForUpdates()
@@ -68,24 +94,10 @@ app.on('ready', () => {
 
         // An api is already available on port 5001
         if (apiVersion !== null) {
-          let alertMessage = 'An IPFS instance is already up!'
-          alertMessage += '\n\nWould you like Orion to connect to the available node, instead of using its own?'
+          const useExistingNode = askWhichNodeToUse(apiVersion)
 
-          if (apiVersion !== pjson.ipfsVersion) {
-            alertMessage += `\n\nPlease note: Orion was design with IPFS ${pjson.ipfsVersion} in mind, `
-            alertMessage += `while the available API is running ${apiVersion}.`
-          }
-
-          const btnId = dialog.showMessageBox({
-            type: 'info',
-            message: alertMessage,
-            buttons: ['No', 'Yes'],
-            cancelId: 0,
-            defaultId: 1
-          })
-          if (btnId === 1) {
+          if (useExistingNode) {
             // Use running node, skip starting the daemon
-            // Set repository path to null so it's ignored and not passed as IPFS_PATH
             // Set binary path to `ipfs` to use the client's binary
             skipRepoPath()
             setCustomBinaryPath('ipfs')
@@ -108,8 +120,6 @@ app.on('ready', () => {
             })
             return Promise.resolve()
           })
-          // Wait for the repo to be unlocked
-          // (usually ipfs daemon needs some time before it releases the lock)
           .then(promiseRepoUnlocked)
       })
       // Start the IPFS API Client

@@ -15,6 +15,11 @@ const CUSTOM_SWARM_PORT = 4101
 export let binaryPath = `${getAppRoot()}/go-ipfs/ipfs`
 let skipRepo = false
 
+/**
+ * Skip passing IPFS_PATH when executing commands.
+ * Useful when you want to use the default repository path,
+ * instead of our custom path (`AppData/Orion/.ipfs`).
+ */
 export function skipRepoPath () {
   skipRepo = true
 }
@@ -27,11 +32,30 @@ export function setCustomBinaryPath (path) {
   binaryPath = path
 }
 
+/**
+ * Execute an IPFS command asynchoniously,
+ * without needing to specify the binary path or repo path.
+ *
+ * Example: `executeIPFSCommand('config Addresses.API')`
+ * which could resolve to `/ip4/127.0.0.1/tcp/5001`
+ *
+ * @param {string} command
+ * @return Promise<string>
+ */
 export function executeIPFSCommand (command) {
   const env = skipRepo ? '' : `IPFS_PATH=${getRepoPath()}`
   return exec(`${env} ${binaryPath} ${command}`)
 }
 
+/**
+ * Spawn a new process using the given IPFS command,
+ * without needing to specify the binary path or repo path.
+ *
+ * Example: `const daemonProcess = spawnIPFSCommand('daemon')`
+ *
+ * @param {string} command
+ * @returns ChildProcess
+ */
 export function spawnIPFSCommand (command) {
   const options = skipRepo ? undefined : { env: { IPFS_PATH: getRepoPath() } }
   return spawn(binaryPath, [command], options)
@@ -156,9 +180,16 @@ export function ensuresIPFSInitialised () {
 }
 
 /**
- * 5001 -> 5101
- * 8080 -> 8180
- * 4001 -> 4101
+ * This will ensure Orion starts on the correct ports by
+ * resetting the ports to their default values or, when `customPorts` is passed,
+ * by mapping these ports to:
+ *
+ * 5001 -> 5101 (API)
+ * 8080 -> 8180 (Gateway)
+ * 4001 -> 4101 (Swarm)
+ *
+ * @param {boolean} customPorts
+ * @returns Promise
  */
 export function ensureAddressesConfigured (customPorts = false) {
   let apiPort = '5001'
@@ -220,6 +251,12 @@ export function getSiderusPeers () {
   })
 }
 
+/**
+ * Wait for the ipfs repository to be unlocked.
+ * Useful when running ipfs commands simultaneously.
+ * (e.g running ipfs daemon needs some time before it releases the lock)
+ * @param {number} timeout defaults to 30 tries every second
+ */
 export function promiseRepoUnlocked (timeout = 30) {
   let iID // interval id
   let trial = 0
