@@ -18,13 +18,14 @@ import pjson from '../package.json'
  */
 export function executeIPFSCommand (...args) {
   return new Promise((resolve, reject) => {
-    const options = { env: { IPFS_PATH: global.IPFS_REPO_PATH } }
+    let options
+    if (global.IPFS_REPO_PATH.length > 0) {
+      options = { env: { IPFS_PATH: global.IPFS_REPO_PATH } }
+    }
+
     console.log('Running', global.IPFS_BINARY_PATH, args)
-    // We need to replace spaces with escaped spaces in each argument passed
-    // this will prevent situation of arguments splitted by mistake: ex on macOS
-    args = args.map((el) => { el.replace(' ', '\\ ') })
     // Build the cmd
-    const cmd = global.IPFS_BINARY_PATH + args.join(' ')
+    const cmd = global.IPFS_BINARY_PATH + ' ' + args.join(' ')
     const child = exec(cmd, options)
 
     let output = ''
@@ -47,14 +48,18 @@ export function executeIPFSCommand (...args) {
  * Spawn a new process using the given IPFS command,
  * without needing to specify the binary path or repo path.
  *
- * Example: `const daemonProcess = spawnIPFSCommand('daemon')`
+ * Example: `const daemonProcess = spawnIPFSCommand('daemon', '--debug')`
  *
  * @param {string} command
  * @returns ChildProcess
  */
-export function spawnIPFSCommand (command) {
-  const options = { env: { IPFS_PATH: global.IPFS_REPO_PATH } }
-  return spawn(global.IPFS_BINARY_PATH, [command], options)
+export function spawnIPFSCommand (...args) {
+  let options
+  if (global.IPFS_REPO_PATH.length > 0) {
+    options = { env: { IPFS_PATH: global.IPFS_REPO_PATH } }
+  }
+
+  return spawn(global.IPFS_BINARY_PATH, args, options)
 }
 
 /**
@@ -96,7 +101,7 @@ export function getAPIVersion () {
  */
 export function startIPFSDaemon () {
   return new Promise((resolve, reject) => {
-    const ipfsProcess = spawnIPFSCommand('daemon')
+    const ipfsProcess = spawnIPFSCommand('daemon', `--api=${global.IPFS_MULTIADDR_API}`)
 
     // Prepare temporary file for logging:
     const tmpLog = tmpFileSync({ keep: true })
@@ -134,7 +139,7 @@ export function startIPFSDaemon () {
  * https://github.com/electron/electron/blob/master/docs/api/app.md#appgetpathname
  */
 export function isIPFSInitialised () {
-  const confFile = pathJoin(global.IPFS_REPO_PATH, 'config')
+  const confFile = pathJoin(global.IPFS_REPO_PATH, './config')
   return existsSync(confFile)
 }
 
@@ -146,7 +151,7 @@ export function ensuresIPFSInitialised () {
   if (isIPFSInitialised()) return Promise.resolve()
   console.log('Initialising IPFS repository...')
   return new Promise((resolve, reject) => {
-    const ipfsProcess = spawnIPFSCommand('init')
+    const ipfsProcess = spawnIPFSCommand('init', `--api=${global.IPFS_MULTIADDR_API}`)
     // Prepare temporary file for logging:
     const tmpLog = tmpFileSync({ keep: true })
     const tmpLogPipe = createWriteStream(tmpLog.name)
@@ -184,7 +189,7 @@ export function ensuresIPFSInitialised () {
 export function ensureDaemonConfigured () {
   return executeIPFSCommand('config', 'Addresses.API', global.IPFS_MULTIADDR_API)
     .then(() => executeIPFSCommand('config', 'Addresses.Gateway', global.IPFS_MULTIADDR_GATEAY))
-    .then(() => executeIPFSCommand('config', '--json', 'Addresses.Swarm', JSON.stringify(global.IPFS_MULTIADDR_SWARM)))
+    .then(() => executeIPFSCommand('config', '--json', 'Addresses.Swarm', global.IPFS_MULTIADDR_SWARM))
 }
 
 /**

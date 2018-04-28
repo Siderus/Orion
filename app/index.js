@@ -26,15 +26,15 @@ import StorageWindow from './windows/Storage/window'
 // Let's create the main window
 app.mainWindow = null
 
-// A little space for IPFS
+// A little space for IPFS processes
 global.IPFS_PROCESS = null
 global.IPFS_CLIENT = null
-global.IPFS_BINARY_PATH = 'go-ipfs/ipfs'
 
-// Used to point to the right API endpoint, gateway and swarm.
+// Sets default values for IPFS configurations
+global.IPFS_BINARY_PATH = 'go-ipfs/ipfs'
 global.IPFS_MULTIADDR_API = '/ip4/127.0.0.1/tcp/5001'
 global.IPFS_MULTIADDR_GATEAY = '/ip4/127.0.0.1/tcp/8080'
-global.IPFS_MULTIADDR_SWARM = ['/ip4/0.0.0.0/tcp/4001', '/ip6/::/tcp/4001']
+global.IPFS_MULTIADDR_SWARM = `'["/ip4/0.0.0.0/tcp/4001", "/ip6/::/tcp/4001"]'`
 
 // Used to point to the right IPFS repo & conf
 global.IPFS_REPO_PATH = pathJoin(app.getPath('userData'), 'ipfs-repo')
@@ -106,19 +106,34 @@ app.on('ready', () => {
           if (useExistingNode) {
             console.log('Using existing IPFS node (localhost:5001)')
             global.IPFS_BINARY_PATH = 'ipfs'
-            return Promise.resolve()
+            global.IPFS_REPO_PATH = ''
+            return Promise.resolve(false) // it should not start the ipfs daemon
           } else {
             // Use our own daemon, but on different ports
             console.log('Using custom setup for Orion new IPFS node (localhost:5101)')
             global.IPFS_MULTIADDR_API = '/ip4/127.0.0.1/tcp/5101'
             global.IPFS_MULTIADDR_GATEAY = '/ip4/127.0.0.1/tcp/8180'
-            global.IPFS_MULTIADDR_SWARM = ['/ip4/0.0.0.0/tcp/4101', '/ip6/::/tcp/4101']
+            global.IPFS_MULTIADDR_SWARM = `'["/ip4/0.0.0.0/tcp/4101", "/ip6/::/tcp/4101"]'`
           }
         }
-
+        return Promise.resolve(true) // it should start the ipfs daemon
+      })
+      .then((shouldStart) => {
+        // Logs the path and configuration used
+        console.log('IPFS_BINARY_PATH', global.IPFS_BINARY_PATH)
+        console.log('IPFS_MULTIADDR_API', global.IPFS_MULTIADDR_API)
+        console.log('IPFS_MULTIADDR_GATEAY', global.IPFS_MULTIADDR_GATEAY)
+        console.log('IPFS_MULTIADDR_SWARM', global.IPFS_MULTIADDR_SWARM)
+        console.log('IPFS_REPO_PATH', global.IPFS_REPO_PATH)
+        console.log('IPFS_MULTIADDR_API', global.IPFS_MULTIADDR_API)
+        return Promise.resolve(shouldStart)
+      })
+      .then((shouldStart) => {
+        if (!shouldStart) return Promise.resolve()
         // Starts the IPFS daemon
         console.log('IPFS Daemon: Starting')
         return ensuresIPFSInitialised()
+          .then(() => ensureDaemonConfigured())
           .then(startIPFSDaemon)
           .then((process) => {
             global.IPFS_PROCESS = process
@@ -131,11 +146,6 @@ app.on('ready', () => {
       })
       .then(promiseRepoUnlocked) // ensures that the api are ready
       .then(() => ensureDaemonConfigured())
-      .then(() => {
-        // Logs globals for repo path and API endpoint
-        console.log('Using repository path:', global.IPFS_REPO_PATH)
-        console.log('Using API multiaddr:', global.IPFS_MULTIADDR_API)
-      })
       // Start the IPFS API Client
       .then(initIPFSClient())
       .then(client => {

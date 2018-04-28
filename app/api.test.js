@@ -1,5 +1,4 @@
 import * as api from './api'
-import * as daemon from './daemon'
 import ipfsApi from 'ipfs-api'
 import multiaddr from 'multiaddr'
 import request from 'request-promise-native'
