@@ -137,7 +137,7 @@ app.on('ready', () => {
         console.log('Using API multiaddr:', global.IPFS_MULTIADDR_API)
       })
       // Start the IPFS API Client
-      .then(initIPFSClient(global.IPFS_MULTIADDR_API))
+      .then(initIPFSClient())
       .then(client => {
         console.log('Connecting to the IPFS Daemon')
         global.IPFS_CLIENT = client

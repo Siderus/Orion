@@ -21,16 +21,12 @@ export function setClientInstance (client) {
 }
 
 /**
- * initIPFSClient will set up a new ipfs-api instance. It has an optional
- * argument `apiMultiaddr` that contains the custom multiaddr for the API.
- * If `apiMultiaddr` is not provided, the initIPFSClient is assuming that it is
- * running from a window, and it will extract the client from the global var in
- * the main process (using Electron remote)
+ * initIPFSClient will set up a new ipfs-api instance. It will try to get an
+ * existing instance and the configuration (api endpoint) from global vars
  *
- * @param {string} apiMultiaddr
  * @returns Promise<IPFS_CLIENT>
  */
-export function initIPFSClient (apiMultiaddr) {
+export function initIPFSClient () {
   if (IPFS_CLIENT !== null) return Promise.resolve(IPFS_CLIENT)
 
   // get IPFS client from the main process
@@ -40,6 +36,14 @@ export function initIPFSClient (apiMultiaddr) {
       setClientInstance(globalClient)
       return Promise.resolve(IPFS_CLIENT)
     }
+  }
+  // Configure the endpoint for the api. It will try to get the value from the
+  // global variables IPFS_MULTIADDR_APIs
+  let apiMultiaddr
+  if (remote) {
+    apiMultiaddr = remote.getGlobal('IPFS_MULTIADDR_API')
+  } else if (global.IPFS_MULTIADDR_API) {
+    apiMultiaddr = global.IPFS_MULTIADDR_API
   }
 
   // this fails because of the repo lock

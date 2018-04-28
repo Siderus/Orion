@@ -22,7 +22,7 @@ export function executeIPFSCommand (...args) {
     console.log('Running', global.IPFS_BINARY_PATH, args)
     // We need to replace spaces with escaped spaces in each argument passed
     // this will prevent situation of arguments splitted by mistake: ex on macOS
-    args = args.map((el)=> { el.replace(' ', '\\ ') })
+    args = args.map((el) => { el.replace(' ', '\\ ') })
     // Build the cmd
     const cmd = global.IPFS_BINARY_PATH + args.join(' ')
     const child = exec(cmd, options)
@@ -35,7 +35,7 @@ export function executeIPFSCommand (...args) {
     // On close ensure that the Promise resolves
     child.on('close', (code) => {
       if (code !== 0) {
-        console.error(`Error running: ${global.IPFS_BINARY_PATH} ${args} ${options} - ${code}`);
+        console.error(`Error running: ${global.IPFS_BINARY_PATH} ${args} ${options} - ${code}`)
         return reject(code)
       }
       return resolve(output)
