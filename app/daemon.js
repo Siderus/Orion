@@ -6,30 +6,6 @@ import request from 'request-promise-native'
 import { app, dialog } from 'electron'
 import pjson from '../package.json'
 
-const CUSTOM_API_PORT = 5101
-const CUSTOM_GATEWAY_PORT = 8180
-const CUSTOM_SWARM_PORT = 4101
-
-export let binaryPath = `./go-ipfs/ipfs`
-let skipRepo = false
-
-/**
- * Skip passing IPFS_PATH when executing commands.
- * Useful when you want to use the default repository path,
- * instead of our custom path (`AppData/Orion/.ipfs`).
- */
-export function skipRepoPath () {
-  skipRepo = true
-}
-
-export function getRepoPath () {
-  return pathJoin(app.getPath('userData'), '.ipfs')
-}
-
-export function setCustomBinaryPath (path) {
-  binaryPath = path
-}
-
 /**
  * Execute an IPFS command asynchoniously,
  * without needing to specify the binary path or repo path.
@@ -42,19 +18,27 @@ export function setCustomBinaryPath (path) {
  */
 export function executeIPFSCommand (...args) {
   return new Promise((resolve, reject) => {
-    const options = skipRepo ? undefined : { env: { IPFS_PATH: getRepoPath() } }
-    const child = spawn(binaryPath, args, options)
+    const options = { env: { IPFS_PATH: global.IPFS_REPO_PATH } }
+    console.log('Running', global.IPFS_BINARY_PATH, args)
+    // We need to replace spaces with escaped spaces in each argument passed
+    // this will prevent situation of arguments splitted by mistake: ex on macOS
+    args = args.map((el)=> { el.replace(' ', '\\ ') })
+    // Build the cmd
+    const cmd = global.IPFS_BINARY_PATH + args.join(' ')
+    const child = exec(cmd, options)
 
+    let output = ''
     // Pipe output to stderr
-    child.stderr.on('data', (data) => console.log(`${binaryPath} ${args}: ${data}`))
+    child.stderr.on('data', (data) => console.log(`${global.IPFS_BINARY_PATH} ${args}: ${data}`))
+    child.stdout.on('data', (data) => { output += data })
 
     // On close ensure that the Promise resolves
     child.on('close', (code) => {
-      if(code !== 0) {
-        console.error(`Error running: ${binaryPath} ${args} ${options} - ${code}`);
+      if (code !== 0) {
+        console.error(`Error running: ${global.IPFS_BINARY_PATH} ${args} ${options} - ${code}`);
         return reject(code)
       }
-      return resolve(code)
+      return resolve(output)
     })
   })
 }
@@ -69,8 +53,8 @@ export function executeIPFSCommand (...args) {
  * @returns ChildProcess
  */
 export function spawnIPFSCommand (command) {
-  const options = skipRepo ? undefined : { env: { IPFS_PATH: getRepoPath() } }
-  return spawn(binaryPath, [command], options)
+  const options = { env: { IPFS_PATH: global.IPFS_REPO_PATH } }
+  return spawn(global.IPFS_BINARY_PATH, [command], options)
 }
 
 /**
@@ -90,11 +74,11 @@ export function getAPIVersion () {
     .then(res => {
       /**
        * ApiVersionResult {
-       *   Version: "0.4.14",
-       *   Commit: "",
-       *   Repo: "6",
-       *   System: "amd64/linux",
-       *   Golang: "go1.10"
+       *   Version: '0.4.14',
+       *   Commit: ',
+       *   Repo: '6',
+       *   System: 'amd64/linux',
+       *   Golang: 'go1.10'
        * }
        */
       res = JSON.parse(res)
@@ -150,7 +134,7 @@ export function startIPFSDaemon () {
  * https://github.com/electron/electron/blob/master/docs/api/app.md#appgetpathname
  */
 export function isIPFSInitialised () {
-  const confFile = pathJoin(getRepoPath(), 'config')
+  const confFile = pathJoin(global.IPFS_REPO_PATH, 'config')
   return existsSync(confFile)
 }
 
@@ -192,32 +176,15 @@ export function ensuresIPFSInitialised () {
 }
 
 /**
- * This will ensure Orion starts on the correct ports by
- * resetting the ports to their default values or, when `customPorts` is passed,
- * by mapping these ports to:
+ * This will ensure IPFS Daemon starts on the correct ports by changing the
+ * API, Gateway and Address ports to the one specified in the global variables
  *
- * 5001 -> 5101 (API)
- * 8080 -> 8180 (Gateway)
- * 4001 -> 4101 (Swarm)
- *
- * @param {boolean} customPorts
  * @returns Promise
  */
-export function ensureAddressesConfigured (customPorts = false) {
-  let apiPort = '5001'
-  let gatewayPort = '8080'
-  let swarmPort = '4001'
-
-  if (customPorts) {
-    console.log('Setting custom addresses for API, Gateway and Swarm')
-    apiPort = CUSTOM_API_PORT
-    gatewayPort = CUSTOM_GATEWAY_PORT
-    swarmPort = CUSTOM_SWARM_PORT
-  }
-
-  return executeIPFSCommand('config', 'Addresses.API', `/ip4/127.0.0.1/tcp/${apiPort}`)
-    .then(() => executeIPFSCommand('config', 'Addresses.Gateway', `/ip4/127.0.0.1/tcp/${gatewayPort}`))
-    .then(() => executeIPFSCommand('config', '--json', 'Addresses.Swarm', `["/ip4/0.0.0.0/tcp/${swarmPort}", "/ip6/::/tcp/${swarmPort}"]`))
+export function ensureDaemonConfigured () {
+  return executeIPFSCommand('config', 'Addresses.API', global.IPFS_MULTIADDR_API)
+    .then(() => executeIPFSCommand('config', 'Addresses.Gateway', global.IPFS_MULTIADDR_GATEAY))
+    .then(() => executeIPFSCommand('config', '--json', 'Addresses.Swarm', JSON.stringify(global.IPFS_MULTIADDR_SWARM)))
 }
 
 /**
@@ -229,7 +196,7 @@ export function getApiMultiAddress () {
 
 /**
  * connectToCMD allows easily to connect to a node by specifying a str
- * multiaddress. example: connectToCMD("/ip4/192.168.0.22/tcp/4001/ipfs/Qm...")
+ * multiaddress. example: connectToCMD('/ip4/192.168.0.22/tcp/4001/ipfs/Qm...')
  * returns a promise
  */
 export function connectToCMD (strMultiddr) {
@@ -238,7 +205,7 @@ export function connectToCMD (strMultiddr) {
 
 /**
  * addBootstrapAddr allows easily to add a node multiaddr as a bootstrap nodes
- * example: addBootstrapAddr("/ip4/192.168.0.22/tcp/4001/ipfs/Qm...")
+ * example: addBootstrapAddr('/ip4/192.168.0.22/tcp/4001/ipfs/Qm...')
  * returns a promise
  */
 export function addBootstrapAddr (strMultiddr) {
@@ -283,7 +250,7 @@ export function promiseRepoUnlocked (timeout = 30) {
       return getApiMultiAddress().then(() => {
         clearInterval(iID)
         return resolve()
-      }).catch(() => { }) // do nothing in case of errors
+      }).catch((err) => { console.log('error:', err) }) // do nothing in case of errors
     }, 1000) // every second
   })
 }

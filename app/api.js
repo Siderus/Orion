@@ -9,7 +9,6 @@ import pjson from '../package.json'
 import gateways from './gateways.json'
 
 import Settings from 'electron-settings'
-import { getApiMultiAddress } from './daemon'
 
 export const ERROR_IPFS_UNAVAILABLE = 'IPFS NOT AVAILABLE'
 export const ERROR_IPFS_TIMEOUT = 'TIMEOUT'
@@ -21,7 +20,17 @@ export function setClientInstance (client) {
   IPFS_CLIENT = client
 }
 
-export function initIPFSClient () {
+/**
+ * initIPFSClient will set up a new ipfs-api instance. It has an optional
+ * argument `apiMultiaddr` that contains the custom multiaddr for the API.
+ * If `apiMultiaddr` is not provided, the initIPFSClient is assuming that it is
+ * running from a window, and it will extract the client from the global var in
+ * the main process (using Electron remote)
+ *
+ * @param {string} apiMultiaddr
+ * @returns Promise<IPFS_CLIENT>
+ */
+export function initIPFSClient (apiMultiaddr) {
   if (IPFS_CLIENT !== null) return Promise.resolve(IPFS_CLIENT)
 
   // get IPFS client from the main process
@@ -34,11 +43,8 @@ export function initIPFSClient () {
   }
 
   // this fails because of the repo lock
-  return getApiMultiAddress()
-    .then(apiMultiaddr => {
-      setClientInstance(ipfsAPI(apiMultiaddr))
-      return Promise.resolve(IPFS_CLIENT)
-    })
+  setClientInstance(ipfsAPI(apiMultiaddr))
+  return Promise.resolve(IPFS_CLIENT)
 }
 
 /**

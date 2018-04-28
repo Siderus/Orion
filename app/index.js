@@ -1,19 +1,18 @@
 import { app, dialog, shell } from 'electron'
 import { autoUpdater } from 'electron-updater'
+import { join as pathJoin } from 'path'
 import pjson from '../package.json'
 import './report'
 
 import {
   startIPFSDaemon,
   ensuresIPFSInitialised,
-  ensureAddressesConfigured,
+  ensureDaemonConfigured,
   getSiderusPeers,
   connectToCMD,
   addBootstrapAddr,
   promiseRepoUnlocked,
-  getAPIVersion,
-  setCustomBinaryPath,
-  skipRepoPath
+  getAPIVersion
 } from './daemon'
 
 import {
@@ -30,6 +29,15 @@ app.mainWindow = null
 // A little space for IPFS
 global.IPFS_PROCESS = null
 global.IPFS_CLIENT = null
+global.IPFS_BINARY_PATH = 'go-ipfs/ipfs'
+
+// Used to point to the right API endpoint, gateway and swarm.
+global.IPFS_MULTIADDR_API = '/ip4/127.0.0.1/tcp/5001'
+global.IPFS_MULTIADDR_GATEAY = '/ip4/127.0.0.1/tcp/8080'
+global.IPFS_MULTIADDR_SWARM = ['/ip4/0.0.0.0/tcp/4001', '/ip6/::/tcp/4001']
+
+// Used to point to the right IPFS repo & conf
+global.IPFS_REPO_PATH = pathJoin(app.getPath('userData'), 'ipfs-repo')
 
 // Setup the menu
 require('./menu')
@@ -90,32 +98,29 @@ app.on('ready', () => {
 
     getAPIVersion()
       .then(apiVersion => {
-        let customPorts = false
-
         // An api is already available on port 5001
         if (apiVersion !== null) {
-          console.log("Another service on localhost:5001 has been deteced")
+          console.log('Another service on localhost:5001 has been deteced')
           const useExistingNode = askWhichNodeToUse(apiVersion)
 
           if (useExistingNode) {
-            console.log("Using existing IPFS node (localhost:5001)")
-            // Use running node, skip starting the daemon
-            // Set binary path to `ipfs` to use the client's binary
-            skipRepoPath()
-            setCustomBinaryPath('ipfs')
+            console.log('Using existing IPFS node (localhost:5001)')
+            global.IPFS_BINARY_PATH = 'ipfs'
             return Promise.resolve()
           } else {
             // Use our own daemon, but on different ports
-            console.log("Using custom setup for Orion new IPFS node (localhost:5101)")
-            customPorts = true
+            console.log('Using custom setup for Orion new IPFS node (localhost:5101)')
+            global.IPFS_MULTIADDR_API = '/ip4/127.0.0.1/tcp/5101'
+            global.IPFS_MULTIADDR_GATEAY = '/ip4/127.0.0.1/tcp/8180'
+            global.IPFS_MULTIADDR_SWARM = ['/ip4/0.0.0.0/tcp/4101', '/ip6/::/tcp/4101']
           }
         }
 
+        // Starts the IPFS daemon
+        console.log('IPFS Daemon: Starting')
         return ensuresIPFSInitialised()
-          .then(() => ensureAddressesConfigured(customPorts))
           .then(startIPFSDaemon)
           .then((process) => {
-            console.log('IPFS Daemon: Starting')
             global.IPFS_PROCESS = process
             loadingWindow.webContents.send('set-progress', {
               text: 'Initializing the IPFS Daemon...',
@@ -123,10 +128,16 @@ app.on('ready', () => {
             })
             return Promise.resolve()
           })
-          .then(promiseRepoUnlocked)
+      })
+      .then(promiseRepoUnlocked) // ensures that the api are ready
+      .then(() => ensureDaemonConfigured())
+      .then(() => {
+        // Logs globals for repo path and API endpoint
+        console.log('Using repository path:', global.IPFS_REPO_PATH)
+        console.log('Using API multiaddr:', global.IPFS_MULTIADDR_API)
       })
       // Start the IPFS API Client
-      .then(initIPFSClient)
+      .then(initIPFSClient(global.IPFS_MULTIADDR_API))
       .then(client => {
         console.log('Connecting to the IPFS Daemon')
         global.IPFS_CLIENT = client
