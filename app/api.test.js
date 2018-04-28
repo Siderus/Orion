@@ -57,6 +57,7 @@ describe('api.js', () => {
         })
     })
   })
+
   describe('resolveName', function () {
     it('should reject when IPFS is not started', function () {
       // arrange
