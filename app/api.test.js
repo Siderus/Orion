@@ -7,20 +7,18 @@ import request from 'request-promise-native'
 import pjson from '../package'
 // import Settings from 'electron-settings'
 
-jest.mock('./daemon', () => {
-  return {
-    getApiMultiAddress: jest.fn().mockReturnValue(Promise.resolve('my-address'))
-  }
-})
 jest.mock('ipfs-api', () => {
   return jest.fn().mockReturnValue('new-instance')
 })
+
 jest.mock('./gateways', () => {
   return ['mock-gateway-1', 'mock-gateway-2']
 })
+
 jest.mock('request-promise-native', () => {
   return jest.fn().mockReturnValue(Promise.resolve())
 })
+
 jest.mock('electron-settings', () => {
   const getSyncMock = jest.fn()
     // getSync('skipGatewayQuery)
@@ -49,11 +47,11 @@ describe('api.js', () => {
     it('should create a new instance', () => {
       // arrange
       api.setClientInstance(null)
+      global.IPFS_MULTIADDR_API = 'my-address'
       // act
       return api.initIPFSClient()
         .then(result => {
           // assert
-          expect(daemon.getApiMultiAddress).toHaveBeenCalled()
           expect(ipfsApi).toBeCalledWith('my-address')
           expect(result).toBe('new-instance')
         })
