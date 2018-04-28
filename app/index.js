@@ -94,9 +94,11 @@ app.on('ready', () => {
 
         // An api is already available on port 5001
         if (apiVersion !== null) {
+          console.log("Another service on localhost:5001 has been deteced")
           const useExistingNode = askWhichNodeToUse(apiVersion)
 
           if (useExistingNode) {
+            console.log("Using existing IPFS node (localhost:5001)")
             // Use running node, skip starting the daemon
             // Set binary path to `ipfs` to use the client's binary
             skipRepoPath()
@@ -104,6 +106,7 @@ app.on('ready', () => {
             return Promise.resolve()
           } else {
             // Use our own daemon, but on different ports
+            console.log("Using custom setup for Orion new IPFS node (localhost:5101)")
             customPorts = true
           }
         }
