@@ -1,18 +1,16 @@
-import { spawn } from 'child_process'
+import { spawn, exec } from 'child_process'
 import { createWriteStream, existsSync } from 'fs'
 import { join as pathJoin } from 'path'
-import exec from 'promised-exec'
 import { fileSync as tmpFileSync } from 'tmp'
 import request from 'request-promise-native'
 import { app, dialog } from 'electron'
 import pjson from '../package.json'
-import { get as getAppRoot } from 'app-root-dir'
 
 const CUSTOM_API_PORT = 5101
 const CUSTOM_GATEWAY_PORT = 8180
 const CUSTOM_SWARM_PORT = 4101
 
-export let binaryPath = `${getAppRoot()}/go-ipfs/ipfs`
+export let binaryPath = `./go-ipfs/ipfs`
 let skipRepo = false
 
 /**
@@ -36,15 +34,29 @@ export function setCustomBinaryPath (path) {
  * Execute an IPFS command asynchoniously,
  * without needing to specify the binary path or repo path.
  *
- * Example: `executeIPFSCommand('config Addresses.API')`
+ * Example: `executeIPFSCommand('config', 'Addresses.API')`
  * which could resolve to `/ip4/127.0.0.1/tcp/5001`
  *
  * @param {string} command
  * @return Promise<string>
  */
-export function executeIPFSCommand (command) {
-  const env = skipRepo ? '' : `IPFS_PATH=${getRepoPath()}`
-  return exec(`${env} ${binaryPath} ${command}`)
+export function executeIPFSCommand (...args) {
+  return new Promise((resolve, reject) => {
+    const options = skipRepo ? undefined : { env: { IPFS_PATH: getRepoPath() } }
+    const child = spawn(binaryPath, args, options)
+
+    // Pipe output to stderr
+    child.stderr.on('data', (data) => console.log(`${binaryPath} ${args}: ${data}`))
+
+    // On close ensure that the Promise resolves
+    child.on('close', (code) => {
+      if(code !== 0) {
+        console.error(`Error running: ${binaryPath} ${args} ${options} - ${code}`);
+        return reject(code)
+      }
+      return resolve(code)
+    })
+  })
 }
 
 /**
@@ -203,16 +215,16 @@ export function ensureAddressesConfigured (customPorts = false) {
     swarmPort = CUSTOM_SWARM_PORT
   }
 
-  return executeIPFSCommand(`config Addresses.API /ip4/127.0.0.1/tcp/${apiPort}`)
-    .then(() => executeIPFSCommand(`config Addresses.Gateway /ip4/127.0.0.1/tcp/${gatewayPort}`))
-    .then(() => executeIPFSCommand(`config Addresses.Swarm --json '["/ip4/0.0.0.0/tcp/${swarmPort}", "/ip6/::/tcp/${swarmPort}"]'`))
+  return executeIPFSCommand('config', 'Addresses.API', `/ip4/127.0.0.1/tcp/${apiPort}`)
+    .then(() => executeIPFSCommand('config', 'Addresses.Gateway', `/ip4/127.0.0.1/tcp/${gatewayPort}`))
+    .then(() => executeIPFSCommand('config', '--json', 'Addresses.Swarm', `["/ip4/0.0.0.0/tcp/${swarmPort}", "/ip6/::/tcp/${swarmPort}"]`))
 }
 
 /**
  * Returns the multiAddr usable to connect to the local dameon via API
  */
 export function getApiMultiAddress () {
-  return executeIPFSCommand(`config Addresses.API`)
+  return executeIPFSCommand('config', 'Addresses.API')
 }
 
 /**
@@ -221,7 +233,7 @@ export function getApiMultiAddress () {
  * returns a promise
  */
 export function connectToCMD (strMultiddr) {
-  return executeIPFSCommand(`swarm connect ${strMultiddr}`)
+  return executeIPFSCommand('swarm', 'connect', `${strMultiddr}`)
 }
 
 /**
@@ -230,7 +242,7 @@ export function connectToCMD (strMultiddr) {
  * returns a promise
  */
 export function addBootstrapAddr (strMultiddr) {
-  return executeIPFSCommand(`bootstrap add ${strMultiddr}`)
+  return executeIPFSCommand('bootstrap', 'add', `${strMultiddr}`)
 }
 
 /**
