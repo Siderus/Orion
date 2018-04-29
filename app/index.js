@@ -1,14 +1,19 @@
 import { app, dialog, shell } from 'electron'
 import { autoUpdater } from 'electron-updater'
+import { join as pathJoin } from 'path'
 import pjson from '../package.json'
 import './report'
+import rootDir from 'app-root-dir'
 
 import {
   startIPFSDaemon,
   ensuresIPFSInitialised,
+  ensureDaemonConfigured,
   getSiderusPeers,
   connectToCMD,
-  addBootstrapAddr
+  addBootstrapAddr,
+  promiseRepoUnlocked,
+  getAPIVersion
 } from './daemon'
 
 import {
@@ -22,14 +27,49 @@ import StorageWindow from './windows/Storage/window'
 // Let's create the main window
 app.mainWindow = null
 
-// A little space for IPFS
+// A little space for IPFS processes
 global.IPFS_PROCESS = null
 global.IPFS_CLIENT = null
+
+// Sets default values for IPFS configurations
+global.IPFS_BINARY_PATH = `${rootDir.get()}/go-ipfs/ipfs`
+global.IPFS_MULTIADDR_API = '/ip4/127.0.0.1/tcp/5001'
+global.IPFS_MULTIADDR_GATEAY = '/ip4/127.0.0.1/tcp/8080'
+global.IPFS_MULTIADDR_SWARM = `'["/ip4/0.0.0.0/tcp/4001", "/ip6/::/tcp/4001"]'`
+
+// Used to point to the right IPFS repo & conf
+global.IPFS_REPO_PATH = pathJoin(app.getPath('userData'), 'ipfs-repo')
 
 // Setup the menu
 require('./menu')
 // Make sure we have a single instance
 require('./singleInstance')
+
+/**
+ * Returns `true` if the user wants to use the running node and
+ * `false`, if the user wants to use own node
+ *
+ * @returns {boolean}
+ */
+function askWhichNodeToUse (apiVersion) {
+  let alertMessage = 'An IPFS instance is already up!'
+  alertMessage += '\n\nWould you like Orion to connect to the available node, instead of using its own?'
+
+  if (apiVersion !== pjson.ipfsVersion) {
+    alertMessage += `\n\nPlease note: Orion was design with IPFS ${pjson.ipfsVersion} in mind, `
+    alertMessage += `while the available API is running ${apiVersion}.`
+  }
+
+  const btnId = dialog.showMessageBox({
+    type: 'info',
+    message: alertMessage,
+    buttons: ['No', 'Yes'],
+    cancelId: 0,
+    defaultId: 1
+  })
+
+  return btnId === 1
+}
 
 app.on('ready', () => {
   // Ask github whether there is an update
@@ -56,20 +96,59 @@ app.on('ready', () => {
     })
     // Set up crash reports.
     // Set up the needed stuff as the app launches.
-    ensuresIPFSInitialised()
-      .then(startIPFSDaemon)
-      .then((process) => {
-        console.log('IPFS Daemon started')
-        global.IPFS_PROCESS = process
-        loadingWindow.webContents.send('set-progress', {
-          text: 'Initializing IPFS client...',
-          percentage: 20
-        })
-        return Promise.resolve()
-      })
 
+    getAPIVersion()
+      .then(apiVersion => {
+        // An api is already available on port 5001
+        if (apiVersion !== null) {
+          console.log('Another service on localhost:5001 has been deteced')
+          const useExistingNode = askWhichNodeToUse(apiVersion)
+
+          if (useExistingNode) {
+            console.log('Using existing IPFS node (localhost:5001)')
+            global.IPFS_BINARY_PATH = 'ipfs'
+            global.IPFS_REPO_PATH = ''
+            return Promise.resolve(false) // it should not start the ipfs daemon
+          } else {
+            // Use our own daemon, but on different ports
+            console.log('Using custom setup for Orion new IPFS node (localhost:5101)')
+            global.IPFS_MULTIADDR_API = '/ip4/127.0.0.1/tcp/5101'
+            global.IPFS_MULTIADDR_GATEAY = '/ip4/127.0.0.1/tcp/8180'
+            global.IPFS_MULTIADDR_SWARM = `'["/ip4/0.0.0.0/tcp/4101", "/ip6/::/tcp/4101"]'`
+          }
+        }
+        return Promise.resolve(true) // it should start the ipfs daemon
+      })
+      .then((shouldStart) => {
+        // Logs the path and configuration used
+        console.log('IPFS_BINARY_PATH', global.IPFS_BINARY_PATH)
+        console.log('IPFS_MULTIADDR_API', global.IPFS_MULTIADDR_API)
+        console.log('IPFS_MULTIADDR_GATEAY', global.IPFS_MULTIADDR_GATEAY)
+        console.log('IPFS_MULTIADDR_SWARM', global.IPFS_MULTIADDR_SWARM)
+        console.log('IPFS_REPO_PATH', global.IPFS_REPO_PATH)
+        console.log('IPFS_MULTIADDR_API', global.IPFS_MULTIADDR_API)
+        return Promise.resolve(shouldStart)
+      })
+      .then((shouldStart) => {
+        if (!shouldStart) return Promise.resolve()
+        // Starts the IPFS daemon
+        console.log('IPFS Daemon: Starting')
+        return ensuresIPFSInitialised()
+          .then(() => ensureDaemonConfigured())
+          .then(startIPFSDaemon)
+          .then((process) => {
+            global.IPFS_PROCESS = process
+            loadingWindow.webContents.send('set-progress', {
+              text: 'Initializing the IPFS Daemon...',
+              percentage: 20
+            })
+            return Promise.resolve()
+          })
+      })
+      .then(promiseRepoUnlocked) // ensures that the api are ready
+      .then(() => ensureDaemonConfigured())
       // Start the IPFS API Client
-      .then(initIPFSClient)
+      .then(initIPFSClient())
       .then(client => {
         console.log('Connecting to the IPFS Daemon')
         global.IPFS_CLIENT = client
@@ -127,7 +206,14 @@ app.on('ready', () => {
       })
       // Catch errors
       .catch(err => {
-        const message = typeof err === 'string' ? err : JSON.stringify(err)
+        let message
+        if (typeof err === 'string') {
+          message = err
+        } else if (err.message) {
+          message = err.message
+        } else {
+          message = JSON.stringify(err)
+        }
         dialog.showMessageBox({ type: 'warning', message })
         app.quit()
       })

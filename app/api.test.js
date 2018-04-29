@@ -1,5 +1,4 @@
 import * as api from './api'
-import * as daemon from './daemon'
 import ipfsApi from 'ipfs-api'
 import multiaddr from 'multiaddr'
 import request from 'request-promise-native'
@@ -7,20 +6,18 @@ import request from 'request-promise-native'
 import pjson from '../package'
 // import Settings from 'electron-settings'
 
-jest.mock('./daemon', () => {
-  return {
-    getMultiAddrIPFSDaemon: jest.fn().mockReturnValue('my-address')
-  }
-})
 jest.mock('ipfs-api', () => {
   return jest.fn().mockReturnValue('new-instance')
 })
+
 jest.mock('./gateways', () => {
   return ['mock-gateway-1', 'mock-gateway-2']
 })
+
 jest.mock('request-promise-native', () => {
   return jest.fn().mockReturnValue(Promise.resolve())
 })
+
 jest.mock('electron-settings', () => {
   const getSyncMock = jest.fn()
     // getSync('skipGatewayQuery)
@@ -49,16 +46,17 @@ describe('api.js', () => {
     it('should create a new instance', () => {
       // arrange
       api.setClientInstance(null)
+      global.IPFS_MULTIADDR_API = 'my-address'
       // act
       return api.initIPFSClient()
         .then(result => {
           // assert
-          expect(daemon.getMultiAddrIPFSDaemon).toHaveBeenCalled()
           expect(ipfsApi).toBeCalledWith('my-address')
           expect(result).toBe('new-instance')
         })
     })
   })
+
   describe('resolveName', function () {
     it('should reject when IPFS is not started', function () {
       // arrange

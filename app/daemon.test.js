@@ -1,5 +1,7 @@
 import * as daemon from './daemon'
 
+global.IPFS_REPO_PATH = '/custom/path/to/ipfs'
+
 jest.mock('electron-settings', () => {
   const getSyncMock = jest.fn()
     .mockReturnValueOnce(null)
@@ -7,13 +9,6 @@ jest.mock('electron-settings', () => {
 
   return {
     getSync: getSyncMock
-  }
-})
-jest.mock('app-root-dir', () => {
-  const getAppRootMock = jest.fn().mockReturnValue('root-dir')
-
-  return {
-    get: getAppRootMock
   }
 })
 
@@ -27,16 +22,6 @@ jest.mock('electron', () => {
 })
 
 describe('daemon.js', () => {
-  describe('getPathIPFSBinary', () => {
-    it('should always return the default value', () => {
-      // arrange
-      // act
-      const path = daemon.getPathIPFSBinary()
-      // assert
-      expect(path).toBe('root-dir/go-ipfs/ipfs')
-    })
-  })
-
   describe('isIPFSInitialised', () => {
     it('will correctly return if a repo conf does not exist', () => {
       const bool = daemon.isIPFSInitialised()
