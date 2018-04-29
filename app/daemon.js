@@ -151,7 +151,7 @@ export function ensuresIPFSInitialised () {
   if (isIPFSInitialised()) return Promise.resolve()
   console.log('Initialising IPFS repository...')
   return new Promise((resolve, reject) => {
-    const ipfsProcess = spawnIPFSCommand('init', `--api=${global.IPFS_MULTIADDR_API}`)
+    const ipfsProcess = spawnIPFSCommand('init')
     // Prepare temporary file for logging:
     const tmpLog = tmpFileSync({ keep: true })
     const tmpLogPipe = createWriteStream(tmpLog.name)
