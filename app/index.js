@@ -3,6 +3,7 @@ import { autoUpdater } from 'electron-updater'
 import { join as pathJoin } from 'path'
 import pjson from '../package.json'
 import './report'
+import rootDir from 'app-root-dir'
 
 import {
   startIPFSDaemon,
@@ -31,7 +32,7 @@ global.IPFS_PROCESS = null
 global.IPFS_CLIENT = null
 
 // Sets default values for IPFS configurations
-global.IPFS_BINARY_PATH = 'go-ipfs/ipfs'
+global.IPFS_BINARY_PATH = `${rootDir.get()}/go-ipfs/ipfs`
 global.IPFS_MULTIADDR_API = '/ip4/127.0.0.1/tcp/5001'
 global.IPFS_MULTIADDR_GATEAY = '/ip4/127.0.0.1/tcp/8080'
 global.IPFS_MULTIADDR_SWARM = `'["/ip4/0.0.0.0/tcp/4001", "/ip6/::/tcp/4001"]'`
