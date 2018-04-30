@@ -162,7 +162,6 @@ app.on('ready', () => {
           })
       })
       .then(promiseRepoUnlocked) // ensures that the api are ready
-      .then(() => ensureDaemonConfigured())
       // Start the IPFS API Client
       .then(initIPFSClient())
       .then(client => {
