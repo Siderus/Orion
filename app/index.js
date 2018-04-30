@@ -129,19 +129,35 @@ app.on('ready', () => {
         console.log('IPFS_MULTIADDR_API', global.IPFS_MULTIADDR_API)
         return Promise.resolve(shouldStart)
       })
+      // Configure & Start the daemon in case
       .then((shouldStart) => {
         if (!shouldStart) return Promise.resolve()
-        // Starts the IPFS daemon
-        console.log('IPFS Daemon: Starting')
+        // ToDo: Use a single promise chain, stay away from crazy indentation
+        // levels!
+
+        // To ensure the configuration is correct, try to initialize the repo
         return ensuresIPFSInitialised()
-          .then(() => ensureDaemonConfigured())
+          .then(() => {
+            // initPorcess is a childprocess
+            console.log('Configuring IPFS daemon')
+            loadingWindow.webContents.send('set-progress', {
+              text: 'Configuring IPFS daemon...',
+              percentage: 10
+            })
+          })
+          // Then change the json of the configuration file
+          .then(ensureDaemonConfigured)
+          .then(() => {
+            // Show a message that we are starting the IPFS daemon
+            console.log('IPFS Daemon: Starting')
+            loadingWindow.webContents.send('set-progress', {
+              text: 'Starting the IPFS Daemon...',
+              percentage: 20
+            })
+          })
           .then(startIPFSDaemon)
           .then((process) => {
             global.IPFS_PROCESS = process
-            loadingWindow.webContents.send('set-progress', {
-              text: 'Initializing the IPFS Daemon...',
-              percentage: 20
-            })
             return Promise.resolve()
           })
       })
