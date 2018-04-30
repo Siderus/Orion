@@ -39,8 +39,8 @@ export function executeIPFSCommand (...args) {
     // Pipe output to stderr
     child.stderr.on('data', (data) => {
       output += data
-      console.log(`${global.IPFS_BINARY_PATH} ${args}: ${data}`}
-    ))
+      console.log(`${global.IPFS_BINARY_PATH} ${args}: ${data}`)
+    })
     child.stdout.on('data', (data) => { output += data })
 
     // On close ensure that the Promise resolves
