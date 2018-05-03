@@ -1,5 +1,12 @@
 import { spawn, exec } from 'child_process'
-import { createWriteStream, existsSync } from 'fs'
+
+import {
+  readFileSync,
+  writeFile,
+  createWriteStream,
+  existsSync
+} from 'fs'
+
 import { join as pathJoin } from 'path'
 import { fileSync as tmpFileSync } from 'tmp'
 import request from 'request-promise-native'
@@ -30,14 +37,17 @@ export function executeIPFSCommand (...args) {
 
     let output = ''
     // Pipe output to stderr
-    child.stderr.on('data', (data) => console.log(`${global.IPFS_BINARY_PATH} ${args}: ${data}`))
+    child.stderr.on('data', (data) => {
+      output += data
+      console.log(`${global.IPFS_BINARY_PATH} ${args}: ${data}`)
+    })
     child.stdout.on('data', (data) => { output += data })
 
     // On close ensure that the Promise resolves
     child.on('close', (code) => {
       if (code !== 0) {
         console.error(`Error running: ${global.IPFS_BINARY_PATH} ${args} ${options} - ${code}`)
-        return reject(code)
+        return reject(output)
       }
       return resolve(output)
     })
@@ -58,7 +68,7 @@ export function spawnIPFSCommand (...args) {
   if (global.IPFS_REPO_PATH.length > 0) {
     options = { env: { IPFS_PATH: global.IPFS_REPO_PATH } }
   }
-
+  console.log('Running', global.IPFS_BINARY_PATH, args, options)
   return spawn(global.IPFS_BINARY_PATH, args, options)
 }
 
@@ -97,11 +107,13 @@ export function getAPIVersion () {
 
 /**
  * startIPFSDaemon will start IPFS go daemon, if installed.
- * return a promise with child process of IPFS daemon
+ * return a promise with child process of IPFS daemon.
+ * The daemon always has 2 options, one to ensure that the repo is initalized
+ * the other one to ensure that the api endpoint is the right multiaddr
  */
 export function startIPFSDaemon () {
   return new Promise((resolve, reject) => {
-    const ipfsProcess = spawnIPFSCommand('daemon', `--api=${global.IPFS_MULTIADDR_API}`)
+    const ipfsProcess = spawnIPFSCommand('daemon', '--init', `--api=${global.IPFS_MULTIADDR_API}`)
 
     // Prepare temporary file for logging:
     const tmpLog = tmpFileSync({ keep: true })
@@ -187,9 +199,23 @@ export function ensuresIPFSInitialised () {
  * @returns Promise
  */
 export function ensureDaemonConfigured () {
-  return executeIPFSCommand('config', 'Addresses.API', global.IPFS_MULTIADDR_API)
-    .then(() => executeIPFSCommand('config', 'Addresses.Gateway', global.IPFS_MULTIADDR_GATEAY))
-    .then(() => executeIPFSCommand('config', '--json', 'Addresses.Swarm', global.IPFS_MULTIADDR_SWARM))
+  return new Promise((resolve, reject) => {
+    // Read the json conifugation. A simple require() won't work
+    const configFilePath = pathJoin(global.IPFS_REPO_PATH, './config')
+    const confRaw = readFileSync(configFilePath, { encoding: 'utf8' })
+    let conf = JSON.parse(confRaw)
+
+    // Change the configuration
+    conf.Addresses.API = global.IPFS_MULTIADDR_API
+    conf.Addresses.Gateway = global.IPFS_MULTIADDR_GATEAY
+    conf.Addresses.Swarm = global.IPFS_MULTIADDR_SWARM
+
+    // Return a promise that writes the configuration back in the file
+    writeFile(configFilePath, JSON.stringify(conf, null, 2), function (err) {
+      if (err) return reject(err)
+      return resolve()
+    })
+  })
 }
 
 /**

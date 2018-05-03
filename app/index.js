@@ -35,7 +35,7 @@ global.IPFS_CLIENT = null
 global.IPFS_BINARY_PATH = `${rootDir.get()}/go-ipfs/ipfs`
 global.IPFS_MULTIADDR_API = '/ip4/127.0.0.1/tcp/5001'
 global.IPFS_MULTIADDR_GATEAY = '/ip4/127.0.0.1/tcp/8080'
-global.IPFS_MULTIADDR_SWARM = `'["/ip4/0.0.0.0/tcp/4001", "/ip6/::/tcp/4001"]'`
+global.IPFS_MULTIADDR_SWARM = ['/ip4/0.0.0.0/tcp/4001', '/ip6/::/tcp/4001']
 
 // Used to point to the right IPFS repo & conf
 global.IPFS_REPO_PATH = pathJoin(app.getPath('userData'), 'ipfs-repo')
@@ -91,7 +91,7 @@ app.on('ready', () => {
   loadingWindow.on('ready-to-show', () => {
     console.log('Loading window ready to show')
     loadingWindow.webContents.send('set-progress', {
-      text: 'Starting IPFS daemon...',
+      text: 'Getting started...',
       percentage: 0
     })
     // Set up crash reports.
@@ -114,7 +114,7 @@ app.on('ready', () => {
             console.log('Using custom setup for Orion new IPFS node (localhost:5101)')
             global.IPFS_MULTIADDR_API = '/ip4/127.0.0.1/tcp/5101'
             global.IPFS_MULTIADDR_GATEAY = '/ip4/127.0.0.1/tcp/8180'
-            global.IPFS_MULTIADDR_SWARM = `'["/ip4/0.0.0.0/tcp/4101", "/ip6/::/tcp/4101"]'`
+            global.IPFS_MULTIADDR_SWARM = ['/ip4/0.0.0.0/tcp/4101', '/ip6/::/tcp/4101']
           }
         }
         return Promise.resolve(true) // it should start the ipfs daemon
@@ -129,24 +129,39 @@ app.on('ready', () => {
         console.log('IPFS_MULTIADDR_API', global.IPFS_MULTIADDR_API)
         return Promise.resolve(shouldStart)
       })
+      // Configure & Start the daemon in case
       .then((shouldStart) => {
         if (!shouldStart) return Promise.resolve()
-        // Starts the IPFS daemon
-        console.log('IPFS Daemon: Starting')
+        // ToDo: Use a single promise chain, stay away from crazy indentation
+        // levels!
+
+        // To ensure the configuration is correct, try to initialize the repo
         return ensuresIPFSInitialised()
-          .then(() => ensureDaemonConfigured())
+          .then(() => {
+            // initPorcess is a childprocess
+            console.log('Configuring IPFS daemon')
+            loadingWindow.webContents.send('set-progress', {
+              text: 'Configuring IPFS daemon...',
+              percentage: 10
+            })
+          })
+          // Then change the json of the configuration file
+          .then(ensureDaemonConfigured)
+          .then(() => {
+            // Show a message that we are starting the IPFS daemon
+            console.log('IPFS Daemon: Starting')
+            loadingWindow.webContents.send('set-progress', {
+              text: 'Starting the IPFS Daemon...',
+              percentage: 20
+            })
+          })
           .then(startIPFSDaemon)
           .then((process) => {
             global.IPFS_PROCESS = process
-            loadingWindow.webContents.send('set-progress', {
-              text: 'Initializing the IPFS Daemon...',
-              percentage: 20
-            })
             return Promise.resolve()
           })
       })
       .then(promiseRepoUnlocked) // ensures that the api are ready
-      .then(() => ensureDaemonConfigured())
       // Start the IPFS API Client
       .then(initIPFSClient())
       .then(client => {

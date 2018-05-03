@@ -8,6 +8,8 @@ Orion is an easy and KISS [inter planetary file system](http://ipfs.io) desktop
 client. It allows you to easily add and remove files, and manage the repository,
 the daemon and basic configuration.
 
+To download the latest version for Windows, Linux and macOS [check the latest release](https://github.com/Siderus/Orion/releases/latest)!
+
 ![Screenshots](docs/main.png)
 
 ## About the project
