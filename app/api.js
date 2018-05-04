@@ -39,72 +39,121 @@ export function initIPFSClient () {
 }
 
 /**
- * This function will allow the user to add a file to the IPFS repo.
+ * ```
+ * Link {
+ *  hash: string;
+ *  path: string;
+ *  size: number;
+ * }
+ * ```
+ *
+ * @param {Link[]} links
+ * @returns {Link} the wrapper, which is of type Link
  */
-export function addFileFromFSPath (filePath, _queryGateways = queryGateways) {
+export function wrapFiles (links) {
+  const wrapperDAG = {
+    Data: Buffer.from('\u0008\u0001'),
+    // The object.put API expects `Name` not `path`
+    Links: links.map(link => ({
+      Name: link.path,
+      Hash: link.hash,
+      Size: link.size
+    }))
+  }
+
+  return IPFS_CLIENT.object.put(wrapperDAG)
+    .then(res => {
+      // res is of type DAGNode
+      // https://github.com/ipld/js-ipld-dag-pb#nodetojson
+      res = res.toJSON()
+      const wrapper = {
+        hash: res.multihash,
+        path: '',
+        size: res.size
+      }
+
+      return wrapper
+    })
+}
+
+/**
+ * This function will allow the user to add a file or multiple files to the IPFS repo.
+ * Accepts a string or a string array.
+ * Wraps the files in a directory.
+ *
+ * ```
+ * Wrapper {
+ *  hash: string;
+ *  path: string;
+ *  size: number;
+ * }
+ * ```
+ *
+ * @param {string|string[]} filePath
+ * @returns {Wrapper} wrapper
+ */
+export function addFileOrFilesFromFSPath (filePath, _queryGateways = queryGateways) {
   if (!IPFS_CLIENT) return Promise.reject(ERROR_IPFS_UNAVAILABLE)
 
   const options = { recursive: true }
-  /**
-   * Add the file/directory from fs
-   */
-  return IPFS_CLIENT.util.addFromFs(filePath, options)
-    .then(files => {
-      /**
-       * If it was a directory it will be last
-       * Example result:
-       * [{
-       *   hash: "QmRgutAxd8t7oGkSm4wmeuByG6M51wcTso6cubDdQtuEfL"
-       *   path: "ipfs-test-dir/wrappedtext.txt"
-       *   size: 15
-       * }, {
-       *   hash: "QmcysLdK6jV4QAgcdxVZFzTt8TieH4bkyW6kniPKTr2RXp"
-       *   path: "ipfs-test-dir"
-       *   size: 9425451
-       * }]
-       *
-       */
-      const rootFile = files[files.length - 1]
-      const wrapperDag = {
-        Data: Buffer.from('\u0008\u0001'),
-        Links: [{
-          Name: rootFile.path,
-          Hash: rootFile.hash,
-          Size: rootFile.size
-        }]
-      }
 
-      return IPFS_CLIENT.object.put(wrapperDag)
-        .then(res => {
-          // res is of type DAGNode
-          // https://github.com/ipld/js-ipld-dag-pb#nodetojson
-          res = res.toJSON()
-          const wrapper = {
-            hash: res.multihash,
-            path: '',
-            size: res.size
+  const promises = []
+  if (Array.isArray(filePath)) {
+    filePath.map(path => promises.push(IPFS_CLIENT.util.addFromFs(path, options)))
+  } else {
+    /**
+     * Add the file/directory from fs
+     */
+    promises.push(IPFS_CLIENT.util.addFromFs(filePath, options))
+  }
+
+  return Promise.all(promises)
+    .then(fileUploadResults => {
+      // IPFS_CLIENT.util.addFromFs always returns an array
+      // (because it can upload an dir recursively),
+      // which is why we expect an array of arrays
+
+      const rootFiles = fileUploadResults.map(result => {
+        /**
+         * If it was a directory it will be last
+         * Example result:
+         * [{
+         *   hash: "QmRgutAxd8t7oGkSm4wmeuByG6M51wcTso6cubDdQtuEfL"
+         *   path: "ipfs-test-dir/wrappedtext.txt"
+         *   size: 15
+         * }, {
+         *   hash: "QmcysLdK6jV4QAgcdxVZFzTt8TieH4bkyW6kniPKTr2RXp"
+         *   path: "ipfs-test-dir"
+         *   size: 9425451
+         * }]
+         *
+         */
+        return result[result.length - 1]
+      })
+
+      return wrapFiles(rootFiles)
+        .then(wrapper => Promise.all([
+          // This value is needed further in the chain
+          wrapper,
+          // Pin the wrapper directory
+          IPFS_CLIENT.pin.add(wrapper.hash),
+          // Unpin the initial uploads
+          ...rootFiles.map(rootFile => IPFS_CLIENT.pin.rm(rootFile.hash))
+        ]))
+        /**
+         * Query the gateways and return the wrapper dir
+         */
+        .then(results => {
+          const wrapper = results[0]
+
+          if (!Settings.getSync('skipGatewayQuery')) {
+            // Query all the uploaded files
+            fileUploadResults.forEach(files => files.forEach(file => _queryGateways(file.hash)))
+            // Query the wrapper
+            _queryGateways(wrapper.hash)
           }
-          files.push(wrapper)
 
-          return Promise.all([
-            /**
-             * Pin the wrapper directory
-            */
-            IPFS_CLIENT.pin.add(wrapper.hash),
-            /**
-             * Unpin the initial upload
-             */
-            IPFS_CLIENT.pin.rm(rootFile.hash)
-          ])
-            /**
-             * Return all items + the wrapper dir
-             */
-            .then(() => {
-              if (!Settings.getSync('skipGatewayQuery')) {
-                files.forEach(file => _queryGateways(file.hash))
-              }
-              return Promise.resolve(files)
-            })
+          return Promise.resolve(wrapper)
         })
     })
 }
