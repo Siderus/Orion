@@ -1,6 +1,6 @@
 import { remote } from 'electron'
 import Settings from 'electron-settings'
-import { addFileOrFilesFromFSPath, unpinObject } from '../../api'
+import { addFilesFromFSPath, unpinObject } from '../../api'
 import DetailsWindow from '../Details/window'
 
 const { app, dialog, shell } = remote
@@ -37,10 +37,10 @@ export function addFilesPaths (paths) {
 
   if (paths.length > 1 && askWhetherToWrapAllFiles()) {
     // If the user says yes to wrapping all files, simply pass the paths array
-    promises = [addFileOrFilesFromFSPath(paths)]
+    promises = [addFilesFromFSPath(paths)]
   } else {
-    // User wants to wrap each file
-    promises = paths.map(path => addFileOrFilesFromFSPath(path))
+    // User wants to wrap each file (this method expects an array)
+    promises = paths.map(path => addFilesFromFSPath([path]))
   }
 
   const buttons = ['Close', 'Open in the browser']

@@ -52,6 +52,8 @@ export function initIPFSClient () {
 }
 
 /**
+ * Wrap the given files/links under a directory.
+ *
  * ```
  * Link {
  *  hash: string;
@@ -60,7 +62,7 @@ export function initIPFSClient () {
  * }
  * ```
  *
- * @param {Link[]} links
+ * @param {Link[]} links the files to be included in the wrapper
  * @returns {Link} the wrapper, which is of type Link
  */
 export function wrapFiles (links) {
@@ -102,23 +104,14 @@ export function wrapFiles (links) {
  * }
  * ```
  *
- * @param {string|string[]} filePath
- * @returns {Wrapper} wrapper
+ * @param {string[]} filePaths
+ * @returns {Promise<Wrapper>} promise resolving with the wrapper
  */
-export function addFileOrFilesFromFSPath (filePath, _queryGateways = queryGateways) {
+export function addFilesFromFSPath (filePaths, _queryGateways = queryGateways) {
   if (!IPFS_CLIENT) return Promise.reject(ERROR_IPFS_UNAVAILABLE)
 
   const options = { recursive: true }
-
-  const promises = []
-  if (Array.isArray(filePath)) {
-    filePath.map(path => promises.push(IPFS_CLIENT.util.addFromFs(path, options)))
-  } else {
-    /**
-     * Add the file/directory from fs
-     */
-    promises.push(IPFS_CLIENT.util.addFromFs(filePath, options))
-  }
+  const promises = filePaths.map(path => IPFS_CLIENT.util.addFromFs(path, options))
 
   return Promise.all(promises)
     .then(fileUploadResults => {

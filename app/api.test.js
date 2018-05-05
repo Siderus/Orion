@@ -179,7 +179,7 @@ describe('api.js', () => {
       // arrange
       api.setClientInstance(null)
       // act
-      return api.addFileOrFilesFromFSPath('./fake-path')
+      return api.addFilesFromFSPath()
         .catch(err => {
           // assert
           expect(err).toBe(ERROR_IPFS_UNAVAILABLE)
@@ -228,7 +228,7 @@ describe('api.js', () => {
       })
       const queryGatewaysMock = jest.fn()
       // act
-      return api.addFileOrFilesFromFSPath('./textfiles', queryGatewaysMock)
+      return api.addFilesFromFSPath(['./textfiles'], queryGatewaysMock)
         .then(result => {
           // assert
           expect(addFromFsMock).toHaveBeenCalledWith('./textfiles', { recursive: true })
@@ -294,7 +294,7 @@ describe('api.js', () => {
       })
       const queryGatewaysMock = jest.fn()
       // act
-      return api.addFileOrFilesFromFSPath('./textfiles', queryGatewaysMock)
+      return api.addFilesFromFSPath(['./textfiles'], queryGatewaysMock)
         .then(result => {
           // assert
           expect(queryGatewaysMock).toHaveBeenCalledWith('QmRgutAxd8t7oGkSm4wmeuByG6M51wcTso6cubDdQtu001')
