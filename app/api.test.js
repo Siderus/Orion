@@ -174,12 +174,12 @@ describe('api.js', () => {
     })
   })
 
-  describe('addFileFromFSPath', () => {
+  describe('addFileOrFilesFromFSPath', () => {
     it('should reject when IPFS is not started', () => {
       // arrange
       api.setClientInstance(null)
       // act
-      return api.addFileFromFSPath('./fake-path')
+      return api.addFilesFromFSPath()
         .catch(err => {
           // assert
           expect(err).toBe(ERROR_IPFS_UNAVAILABLE)
@@ -228,7 +228,7 @@ describe('api.js', () => {
       })
       const queryGatewaysMock = jest.fn()
       // act
-      return api.addFileFromFSPath('./textfiles', queryGatewaysMock)
+      return api.addFilesFromFSPath(['./textfiles'], queryGatewaysMock)
         .then(result => {
           // assert
           expect(addFromFsMock).toHaveBeenCalledWith('./textfiles', { recursive: true })
@@ -243,21 +243,11 @@ describe('api.js', () => {
           expect(pinAddMock).toHaveBeenCalledWith('QmRgutAxd8t7oGkSm4wmeuByG6M51wcTso6cubDdQtu003')
           expect(pinRmMock).toHaveBeenCalledWith('QmRgutAxd8t7oGkSm4wmeuByG6M51wcTso6cubDdQtu002')
           expect(queryGatewaysMock).not.toHaveBeenCalled()
-          expect(result).toEqual([
-            {
-              hash: 'QmRgutAxd8t7oGkSm4wmeuByG6M51wcTso6cubDdQtu001',
-              path: 'textfiles/foo.txt',
-              size: 30
-            }, {
-              hash: 'QmRgutAxd8t7oGkSm4wmeuByG6M51wcTso6cubDdQtu002',
-              path: 'textfiles',
-              size: 50
-            }, {
-              hash: 'QmRgutAxd8t7oGkSm4wmeuByG6M51wcTso6cubDdQtu003',
-              path: '',
-              size: 60
-            }
-          ])
+          expect(result).toEqual({
+            hash: 'QmRgutAxd8t7oGkSm4wmeuByG6M51wcTso6cubDdQtu003',
+            path: '',
+            size: 60
+          })
         })
     })
 
@@ -304,7 +294,7 @@ describe('api.js', () => {
       })
       const queryGatewaysMock = jest.fn()
       // act
-      return api.addFileFromFSPath('./textfiles', queryGatewaysMock)
+      return api.addFilesFromFSPath(['./textfiles'], queryGatewaysMock)
         .then(result => {
           // assert
           expect(queryGatewaysMock).toHaveBeenCalledWith('QmRgutAxd8t7oGkSm4wmeuByG6M51wcTso6cubDdQtu001')
