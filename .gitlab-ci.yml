@@ -7,6 +7,11 @@ stages:
   - test
   - release
 
+before_script:
+  - mv package.json package.json.old
+  - cat package.json.old | jq 'to_entries | map(if .key == "env" then .value = "release" else . end) | from_entries' > package.json
+  - rm -f package.json.old
+
 yarn-test:
   stage: test
   tags:
