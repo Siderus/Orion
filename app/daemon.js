@@ -207,7 +207,7 @@ export function ensureDaemonConfigured () {
 
     // Change the configuration
     conf.Addresses.API = global.IPFS_MULTIADDR_API
-    conf.Addresses.Gateway = global.IPFS_MULTIADDR_GATEAY
+    conf.Addresses.Gateway = global.IPFS_MULTIADDR_GATEWAY
     conf.Addresses.Swarm = global.IPFS_MULTIADDR_SWARM
 
     // Return a promise that writes the configuration back in the file
@@ -281,7 +281,9 @@ export function promiseRepoUnlocked (timeout = 30) {
       return getApiMultiAddress().then(() => {
         clearInterval(iID)
         return resolve()
-      }).catch((err) => { console.log('error:', err) }) // do nothing in case of errors
+      }).catch(() => {
+        console.log('Waiting for repo to be unlocked...')
+      })
     }, 1000) // every second
   })
 }
