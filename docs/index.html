@@ -24,7 +24,7 @@
 </head>
 
 <body>
-  <main>
+  <main itemtype="http://schema.org/SoftwareApplication">
     <section class="jumbotron text-center text-md-left">
       <div class="container">
         <div class="row">
@@ -59,14 +59,18 @@
               id="path11" inkscape:connector-curvature="0" />
           </svg>
           <div class="col-md">
-            <h1 class="jumbotron-heading">Siderus Orion</h1>
-            <p class="lead text-muted">
+            <meta itemprop="url" content="https://orion.siderus.io/" />
+            <meta itemprop="image" content="https://orion.siderus.io/logo-big.png" />
+            <meta itemprop="license" content="https://github.com/Siderus/Orion/blob/master/LICENSE.md" />
+            <meta itemprop="alternateName" content="Orion" />
+
+            <h1 class="jumbotron-heading" itemprop="name">Siderus Orion</h1>
+            <p class="lead text-muted" itemprop="description">
               Orion is an Open Source easy to use <a target="_blank" href="https://ipfs.io/">Inter Planetary File System</a> (IPFS) desktop client. 
-              It is designed to help the first-time users to join the decentralised IPFS network. 
-              It helps the user managing the files/storage of their Node as well as interacting with the dApps and browsers that requires IPFS installed.
+              It is designed to help the first-time users to join the decentralised IPFS network and to interact with dApps and modern browsers without technical knowledge.
             </p>
             <p>
-              <a href="https://github.com/Siderus/Orion/releases/latest" class="btn btn-primary my-2">Download</a>
+              <a itemprop="downloadUrl" href="https://github.com/Siderus/Orion/releases/latest" class="btn btn-primary my-2">Download</a>
               <a href="https://github.com/Siderus/Orion/" class="btn btn-secondary my-2">GitHub</a>
               <a href="#subscribe" class="btn btn-secondary my-2">Subscribe</a>
             </p>
@@ -77,16 +81,18 @@
     <section class="my-5">
       <div class="container">
         <h3>Features</h3>
-        <ul>
-          <li>KISS and Easy to use GUI for IPFS</li>
-          <li>Works with Windows, macOS and Linux</li>
-          <li>Everything included: no other dependencies required!</li>
-          <li>Designed to be used both with dApps/Companion and as File Manager</li>
-          <li>Explores both IPFS and IPNS</li>
+        <ul itemprop="featureList">
+          <li>Simple and Easy to use GUI</li>
+          <li>Works with Windows, macOS and Ubuntu Linux</li>
+          <li>Everything included: no other dependencies required, no terminal needed!</li>
+          <li>Designed to be used both with dApps/Companion browser and as File Manager</li>
+          <li>Explores both IPFS and IPNS objects</li>
           <li>Works with Siderus Hera</li>
           <li>Customizable configuration for developers</li>
-          <li>... and more to come </li>
         </ul>
+        <p>
+          Do you have a feature that you would like to see? <a target="_blank" href="https://github.com/Siderus/Orion/issues/new?template=Feature_request.md">Let us know</a>!
+        </p>
       </div>
     </section>
     <section class="jumbotron text-center">
@@ -117,7 +123,7 @@
       </div>
     </section>
   </main>
-  <footer class="my-5 pt-5 text-muted text-center text-small">
+  <footer class="my-5 pt-5 text-muted text-center text-small" itemprop="author">
     <svg xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
       xmlns:svg="http://www.w3.org/2000/svg" xmlns="http://www.w3.org/2000/svg" version="1.1" id="svg2" viewBox="0 0 512.00001 512.00001"
       height="64" width="64">
@@ -154,7 +160,14 @@
         </g>
       </g>
     </svg>
-    <p class="mb-1">Made with &lt;3 at <a href="https://siderus.io/">Siderus</a></p>
+    <p class="mb-1" itemscope itemprop="organization" itemtype="http://schema.org/Organization">
+      <meta itemprop="url" content="https://siderus.io" />
+      <meta itemprop="name" content="Siderus OU" />
+      <meta itemprop="alternateName" content="Siderus" />
+
+      Made with &lt;3 at <a href="https://siderus.io/">Siderus</a>
+    </p>
+  </meta>
     <br/>
     <ul class="list-inline">
       <li class="list-inline-item">
