@@ -34,7 +34,7 @@ global.IPFS_CLIENT = null
 // Sets default values for IPFS configurations
 global.IPFS_BINARY_PATH = `${rootDir.get()}/go-ipfs/ipfs`
 global.IPFS_MULTIADDR_API = '/ip4/127.0.0.1/tcp/5001'
-global.IPFS_MULTIADDR_GATEAY = '/ip4/127.0.0.1/tcp/8080'
+global.IPFS_MULTIADDR_GATEWAY = '/ip4/127.0.0.1/tcp/8080'
 global.IPFS_MULTIADDR_SWARM = ['/ip4/0.0.0.0/tcp/4001', '/ip6/::/tcp/4001']
 
 // Used to point to the right IPFS repo & conf
@@ -113,7 +113,7 @@ app.on('ready', () => {
             // Use our own daemon, but on different ports
             console.log('Using custom setup for Orion new IPFS node (localhost:5101)')
             global.IPFS_MULTIADDR_API = '/ip4/127.0.0.1/tcp/5101'
-            global.IPFS_MULTIADDR_GATEAY = '/ip4/127.0.0.1/tcp/8180'
+            global.IPFS_MULTIADDR_GATEWAY = '/ip4/127.0.0.1/tcp/8180'
             global.IPFS_MULTIADDR_SWARM = ['/ip4/0.0.0.0/tcp/4101', '/ip6/::/tcp/4101']
           }
         }
@@ -123,10 +123,9 @@ app.on('ready', () => {
         // Logs the path and configuration used
         console.log('IPFS_BINARY_PATH', global.IPFS_BINARY_PATH)
         console.log('IPFS_MULTIADDR_API', global.IPFS_MULTIADDR_API)
-        console.log('IPFS_MULTIADDR_GATEAY', global.IPFS_MULTIADDR_GATEAY)
+        console.log('IPFS_MULTIADDR_GATEWAY', global.IPFS_MULTIADDR_GATEWAY)
         console.log('IPFS_MULTIADDR_SWARM', global.IPFS_MULTIADDR_SWARM)
         console.log('IPFS_REPO_PATH', global.IPFS_REPO_PATH)
-        console.log('IPFS_MULTIADDR_API', global.IPFS_MULTIADDR_API)
         return Promise.resolve(shouldStart)
       })
       // Configure & Start the daemon in case
@@ -163,7 +162,7 @@ app.on('ready', () => {
       })
       .then(promiseRepoUnlocked) // ensures that the api are ready
       // Start the IPFS API Client
-      .then(initIPFSClient())
+      .then(initIPFSClient)
       .then(client => {
         console.log('Connecting to the IPFS Daemon')
         global.IPFS_CLIENT = client
