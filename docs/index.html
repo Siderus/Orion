@@ -2,23 +2,39 @@
 <html lang="en">
 
 <head>
-  <!-- Required meta tags -->
+  <title>Siderus Orion</title>
   <meta charset="utf-8">
+  <meta name="revisit-after" content="3 days">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <link rel='canonical' href='https://orion.siderus.io/' />
+  <link rel='shortlink' href='https://orion.siderus.io/' />
+
+  <meta name="description" content="Siderus Orion is an Open Source easy to use Inter Planetary File System (IPFS) desktop client.">
+  <meta name="keywords" content="siderus,orion,ipfs,blockchain,decentralized,immutable,dapp,open,source,windows,mac,linux,storage" />
+  <link rel="shortcut icon" href="https://siderus.io/logo.svg">
+  <link rel="shortcut icon" href="https://siderus.io/logo-64.png">
 
   <!-- Bootstrap CSS -->
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4"
-    crossorigin="anonymous">
+  <link rel="stylesheet" href="https://siderus.io/ipfs/QmVFgJ7waee9sZGi3sovpbHobxXf46NS9wGKJVfr4gBL2r/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous">
   <style>
     .container {
-      max-width: 720px;
+      max-width: 750px;
     }
   </style>
-  <title>Siderus Orion</title>
+
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-87267397-6"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-87267397-6');
+  </script>
 </head>
 
 <body>
-  <main>
+  <main itemscope itemtype="http://schema.org/SoftwareApplication">
     <section class="jumbotron text-center text-md-left">
       <div class="container">
         <div class="row">
@@ -26,7 +42,7 @@
             xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:svg="http://www.w3.org/2000/svg" xmlns="http://www.w3.org/2000/svg"
             xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd" xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
             viewBox="0 0 500 500" version="1.1" id="svg13" sodipodi:docname="logo.svg" inkscape:version="0.92.2 5c3e80d, 2017-08-06"
-            inkscape:export-filename="/Users/koalalorenzo/Repositories/Siderus/Lumpy/docs/logo-big.png" inkscape:export-xdpi="98.304001"
+            inkscape:export-xdpi="98.304001"
             inkscape:export-ydpi="98.304001">
             <metadata id="metadata17">
               <rdf:RDF>
@@ -53,14 +69,22 @@
               id="path11" inkscape:connector-curvature="0" />
           </svg>
           <div class="col-md">
-            <h1 class="jumbotron-heading">Siderus Orion</h1>
-            <p class="lead text-muted">
-              Lorem ipsum dolor sit amet, sed omnes vivendo percipitur eu, pri tacimates delicatissimi ad, vide disputationi an vel. Eum
-              corpora incorrupte at.
+            <meta itemprop="url" content="https://orion.siderus.io/" />
+            <meta itemprop="image" content="https://orion.siderus.io/logo-big.png" />
+            <meta itemprop="license" content="https://github.com/Siderus/Orion/blob/master/LICENSE.md" />
+            <meta itemprop="alternateName" content="Orion" />
+            <meta itemprop="operatingSystem" content="macOS, Ubuntu, Linux, Windows" />
+            <meta itemprop="applicationCategory" content="Tool, File Manager, Daemon, IPFS" />
+
+            <h1 class="jumbotron-heading" itemprop="name">Siderus Orion</h1>
+            <p class="lead text-muted" itemprop="description">
+              Orion is an Open Source easy to use <a target="_blank" href="https://ipfs.io/">Inter Planetary File System</a> (IPFS) desktop client. 
+              It is designed to help the first-time users to join the decentralised IPFS network and to interact with dApps and modern browsers without technical knowledge.
             </p>
             <p>
-              <a href="https://github.com/Siderus/Orion/releases/latest" class="btn btn-primary my-2">Download</a>
+              <a itemprop="downloadUrl" href="https://github.com/Siderus/Orion/releases/latest" class="btn btn-primary my-2">Download</a>
               <a href="https://github.com/Siderus/Orion/" class="btn btn-secondary my-2">GitHub</a>
+              <a href="#subscribe" class="btn btn-secondary my-2">Subscribe</a>
             </p>
           </div>
         </div>
@@ -69,26 +93,31 @@
     <section class="my-5">
       <div class="container">
         <h3>Features</h3>
-        <ul>
-          <li>Easy to use</li>
-          <li>Works with Windows, macOS and Linux</li>
-          <li>Everything included: no other dependencies required</li>
-          <li>Explores IPFS and IPNS files</li>
-          <li>Works with Siderus Hera</li>
-          <li>Customizable configuration for developers</li>
-          <li>... and more to come </li>
+        <ul itemprop="featureList">
+          <li>Designed to be simple and easy to use, </li>
+          <li>Works with Windows, macOS and Ubuntu Linux, </li>
+          <li>Everything included: no other dependencies required, no terminal needed! </li>
+          <li>Works with your IPFS Browser Companion, </li>
+          <li>Works with most dApps and Ethereum Blockchain, </li>
+          <li>Explores both IPFS and IPNS objects, </li>
+          <li>Works with Siderus Hera, </li>
+          <li>Customizable configuration for developers.</li>
         </ul>
+        <p>
+          Do you have a feature that you would like to see? <a target="_blank" href="https://github.com/Siderus/Orion/issues/new?template=Feature_request.md">Let us know</a>!
+        </p>
       </div>
     </section>
     <section class="jumbotron text-center">
       <div class="container">
-        <h3 class="jumbotron-heading">Subscribe to our Newsletter</h3>
+        <h3 id="subscribe" class="jumbotron-heading">Subscribe to our Newsletter</h3>
+        <br>
         <!-- Begin MailChimp Signup Form -->
 				<div id="mc_embed_signup" class="form-inline justify-content-center">
 					<form action="//siderus.us14.list-manage.com/subscribe/post?u=4f0316f47e9e8e602a0dfe075&amp;id=85f29686b7" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="validate" target="_blank" novalidate>
 						<div id="mc_embed_signup_scroll">
 							<div class="input-group mc-field-group">
-								<input type="email" placeholder="Enter your email here..." value="" name="EMAIL" class="form-control required email" id="mce-EMAIL">
+								<input type="email" placeholder="Enter your email here..." value="" name="EMAIL" class="form-control required email" id="mce-EMAIL" style="width: 320px;">
                 <div class="input-group-append">
                   <input type="submit" class="btn btn-outline-primary" value="Subscribe" name="subscribe" id="mc-embedded-subscribe">
                 </div>
@@ -107,7 +136,7 @@
       </div>
     </section>
   </main>
-  <footer class="my-5 pt-5 text-muted text-center text-small">
+  <footer class="my-5 pt-5 text-muted text-center text-small" itemprop="author">
     <svg xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
       xmlns:svg="http://www.w3.org/2000/svg" xmlns="http://www.w3.org/2000/svg" version="1.1" id="svg2" viewBox="0 0 512.00001 512.00001"
       height="64" width="64">
@@ -144,7 +173,14 @@
         </g>
       </g>
     </svg>
-    <p class="mb-1">Made with &lt;3 at Siderus</p>
+    <p class="mb-1" itemscope itemprop="organization" itemtype="http://schema.org/Organization">
+      <meta itemprop="url" content="https://siderus.io" />
+      <meta itemprop="name" content="Siderus OU" />
+      <meta itemprop="alternateName" content="Siderus" />
+
+      Made with &lt;3 at <a href="https://siderus.io/">Siderus</a>
+    </p>
+    <br/>
     <ul class="list-inline">
       <li class="list-inline-item">
         <a href="https://github.com/Siderus/Orion/">GitHub</a>
@@ -164,12 +200,11 @@
   </footer>
   <!-- Optional JavaScript -->
   <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+  <script src="https://siderus.io/ipfs/QmVFgJ7waee9sZGi3sovpbHobxXf46NS9wGKJVfr4gBL2r/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
     crossorigin="anonymous"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js" integrity="sha384-cs/chFZiN24E4KMATLdqdvsezGxaGsi4hLGOzlXwp5UZB1LY//20VyM2taTB4QvJ"
+  <script src="https://siderus.io/ipfs/QmVFgJ7waee9sZGi3sovpbHobxXf46NS9wGKJVfr4gBL2r/popper.min.js" integrity="sha384-cs/chFZiN24E4KMATLdqdvsezGxaGsi4hLGOzlXwp5UZB1LY//20VyM2taTB4QvJ"
     crossorigin="anonymous"></script>
-  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js" integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm"
-    crossorigin="anonymous"></script>
-</body>
+  <script src="https://siderus.io/ipfs/QmVFgJ7waee9sZGi3sovpbHobxXf46NS9wGKJVfr4gBL2r/bootstrap.min.js" integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm" crossorigin="anonymous"></script>
+  </body>
 
 </html>
