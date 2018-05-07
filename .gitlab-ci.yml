@@ -28,5 +28,9 @@ yarn-release:
     - docker
   script:
     - docker run --rm -e GH_TOKEN="${GH_TOKEN}" -v ${PWD}:/project electronuserland/builder:wine /bin/bash -c "make release_all"
+    - curl https://sentry.io/api/hooks/release/builtin/1189440/${SENTRY_RELEASE_TOKEN}/ \
+      -X POST \
+      -H 'Content-Type: application/json' \
+      -d "{\"version\": "$(cat ./package.json | jq .version)"}"
   only:
     - master
