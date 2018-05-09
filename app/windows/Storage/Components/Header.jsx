@@ -74,15 +74,20 @@ class Header extends React.Component {
     if (selected.length > 1) {
       opts.properties = ['openDirectory', 'createDirectory']
       opts.buttonLabel = 'Save everything here'
-      const destDir = remote.dialog.showOpenDialog(remote.app.mainWindow, opts)[0]
+      const filePaths = remote.dialog.showOpenDialog(remote.app.mainWindow, opts)
+      if (!filePaths) return
 
-      promises = selected.map(element => saveFileToPath(element.hash, destDir))
+      const destination = filePaths[0]
+      promises = selected.map(element => saveFileToPath(element.hash, destination))
     } else {
       // selected.length === 1
       opts.properties = ['openDirectory']
       opts.buttonLabel = 'Save here'
-      const dest = remote.dialog.showOpenDialog(remote.app.mainWindow, opts)
-      promises = [saveFileToPath(selected[0].hash, dest[0])]
+      const filePaths = remote.dialog.showOpenDialog(remote.app.mainWindow, opts)
+      if (!filePaths) return
+
+      const destination = filePaths[0]
+      promises = [saveFileToPath(selected[0].hash, destination)]
     }
 
     this.setState({ isSavingOnDisk: true })
