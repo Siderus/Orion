@@ -33,8 +33,10 @@ function askWhetherToWrapAllFiles () {
  * ToDo: add loading messages/feedback
  */
 export function addFilesPaths (paths) {
-  let promises
+  // If no paths were selected it means the user canceled
+  if (!paths) return
 
+  let promises
   if (paths.length > 1 && askWhetherToWrapAllFiles()) {
     // If the user says yes to wrapping all files, simply pass the paths array
     promises = [addFilesFromFSPath(paths)]
