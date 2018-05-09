@@ -73,7 +73,10 @@ function askWhichNodeToUse (apiVersion) {
 }
 
 app.on('ready', () => {
-  setupTrayIcon()
+  // On MacOS it's expected for the app not to close, and to re-open it from Launchpad
+  if (process.platform !== 'darwin') {
+    setupTrayIcon()
+  }
 
   // Ask github whether there is an update
   autoUpdater.checkForUpdates()

@@ -1,11 +1,18 @@
 import path from 'path'
-import { app, Menu, Tray } from 'electron'
+import { app, Menu, Tray, nativeImage } from 'electron'
 
-let appIcon = null
+let appTray = null
 const iconPath = path.join(__dirname, '../docs/logo.png')
+const icon = nativeImage.createFromPath(iconPath)
 
+/**
+ * This will setup a tray icon for the app,
+ * which allows the user to:
+ *  - open the main window (StorageWindow)
+ *  - quit the app.
+ */
 function setupTrayIcon () {
-  appIcon = new Tray(iconPath)
+  appTray = new Tray(icon)
   const contextMenu = Menu.buildFromTemplate([
     {
       label: 'Open Siderus Orion',
@@ -22,7 +29,7 @@ function setupTrayIcon () {
   ])
 
   // Call this again for Linux because we modified the context menu
-  appIcon.setContextMenu(contextMenu)
+  appTray.setContextMenu(contextMenu)
 }
 
 export default setupTrayIcon
