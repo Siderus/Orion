@@ -47,12 +47,13 @@
   },
   "dependencies": {
     "@sentry/electron": "^0.5.2",
+    "app-root-dir": "^1.0.2",
     "byte-size": "^3.0.0",
     "classnames": "^2.2.5",
     "electron-compile": "^6.4.2",
     "electron-settings": "^2.2.2",
     "electron-updater": "^2.21.4",
-    "ipfs-api": "git+https://github.com/ipfs/js-ipfs-api.git",
+    "ipfs-api": "^20.2.1",
     "is-electron-renderer": "^2.0.1",
     "is-ipfs": "^0.3.0",
     "mobx": "^3.0.2",
@@ -69,8 +70,7 @@
     "spin.js": "^2.3.2",
     "styled-components": "^3.1.6",
     "tmp": "^0.0.33",
-    "underscore": "^1.8.3",
-    "app-root-dir": "^1.0.2"
+    "underscore": "^1.8.3"
   },
   "build": {
     "appId": "io.siderus.orion",
@@ -86,7 +86,10 @@
     },
     "linux": {
       "target": [
-        "deb", "rpm", "pacman", "apk"
+        "deb",
+        "rpm",
+        "pacman",
+        "apk"
       ]
     },
     "mac": {
