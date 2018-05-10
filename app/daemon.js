@@ -128,7 +128,7 @@ export function startIPFSDaemon () {
     ipfsProcess.stderr.pipe(tmpLogPipe)
 
     ipfsProcess.on('close', (exit) => {
-      if (exit !== 0) {
+      if (exit !== 0 && exit !== null) {
         let msg = `IPFS Daemon was closed with exit code ${exit}. `
         msg += 'The app will be closed. Try again. '
         msg += `Log file: ${tmpLog.name}`
