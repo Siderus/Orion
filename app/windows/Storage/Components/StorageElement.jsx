@@ -1,7 +1,6 @@
 import { remote } from 'electron'
 
 import React from 'react'
-import { isEqual } from 'underscore'
 import { Icon } from 'react-photonkit'
 
 import { saveFileToPath } from '../../../api'
@@ -75,7 +74,7 @@ class StorageElement extends React.Component {
   _handleCheckboxOnClick (element, proxy, event) {
     if (!this.props.storageStore) return
 
-    if (this.props.storageStore.selected.find((el) => isEqual(el, element))) {
+    if (this.props.storageStore.selected.find(el => el.hash === element.hash)) {
       this.props.storageStore.selected.pop(element)
     } else {
       this.props.storageStore.selected.push(element)
