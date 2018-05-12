@@ -2,6 +2,7 @@ import { app, dialog, shell } from 'electron'
 import { autoUpdater } from 'electron-updater'
 import { join as pathJoin } from 'path'
 import pjson from '../package.json'
+import Settings from 'electron-settings'
 import './report'
 import rootDir from 'app-root-dir'
 import setupTrayIcon from './setup-tray-icon'
@@ -24,6 +25,7 @@ import {
 
 import LoadingWindow from './windows/Loading/window'
 import StorageWindow from './windows/Storage/window'
+import WelcomeWindow from './windows/Welcome/window'
 
 // Let's create the main window
 app.mainWindow = null
@@ -72,7 +74,18 @@ function askWhichNodeToUse (apiVersion) {
   return btnId === 1
 }
 
-app.on('ready', () => {
+/**
+ * This method will:
+ *  1. setup the tray icon (except on macOS)
+ *  2. check for updates
+ *  3. show loading window
+ *  4. check if an API is already running
+ *  5. start the daemon if not
+ *  6. connect to the API
+ *  7. connect to the Siderus peers (and add them as bootstrap nodes)
+ *  8. show storage window
+ */
+function startOrion () {
   // On MacOS it's expected for the app not to close, and to re-open it from Launchpad
   if (process.platform !== 'darwin') {
     setupTrayIcon()
@@ -238,6 +251,28 @@ app.on('ready', () => {
         app.quit()
       })
   })
+}
+
+app.on('start-orion', () => {
+  startOrion()
+})
+
+app.on('ready', () => {
+  const userAgreement = Settings.getSync('userAgreement')
+
+  if (userAgreement) {
+    startOrion()
+  } else {
+    // If the user did not accept our ToS, show the welcome window
+    const welcomeWindow = WelcomeWindow.create(app)
+    welcomeWindow.on('closed', () => {
+      // If the user did not accept ToS, but closed the welcome window, quit (don't run the the bg)
+      const userAgreement = Settings.getSync('userAgreement')
+      if (!userAgreement) {
+        app.quit()
+      }
+    })
+  }
 })
 
 app.on('activate', () => {
