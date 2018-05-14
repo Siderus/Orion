@@ -1,88 +1,31 @@
 import React from 'react'
+import request from 'request-promise-native'
+import Spinner from 'react-spin'
 
-function ToS () {
-  return (
-    <div>
-      <h1 id="siderus-hera-terms-of-service">Siderus Hera Terms of Service</h1>
-      <p>Our Terms of Service have been updated as of 8th of April 2018 This is an agreement (&quot;user agreement&quot; or &quot;agreement&quot;) between Siderus OU (&quot;we&quot;, &quot;our,&quot; &quot;us&quot;) and you. Please read these Terms of Service (the &quot;Terms&quot; or &quot;Terms of Service&quot;) carefully before using Siderus OU&#39;s Hera.</p>
-      <h2 id="1-acceptance-of-terms">1. ACCEPTANCE OF TERMS</h2>
-      <p>Siderus OU&#39;s Hera (&quot;Hera&quot; or &quot;Siderus Hera&quot;) serves as a gateway to the decentralised web by providing access to the IPFS infrastructure and allowing Siderus OU&#39;s clients to create on demand instances of IPFS servers on Hera infrastructure.</p>
-      <p>Graphics, text, photographs, files, images, video, audio, code and any other material obtainable via any media provided, hosted and/or maintained by or via Hera or other third parties is referred to here as the &quot;Hera Content&quot;.</p>
-      <p>Graphics, text, photographs, files, images, video, audio, code and any other material obtainable via any media provided, hosted, uploaded by you or other third parties is referred to here as &quot;External Content&quot; or &quot;Content&quot;.</p>
-      <p>Hera hosts a website that serves as a registration portal, product offering, and an overview of the health of Hera services through our website located at: <a href="https://hera.siderus.io/">https://hera.siderus.io/</a> (the &quot;Portal&quot; or &quot;Site&quot;) which includes but does not limits to the Hera Content.</p>
-      <p>Hera hosts also website that serves public gateway for IPFS decentralised network through our website located at: <a href="https://siderus.io/ipfs/">https://siderus.io/ipfs/</a> and <a href="https://siderus.io/ipns/">https://siderus.io/ipns/</a> (the &quot;Gateway&quot;) which allows Siderus Clients to retrive, download the Hera Content and Clients Content.</p>
-      <p>Hera allows Siderus OU&#39;s clients to create IPFS instances, hosted on custom websites on demand located as customised subdomains of <a href="https://ipfs.rocks">https://ipfs.rocks</a> (the &quot;Client Instances&quot;), owned by Siderus OU&#39;s clients.</p>
-      <p>The Site and any other features, tools, materials, or services offered from time to time by Hera, including but not limiting to our infrastructure and the Gateway, is referred to here as the &quot;Service&quot;.</p>
-      <p>This agreement is a legal contract between you and us. You acknowledge that you have read, understood, and agree to be bound by the terms of this agreement. If you do not agree to this agreement, you should not use Siderus OU services and websites. Please take a look at Hera Privacy Policy too. It explains how we collect and use your information.</p>
-      <p>By using or otherwise accessing the Service, the Portal or any of the Client Instances, or clicking to accept or agree to these Terms where that option is made available, you (1) accept and agree to these Terms (2) consent to the collection, use, disclosure and other handling of information as described in our Privacy Policy and (3) any additional terms, rules and conditions of participation issued by Hera from time to time. If you do not agree to the Terms, then you may not access or use the Services and any of the Client Instances.</p>
-      <h2 id="2-modification-of-terms-of-use">2. MODIFICATION OF TERMS OF USE</h2>
-      <p>Siderus OU reserves the right, at its sole discretion, to modify or replace the Terms of Use at any time. The most current version of these Terms will be posted on our Site. You shall be responsible for reviewing and becoming familiar with any such modifications. Use of the Services by you after any modification to the Terms constitutes your acceptance of the Terms as modified.</p>
-      <h2 id="3-eligibility">3. ELIGIBILITY</h2>
-      <p>You represent and warrant that you: (a) are of legal age to form a binding contract; (b) have full power and authority to enter into this agreement and in doing so will not violate any other agreement to which you are a party; and (c) have not previously been removed or suspended from using our Services If you are registering to use the Services on behalf of a legal entity, you further represent and warrant that (i) such legal entity is duly organised and validly existing under the applicable laws of the jurisdiction of its organisation, and (ii) you are duly authorised by such legal entity to act on its behalf.</p>
-      <h2 id="4-account-registration">4. ACCOUNT REGISTRATION</h2>
-      <p>Usage or access to our services may require an account consisting of a User ID, Email Address and/or a Password (&quot;Account&quot;). When you create an Account, you agree to: (a) create a strong password that you do not use for any other website or online service; (b) provide accurate and truthful information; (c) maintain and promptly update your Account information; (d) maintain the security of your Account by protecting your Account password and restricting access to your computer and your Account; (e) promptly notify us if you discover or otherwise suspect any security breaches related to your Account; and (f) take responsibility for all activities that occur under your Account and accept all risks of any authorised or unauthorised access to your Account, to the maximum extent permitted by law. When you create an Account, we assign you an account identifier that you must retain to access your Account.</p>
-      <h2 id="5-unauthorised-use-or-access">5. UNAUTHORISED USE OR ACCESS</h2>
-      <p>Unless otherwise expressly authorised in these Terms or on the Site, you may not take any action to interfere with the Service or any other user’s use of the Service or decompile, reverse engineer or disassemble any Content or other products or processes accessible through the Service, nor insert any code or product or manipulate the Service in any way that affects any user’s experience.</p>
-      <p>While using the Service you are required to comply with all applicable statutes, orders, regulations, rules, and other laws. In addition, we require users of the Service to respect the rights and dignity of others. Your use of the Service is conditioned on your compliance with the rules of conduct set forth in this section.</p>
-      <p>You agree that you will neither use the Service in a manner, nor share any Content, that: (a) is false or misleading; (b) is defamatory, derogatory, degrading or harassing of another or constitutes a personal attack; (c) invades another&#39;s privacy or includes, copies or transmits another&#39;s confidential, sensitive or personal information; (d) promotes bigotry, racism, hatred or harm against any group or individual; (e) is obscene or not in good taste; (f) violates or infringes or promotes the violation or infringement of another&#39;s rights, including intellectual property rights; (g) you do not have the right and authority to share and grant the necessary rights and licenses for; (h) violates or promotes the violation of any applicable laws or regulations; (i) contains a solicitation of funds, goods or services, or promotes or advertises goods or services; or (j) contains any viruses, Trojan horses, or other components designed to limit or harm the functionality of a computer.</p>
-      <p>Additionally, you acknowledge and agree that you (and not Siderus OU) are responsible for obtaining and maintaining all telecommunications, broadband, and computer hardware, equipment, and services needed to access and use the Site, the Gateway, the Client Instances and the Service, and paying all charges related thereto.</p>
-      <p>You agree that Siderus OU may or may not block, remove, hide, limit the access or/and delete Content that does not follow the Terms.</p>
-      <h2 id="6-representations-warranties-and-risks">6. REPRESENTATIONS, WARRANTIES AND RISKS</h2>
-      <h3 id="6-1-warranty-disclaimer">6.1 WARRANTY DISCLAIMER</h3>
-      <p>You expressly understand and agree that your use of the Service, the Gateway and any of the Client Instances is at your sole risk. The Service, the Gateway and any of the Client Instances are provided on an &quot;AS IS&quot; and &quot;as available&quot; basis, without warranties of any kind, either express or implied, including, without limitation, implied warranties of merchantability, fitness for a particular purpose or non-infringement. You release Siderus OU from all liability for Content you acquired or failed to acquire through the Service, the Gateway and/or the Client Instances or any media owned and/or provided by Siderus OU.</p>
-      <h3 id="6-2-sophistication-and-risk-of-cryptographic-systems">6.2 SOPHISTICATION AND RISK OF CRYPTOGRAPHIC SYSTEMS</h3>
-      <p>By utilising the Service, the Gateway and/or any Client Instances in any way, you represent that you understand the inherent risks associated with cryptographic systems; and warrant that you have an understanding of the usage and intricacies of asymmetric and symmetric cryptography, including but not limiting to IPFS technologies, tools and services.</p>
-      <h3 id="6-3-platform-security">6.3 PLATFORM SECURITY</h3>
-      <p>Hera is an early stage platform. You acknowledge that IPFS and any technology used is subject to flaws and acknowledge that you are solely responsible for evaluating any available code provided by the Services. You further expressly acknowledge and represent that the Content can be written maliciously or negligently, that Siderus OU cannot be held liable for your interaction with such Content and that such Content may cause loss of property or identity. These warnings and others later provided by Hera in no way evidence or represent an on-going duty to alert you to all of the potential risks of utilising the Service, the Gateway, the Client Instances or Content.</p>
-      <h2 id="7-indemnity">7. INDEMNITY</h2>
-      <p>You agree, to the fullest extent permitted by applicable law, to release and to indemnify, defend and hold harmless Siderus OU and its parents, subsidiaries, affiliates and agencies, as well as the officers, directors, employees, shareholders and representatives of any of the foregoing entities, from and against any and all losses, liabilities, expenses, damages, costs (including attorneys’ fees and court costs) claims or actions of any kind whatsoever arising or resulting from your use of the Service and/or any of the Client Instances, your violation of these Terms, and any of your acts or omissions that implicate publicity rights, defamation or invasion of privacy. Siderus OU reserves the right, at its own expense, to assume exclusive defence and control of any matter otherwise subject to indemnification by you and, in such case, you agree to cooperate with Siderus OU in the defence of such matter.</p>
-      <h2 id="8-limitation-on-liability">8. LIMITATION ON LIABILITY</h2>
-      <p>You acknowledge and agree that you assume full responsibility for your use of the Portal, the Service and the Client Instances. You acknowledge and agree that any information you send or receive during your use of the Portal and Service may not be secure and may be intercepted or later acquired by unauthorised parties.</p>
-      <p>You acknowledge and agree that your use of the sites and service is at your own risk. recognising such, you understand and agree that, to the fullest extent permitted by applicable law, neither Siderus OU nor its suppliers or licensors will be liable to you for any direct, indirect, incidental, special, consequential, punitive, exemplary or other damages of any kind, including without limitation damages for loss of profits, goodwill, use, data or other tangible or intangible losses or any other damages based on contract, tort (including, in jurisdictions where permitted, negligence and gross negligence), strict liability or any other theory (even if Siderus OU had been advised of the possibility of such damages), resulting from the Site or Service; the use or the inability to use the Site, the Service or any of the Client Instances; unauthorised access to or alteration of your transmissions or data; statements or conduct of any third party on the sites or service; any actions we take or fail to take as a result of communications you send to us; human errors; technical malfunctions; failures, including public utility or telephone outages; omissions, interruptions, latency, deletions or defects of any device or network, providers, or software (including, but not limited to, those that do not permit participation in the Service); any injury or damage to computer equipment; inability to fully access the Portal or Service or any other website; theft, tampering, destruction, or unauthorised access to, images or other content of any kind; data that is processed late or incorrectly or is incomplete or lost; typographical, printing or other errors, or any combination thereof; or any other matter relating to the Sites or Service or any of the Client Instances. Some jurisdictions do not allow the exclusion of certain warranties or the limitation or exclusion of liability for incidental or consequential damages. Accordingly, some of the above limitations may not apply to you.</p>
-      <h2 id="9-license">9. LICENSE</h2>
-      <p>Subject to your compliance with these Terms, Siderus OU grants you a limited, non-exclusive, non-transferable, non-sublicensable license to access and make personal and non-commercial use of the Service and any of the Client Instances. This license does not include any resale or commercial use of the Service or any derivative use of the Service or any of the Client Instances.</p>
-      <p>All rights not expressly granted to you in these Terms are reserved and retained by Siderus OU or its licensors. Hera and the Service may not be reproduced, duplicated, copied, sold, resold, visited, or otherwise exploited for any commercial purpose without express written consent of Siderus OU. You may not frame or utilise framing techniques to enclose any trademark, logo, or other proprietary information (including images, text, page layout, or form) of Siderus OU without express written consent. You may not misuse the Services or any of the Client Instances. You may use the Services and any of the Client Instances only as permitted by law. The licenses granted by Siderus OU terminate if you do not comply with these Terms.</p>
-      <h2 id="10-discontinuance-of-services">10. DISCONTINUANCE OF SERVICES</h2>
-      <p>We may, in our sole discretion and without liability to you, with or without prior notice and at any time, modify or discontinue, temporarily or permanently, any portion of our Services and any of the Client Instances.</p>
-      <h2 id="11-termination-and-suspension">11. TERMINATION AND SUSPENSION</h2>
-      <p>Siderus OU may terminate or suspend all or part of the Service and any of the Client Instances, without prior notice or liability if you breach any of the terms or conditions of the Terms. The following provisions of the Terms survive any termination of these Terms: INDEMNITY; WARRANTY DISCLAIMERS; LIMITATION ON LIABILITY; LICENSE; TERMINATION; NO THIRD PARTY BENEFICIARIES; PRIVACY POLICY; GENERAL INFORMATION.</p>
-      <h2 id="12-no-third-party-beneficiaries">12. NO THIRD PARTY BENEFICIARIES</h2>
-      <p>You agree that, except as otherwise expressly provided in these Terms, there shall be no third party beneficiaries to the Terms.</p>
-      <h2 id="13-notice-and-procedure-for-making-claims-of-copyright-infringement">13. NOTICE AND PROCEDURE FOR MAKING CLAIMS OF COPYRIGHT INFRINGEMENT</h2>
-      <p>If you believe that your copyright or the copyright of a person on whose behalf you are authorised to act has been infringed, please provide Siderus OU Support a written notice containing the following information:</p>
-      <ul>
-        <li>an electronic or physical signature of the person authorised to act on behalf of the owner of the copyright or other intellectual property interest;</li>
-        <li>a description of the copyrighted work or other intellectual property that you claim has been infringed;</li>
-        <li>a description of where the material that you claim is infringing is located on the Service;</li>
-        <li>your address, telephone number, and email address;</li>
-        <li>a statement by you that you have a good faith belief that the disputed use is not authorised by the copyright owner, its agent, or the law;</li>
-        <li>a statement by you, made under penalty of perjury, that the above information in your Notice is accurate and that you are the copyright or intellectual property owner or authorised to act on the copyright or intellectual property owner&#39;s behalf.</li>
-      </ul>
-      <p>You can reach Siderus OU Support at <a href="https://siderus.io/dmca">https://siderus.io/dmca</a> or via email to hello at siderus dot io by specifying &quot;Copyright Notification&quot; as the subject line of the email. Alternatively you can also reach us via Mail:</p>
-      <pre><code>Siderus OU
-      Sepapaja tn 6
-      15551 Tallinn
-      Estonia
-      </code></pre> <p>You understand that Siderus OU Support will investigate each case submitted and after providing the required material, we may take an action within working 14 days since the request has been validated. You also agree that due to the nature of IPFS and decentralised networks Siderus OU is not responsible for third parties violating any copyright infringement.</p>
-      <h2 id="14-general-information">14. GENERAL INFORMATION</h2>
-      <h3 id="14-1-entire-agreement">14.1 ENTIRE AGREEMENT</h3>
-      <p>These Terms (and any additional terms, rules and conditions of participation that Siderus OU may post on the Site) constitute the entire agreement between you and Siderus OU with respect to the Service and supersedes any prior agreements, oral or written, between you and Siderus OU. In the event of a conflict between these Terms and the additional terms, rules and conditions of participation, the latter will prevail over the Terms to the extent of the conflict.</p>
-      <h3 id="14-2-waiver-and-severability-of-terms">14.2 WAIVER AND SEVERABILITY OF TERMS</h3>
-      <p>The failure of Siderus OU to exercise or enforce any right or provision of the Terms shall not constitute a waiver of such right or provision. If any provision of the Terms is found by an arbitrator or court of competent jurisdiction to be invalid, the parties nevertheless agree that the arbitrator or court should endeavour to give effect to the parties&#39; intentions as reflected in the provision, and the other provisions of the Terms remain in full force and effect.</p>
-      <h3 id="14-3-statute-of-limitations">14.3 STATUTE OF LIMITATIONS</h3>
-      <p>You agree that regardless of any statute or law to the contrary, any claim or cause of action arising out of or related to the use of the Service or the Terms must be filed within one (1) year after such claim or cause of action arose or be forever barred.</p>
-      <h3 id="14-4-section-titles">14.4 SECTION TITLES</h3>
-      <p>The section titles in the Terms are for convenience only and have no legal or contractual effect.</p>
-      <h3 id="14-5-communications">14.5 COMMUNICATIONS</h3>
-      <p>Users with questions, complaints or claims with respect to the Service may contact us using the relevant contact information set forth above.</p>
-      <h2 id="15-software-license">15. SOFTWARE LICENSE</h2>
-      <p>All Rights Reserved. Hera is currently exploring the appropriate license structure and this will be updated when a conclusion is reached.</p>
-      <h2 id="16-privacy-policy">16. PRIVACY POLICY</h2>
-      <p>This Privacy Policy describes how we collect, use, disclose and store information you provide to us. The Privacy Policy applies to the Service on or in which it is posted, linked or referenced.</p>
-      <h3 id="16-1-modification-of-privacy-policy">16.1 MODIFICATION OF PRIVACY POLICY</h3>
-      <p>Siderus OU reserves the right, at its sole discretion, to modify or replace the Privacy Policy at any time. The most current version of the Privacy Policy will be posted on our Site. You shall be responsible for reviewing and becoming familiar with any such modifications. Use of the Services by you after any modification to the Privacy Policy constitutes your acceptance of the Privacy Policy as modified.</p>
-    </div>
-  )
+class ToS extends React.Component {
+  state = {}
+
+  constructor () {
+    super()
+    this.fetchContent()
+  }
+
+  fetchContent = () => {
+    request({ uri: 'https://siderus.io/tos.html' })
+      .then(res => this.setState({ tos: res }))
+      .catch(err => {
+        console.error(err)
+        throw err
+      })
+  }
+
+  render () {
+    return (
+      this.state.tos
+        ? <div dangerouslySetInnerHTML={{ __html: this.state.tos }} />
+        : <Spinner />
+    )
+  }
 }
 
 export default ToS
