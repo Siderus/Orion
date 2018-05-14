@@ -378,7 +378,11 @@ export function saveFileToPath (hash, dest) {
 
       // First make all the directories
       if (file.type === 'dir' || !file.content) {
-        mkdirSync(finalDest)
+        try {
+          mkdirSync(finalDest)
+        } catch (err) {
+          if (err.code !== 'EEXIST') throw err
+        }
       } else {
         // Pipe the file content into an actual write stream
         const writeStream = createWriteStream(finalDest)
