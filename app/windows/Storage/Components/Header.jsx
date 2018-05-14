@@ -67,31 +67,26 @@ class Header extends React.Component {
     if (this.props.storageStore.selected.length === 0) return
 
     const selected = this.props.storageStore.selected
-    const opts = { title: 'Where should I save?' }
-
-    let promises
-    // More than one object/element
-    if (selected.length > 1) {
-      opts.properties = ['openDirectory', 'createDirectory']
-      opts.buttonLabel = 'Save everything here'
-      const filePaths = remote.dialog.showOpenDialog(remote.app.mainWindow, opts)
-      if (!filePaths) return
-
-      const destination = filePaths[0]
-      promises = selected.map(element => saveFileToPath(element.hash, destination))
-    } else {
-      // selected.length === 1
-      opts.properties = ['openDirectory']
-      opts.buttonLabel = 'Save here'
-      const filePaths = remote.dialog.showOpenDialog(remote.app.mainWindow, opts)
-      if (!filePaths) return
-
-      const destination = filePaths[0]
-      promises = [saveFileToPath(selected[0].hash, destination)]
+    const opts = {
+      title: 'Where should I save?',
+      properties: ['openDirectory', 'createDirectory'],
+      buttonLabel: 'Save here'
     }
+    const filePaths = remote.dialog.showOpenDialog(remote.app.mainWindow, opts)
+    if (!filePaths) return
+
+    const destination = filePaths[0]
+    let sequentialChain = Promise.resolve()
+
+    // we call saveFileToPath only after the previous call finished (in .then)
+    selected.forEach(element => {
+      sequentialChain = sequentialChain.then((res) => {
+        return saveFileToPath(element.hash, destination)
+      })
+    })
 
     this.setState({ isSavingOnDisk: true })
-    Promise.all(promises)
+    sequentialChain
       .then(result => this.setState({ isSavingOnDisk: false }))
       .catch(err => {
         remote.dialog.showErrorBox('Saving to disk has failed', err.message)
