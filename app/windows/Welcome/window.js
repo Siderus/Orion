@@ -1,6 +1,6 @@
 /**
  * This window will prompt the user with the a short description about Orion
- * and with the Terms and Conditions which need to be read and accepted
+ * and with the Terms of Service which need to be read and accepted
  */
 
 import path from 'path'

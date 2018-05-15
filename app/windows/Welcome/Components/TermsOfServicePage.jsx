@@ -1,6 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
 import ToS from './ToS'
+import { shell } from 'electron'
 
 import {
   Window,
@@ -23,6 +24,10 @@ const TermsSection = styled.section`
   overflow: auto;
   padding: 0px 10px;
 `
+
+const ToSLink = <a onClick={() => shell.openExternal('https://siderus.io/tos.html')} href='#'>Siderus Terms of Service</a>
+const PrivacyLink = <a onClick={() => shell.openExternal('https://siderus.io/privacy')} href='#'>Privacy policy</a>
+const checkboxLabel = <span>I have read and I agree to {ToSLink} and {PrivacyLink}</span>
 
 class TermsOfServicePage extends React.Component {
   state = {
@@ -49,13 +54,13 @@ class TermsOfServicePage extends React.Component {
         <Window>
           <Content>
             <StyledContent>
-              <h1>Terms and Conditions</h1>
-              <p>In order to continue, you need to accept the Terms and Conditions:</p>
+              <h1>Terms of Service</h1>
+              <p>In order to continue, you need to accept the Terms of Service:</p>
               <TermsSection>
                 <ToS />
               </TermsSection>
               <CheckBox
-                label="I accept terms and conditions"
+                label={checkboxLabel}
                 checked={checked}
                 onChange={this.handleCheckChange}
               />
