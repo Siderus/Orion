@@ -301,7 +301,7 @@ app.on('window-all-closed', () => {
 
   const systemTrayNotification = Settings.getSync('systemTrayNotification')
 
-  if (!systemTrayNotification) {
+  if (systemTrayNotification === undefined) {
     const options = {
       type: 'info',
       title: 'The app will now run in the background',

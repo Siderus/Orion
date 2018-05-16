@@ -16,7 +16,6 @@ import { initIPFSClient } from '../../api'
 import Sidebar from './Components/Sidebar'
 import RepositoryPanel from './Components/RepositoryPanel'
 import ConnectivityPanel from './Components/ConnectivityPanel'
-import AppPanel from './Components/AppPanel'
 
 // Load MobX Stores
 import NavigationStore from './Stores/Navigation'
@@ -42,10 +41,6 @@ class SettingsWindow extends React.Component {
 
             <RepositoryPanel
               informationStore={InformationStore}
-              navigationStore={NavigationStore}
-            />
-
-            <AppPanel
               navigationStore={NavigationStore}
             />
           </PaneGroup>
