@@ -1,6 +1,6 @@
 {
   "name": "Orion",
-  "version": "0.4.0",
+  "version": "0.5.0",
   "env": "development",
   "ipfsVersion": "v0.4.14",
   "description": "Orion is an easy-to-use and KISS IPFS desktop interface",
