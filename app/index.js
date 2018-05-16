@@ -294,3 +294,28 @@ app.on('will-quit', () => {
     global.IPFS_PROCESS.kill()
   }
 })
+
+app.on('window-all-closed', () => {
+  // On MacOS this is already the expected behavior, no need to alert the user/close the app
+  if (process.platform === 'darwin') return
+
+  const systemTrayNotification = Settings.getSync('systemTrayNotification')
+
+  if (systemTrayNotification === undefined) {
+    const options = {
+      type: 'info',
+      title: 'The app will now run in the background',
+      message: 'Quit or open the app from the system tray! \n\nYou can change this behavior in the settings window.',
+      buttons: ['Got it!']
+    }
+    dialog.showMessageBox(options)
+    Settings.set('systemTrayNotification', true)
+  }
+
+  const runInBackground = Settings.getSync('runInBackground')
+
+  // if it's undefined or true don't quit
+  if (runInBackground === false) {
+    app.quit()
+  }
+})

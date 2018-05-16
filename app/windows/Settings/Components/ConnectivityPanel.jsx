@@ -9,21 +9,17 @@ const GatewayEnum = {
   LOCAL: 'http://localhost:8080'
 }
 
+const isMac = process.platform === 'darwin'
+
 /**
  * Connectivity Panel
  */
 @observer
 class ConnectivityPanel extends React.Component {
-  constructor (props) {
-    super(props)
-
-    this.state = {
-      gateway: GatewayEnum.SIDERUS,
-      skipGatewayQuery: true
-    }
-
-    this._handleGatewayChange = this._handleGatewayChange.bind(this)
-    this._handleSkipGatewayQueryChange = this._handleSkipGatewayQueryChange.bind(this)
+  state = {
+    gateway: GatewayEnum.SIDERUS,
+    skipGatewayQuery: true,
+    runInBackground: true
   }
 
   componentWillMount () {
@@ -32,35 +28,38 @@ class ConnectivityPanel extends React.Component {
      */
     Promise.all([
       Settings.get('gatewayURL'),
-      Settings.get('skipGatewayQuery')
+      Settings.get('skipGatewayQuery'),
+      Settings.get('runInBackground')
     ])
       // .then(console.log)
       .then(values => this.setState({
         gateway: values[0],
-        skipGatewayQuery: values[1] || false
+        skipGatewayQuery: values[1] || false,
+        // the default (undefined) is considered true
+        runInBackground: typeof values[2] !== 'boolean' ? true : values[2]
       }))
   }
 
-  _handleSkipGatewayQueryChange (event) {
-    const value = !this.state.skipGatewayQuery
+  _handleSkipGatewayQueryChange = (event) => {
+    const nextValue = !this.state.skipGatewayQuery
     /**
      * Save setting persistently
      */
-    Settings.set('skipGatewayQuery', value)
+    Settings.setSync('skipGatewayQuery', nextValue)
     /**
      * Update component's state
      */
     this.setState({
-      skipGatewayQuery: value
+      skipGatewayQuery: nextValue
     })
   }
 
-  _handleGatewayChange (event) {
+  _handleGatewayChange = (event) => {
     const { value } = event.target
     /**
      * Save setting persistently
      */
-    Settings.set('gatewayURL', value)
+    Settings.setSync('gatewayURL', value)
     /**
      * Update component's state
      */
@@ -69,8 +68,18 @@ class ConnectivityPanel extends React.Component {
     })
   }
 
-  _handelOnSubit (event) {
-
+  _handleRunInBackgroundChange = (event) => {
+    const nextValue = !this.state.runInBackground
+    /**
+     * Save setting persistently
+     */
+    Settings.setSync('runInBackground', nextValue)
+    /**
+     * Update component's state
+     */
+    this.setState({
+      runInBackground: nextValue
+    })
   }
 
   render () {
@@ -82,46 +91,46 @@ class ConnectivityPanel extends React.Component {
     // const peers = data.peers.map(peer => peer.addr.toString()).join("   ")
     return (
       <Pane className="settings">
-        <form onSubmit={this._handelOnSubit.bind(this)}>
+        <Input
+          label="Your peer ID"
+          type="text"
+          value={data.peer.id || '...'}
+          placeholder="Hey girl..." readOnly
+        />
 
-          <Input
-            label="Your peer ID"
-            type="text"
-            value={data.peer.id || '...'}
-            placeholder="Hey girl..." readOnly
-          />
+        <Input
+          label="Number of peers connected"
+          type="text"
+          value={data.peers.length || 0}
+          placeholder="Hey girl..." readOnly
+        />
 
-          <Input
-            label="Number of peers connected"
-            type="text"
-            value={data.peers.length || 0}
-            placeholder="Hey girl..." readOnly
-          />
+        <div className='form-group'>
+          <label>IPFS Gateway</label>
+          <select
+            className="form-control"
+            onChange={this._handleGatewayChange}
+            value={this.state.gateway}
+          >
+            <option value={GatewayEnum.SIDERUS}>Siderus.io</option>
+            <option value={GatewayEnum.LOCAL}>Local HTTP Gateway</option>
+          </select>
+        </div>
 
-          <div className='form-group'>
-            <label>IPFS Gateway</label>
-            <select
-              className="form-control"
-              onChange={this._handleGatewayChange}
-              value={this.state.gateway}
-            >
-              <option value={GatewayEnum.SIDERUS}>Siderus.io</option>
-              <option value={GatewayEnum.LOCAL}>Local HTTP Gateway</option>
-            </select>
-          </div>
+        <CheckBox
+          label="Skip querying gateways after adding a file"
+          checked={this.state.skipGatewayQuery}
+          onChange={this._handleSkipGatewayQueryChange}
+        />
 
+        {
+          !isMac &&
           <CheckBox
-            label="Skip querying gateways after adding a file"
-            checked={this.state.skipGatewayQuery}
-            onChange={this._handleSkipGatewayQueryChange}
+            label="Let the app run in background"
+            checked={this.state.runInBackground}
+            onChange={this._handleRunInBackgroundChange}
           />
-
-          {/* <TextArea
-            label="Peers connected"
-            value={peers}
-            placeholder="Hey girl..." readOnly>
-          </TextArea> */}
-        </form>
+        }
       </Pane>
     )
   }
