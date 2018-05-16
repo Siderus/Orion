@@ -19,7 +19,8 @@ class ConnectivityPanel extends React.Component {
   state = {
     gateway: GatewayEnum.SIDERUS,
     skipGatewayQuery: true,
-    runInBackground: true
+    runInBackground: true,
+    disablePubSubIPNS: false
   }
 
   componentWillMount () {
@@ -29,14 +30,16 @@ class ConnectivityPanel extends React.Component {
     Promise.all([
       Settings.get('gatewayURL'),
       Settings.get('skipGatewayQuery'),
-      Settings.get('runInBackground')
+      Settings.get('runInBackground'),
+      Settings.get('disablePubSubIPNS')
     ])
       // .then(console.log)
       .then(values => this.setState({
         gateway: values[0],
         skipGatewayQuery: values[1] || false,
         // the default (undefined) is considered true
-        runInBackground: typeof values[2] !== 'boolean' ? true : values[2]
+        runInBackground: typeof values[2] !== 'boolean' ? true : values[2],
+        disablePubSubIPNS: values[3] || false
       }))
   }
 
@@ -79,6 +82,20 @@ class ConnectivityPanel extends React.Component {
      */
     this.setState({
       runInBackground: nextValue
+    })
+  }
+
+  _handlePubSubIPNSChange = (event) => {
+    const nextValue = !this.state.disablePubSubIPNS
+    /**
+     * Save setting persistently
+     */
+    Settings.setSync('disablePubSubIPNS', nextValue)
+    /**
+     * Update component's state
+     */
+    this.setState({
+      disablePubSubIPNS: nextValue
     })
   }
 
@@ -131,6 +148,12 @@ class ConnectivityPanel extends React.Component {
             onChange={this._handleRunInBackgroundChange}
           />
         }
+
+        <CheckBox
+          label="Disable IPNS over PubSub (experimental feature)"
+          checked={this.state.disablePubSubIPNS}
+          onChange={this._handlePubSubIPNSChange}
+        />
       </Pane>
     )
   }

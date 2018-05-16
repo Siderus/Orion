@@ -12,6 +12,7 @@ import { fileSync as tmpFileSync } from 'tmp'
 import request from 'request-promise-native'
 import { app, dialog } from 'electron'
 import pjson from '../package.json'
+import Settings from 'electron-settings'
 
 /**
  * Execute an IPFS command asynchoniously,
@@ -113,7 +114,18 @@ export function getAPIVersion () {
  */
 export function startIPFSDaemon () {
   return new Promise((resolve, reject) => {
-    const ipfsProcess = spawnIPFSCommand('daemon', '--init', `--api=${global.IPFS_MULTIADDR_API}`)
+    const disablePubSubIPNS = Settings.getSync('disablePubSubIPNS')
+
+    const args = [
+      '--init',
+      `--api=${global.IPFS_MULTIADDR_API}`
+    ]
+
+    if (!disablePubSubIPNS) {
+      args.push('--enable-namesys-pubsub')
+    }
+
+    const ipfsProcess = spawnIPFSCommand('daemon', ...args)
 
     // Prepare temporary file for logging:
     const tmpLog = tmpFileSync({ keep: true })
