@@ -25,14 +25,6 @@
       color: black;
       text-shadow: 1px 1px 2px white; 
     }
-
-    .jumbotron {
-      margin-bottom: 0px;
-    }
-
-    .my-5 {
-      margin: 0px !important;
-    }
   </style>
 
   <!-- Global site tag (gtag.js) - Google Analytics -->
@@ -48,7 +40,7 @@
 
 <body>
   <main itemscope itemtype="http://schema.org/SoftwareApplication">
-    <section class="jumbotron text-center text-md-left">
+    <section class="my-0 jumbotron text-center text-md-left">
       <div class="container">
         <div class="row">
           <svg class="col-md-4" xmlns:bx="https://boxy-svg.com" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#"
@@ -97,15 +89,15 @@
             <p>
               <a itemprop="downloadUrl" href="https://github.com/Siderus/Orion/releases/latest" class="btn btn-primary my-2">Download</a>
               <a href="https://github.com/Siderus/Orion/" class="btn btn-secondary my-2">GitHub</a>
-              <a href="#subscribe" class="btn btn-secondary my-2">Newsletter</a>
+              <a href="http://eepurl.com/dfB6q5" target="_blank" class="btn btn-secondary my-2">Newsletter</a>
             </p>
           </div>
         </div>
       </div>
     </section>
-    <section class="my-5">
-      <div class="row">
-        <div class="col-6">
+    <section class="my-0">
+      <div class="row mx-0">
+        <div class="col-md-6 p-0">
             <div id="gifs" class="carousel slide carousel-fade" data-ride="carousel" data-interval="12000" data-pause="">
                 <div class="carousel-inner">
                   <div class="carousel-item active">
@@ -120,29 +112,31 @@
                 </div>
               </div>        
         </div>
-        <div class="col-6">
-          <h3>Features</h3>
-          <ul itemprop="featureList">
-            <li>Designed to be simple and easy to use, </li>
-            <li>Works with Windows, macOS and Ubuntu Linux, </li>
-            <li>Everything included: no other dependencies required, no terminal needed! </li>
-            <li>Works with your IPFS Browser Companion, </li>
-            <li>Works with most dApps and Ethereum Blockchain, </li>
-            <li>Explores both IPFS and IPNS objects, </li>
-            <li>Works with Siderus Hera, </li>
-            <li>Customizable configuration for developers.</li>
-          </ul>
-          <p>
-            Do you have a feature that you would like to see? <a target="_blank" href="https://github.com/Siderus/Orion/issues/new?template=Feature_request.md">Let us know</a>!
-          </p>
+        <div class="col-md-6">
+          <div class="p-md-5 p-2">
+            <h3>Features</h3>
+            <ul itemprop="featureList">
+              <li>Designed to be simple and easy to use, </li>
+              <li>Works with Windows, macOS and Ubuntu Linux, </li>
+              <li>Everything included: no other dependencies required, no terminal needed! </li>
+              <li>Works with your IPFS Browser Companion, </li>
+              <li>Works with most dApps and Ethereum Blockchain, </li>
+              <li>Explores both IPFS and IPNS objects, </li>
+              <li>Works with Siderus Hera, </li>
+              <li>Customizable configuration for developers.</li>
+            </ul>
+            <p class="lead">
+              Do you have a feature that you would like to see? <a target="_blank" href="https://github.com/Siderus/Orion/issues/new?template=Feature_request.md">Let us know</a>!
+            </p>
+          </div>
         </div>
       </div>
     </section>
-    <section class="jumbotron align-items-center" id="subscribe">
+    <section class="jumbotron align-items-center text-center" id="subscribe">
       <a class="btn btn-primary" href="http://eepurl.com/dfB6q5" target="_blank">Subscribe to Siderus Newsletter</a>
     </section>
   </main>
-  <footer class="my-5 pt-5 text-muted text-center text-small" itemprop="author">
+  <footer class="mt-0 mb-5 pt-0 text-muted text-center text-small" itemprop="author">
     <svg xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
       xmlns:svg="http://www.w3.org/2000/svg" xmlns="http://www.w3.org/2000/svg" version="1.1" id="svg2" viewBox="0 0 512.00001 512.00001"
       height="64" width="64">
