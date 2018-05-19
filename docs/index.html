@@ -20,6 +20,19 @@
     .container {
       max-width: 750px;
     }
+
+    .carousel-caption {
+      color: black;
+      text-shadow: 1px 1px 2px white; 
+    }
+
+    .jumbotron {
+      margin-bottom: 0px;
+    }
+
+    .my-5 {
+      margin: 0px !important;
+    }
   </style>
 
   <!-- Global site tag (gtag.js) - Google Analytics -->
@@ -84,56 +97,49 @@
             <p>
               <a itemprop="downloadUrl" href="https://github.com/Siderus/Orion/releases/latest" class="btn btn-primary my-2">Download</a>
               <a href="https://github.com/Siderus/Orion/" class="btn btn-secondary my-2">GitHub</a>
-              <a href="#subscribe" class="btn btn-secondary my-2">Subscribe</a>
+              <a href="#subscribe" class="btn btn-secondary my-2">Newsletter</a>
             </p>
           </div>
         </div>
       </div>
     </section>
     <section class="my-5">
-      <div class="container">
-        <h3>Features</h3>
-        <ul itemprop="featureList">
-          <li>Designed to be simple and easy to use, </li>
-          <li>Works with Windows, macOS and Ubuntu Linux, </li>
-          <li>Everything included: no other dependencies required, no terminal needed! </li>
-          <li>Works with your IPFS Browser Companion, </li>
-          <li>Works with most dApps and Ethereum Blockchain, </li>
-          <li>Explores both IPFS and IPNS objects, </li>
-          <li>Works with Siderus Hera, </li>
-          <li>Customizable configuration for developers.</li>
-        </ul>
-        <p>
-          Do you have a feature that you would like to see? <a target="_blank" href="https://github.com/Siderus/Orion/issues/new?template=Feature_request.md">Let us know</a>!
-        </p>
+      <div class="row">
+        <div class="col-6">
+            <div id="gifs" class="carousel slide carousel-fade" data-ride="carousel" data-interval="12000" data-pause="">
+                <div class="carousel-inner">
+                  <div class="carousel-item active">
+                    <img class="d-block w-100" src="./gifs/drag-and-drop.gif" alt="Siderus Orion: Drag and Drop">
+                  </div>
+                  <div class="carousel-item">
+                    <img class="d-block w-100" src="./gifs/get-more-info.gif" alt="Siderus Orion: Get more info">
+                  </div>
+                  <div class="carousel-item">
+                    <img class="d-block w-100" src="./gifs/import.gif" alt="Siderus Orion: import IPFS objects">
+                  </div>
+                </div>
+              </div>        
+        </div>
+        <div class="col-6">
+          <h3>Features</h3>
+          <ul itemprop="featureList">
+            <li>Designed to be simple and easy to use, </li>
+            <li>Works with Windows, macOS and Ubuntu Linux, </li>
+            <li>Everything included: no other dependencies required, no terminal needed! </li>
+            <li>Works with your IPFS Browser Companion, </li>
+            <li>Works with most dApps and Ethereum Blockchain, </li>
+            <li>Explores both IPFS and IPNS objects, </li>
+            <li>Works with Siderus Hera, </li>
+            <li>Customizable configuration for developers.</li>
+          </ul>
+          <p>
+            Do you have a feature that you would like to see? <a target="_blank" href="https://github.com/Siderus/Orion/issues/new?template=Feature_request.md">Let us know</a>!
+          </p>
+        </div>
       </div>
     </section>
-    <section class="jumbotron text-center">
-      <div class="container">
-        <h3 id="subscribe" class="jumbotron-heading">Subscribe to our Newsletter</h3>
-        <br>
-        <!-- Begin MailChimp Signup Form -->
-				<div id="mc_embed_signup" class="form-inline justify-content-center">
-					<form action="//siderus.us14.list-manage.com/subscribe/post?u=4f0316f47e9e8e602a0dfe075&amp;id=85f29686b7" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="validate" target="_blank" novalidate>
-						<div id="mc_embed_signup_scroll">
-							<div class="input-group mc-field-group">
-								<input type="email" placeholder="Enter your email here..." value="" name="EMAIL" class="form-control required email" id="mce-EMAIL" style="width: 320px;">
-                <div class="input-group-append">
-                  <input type="submit" class="btn btn-outline-primary" value="Subscribe" name="subscribe" id="mc-embedded-subscribe">
-                </div>
-							</div>
-
-							<div id="mce-responses" class="clear">
-								<div class="response" id="mce-error-response" style="display:none"></div>
-								<div class="response" id="mce-success-response" style="display:none"></div>
-							</div>    <!-- real people should not fill this in and expect good things - do not remove this or risk form bot signups-->
-
-							<div style="position: absolute; left: -5000px;" aria-hidden="true"><input type="text" name="b_4f0316f47e9e8e602a0dfe075_85f29686b7" tabindex="-1" value=""></div>
-						</div>
-					</form>
-				</div>
-				<!--End mc_embed_signup-->
-      </div>
+    <section class="jumbotron align-items-center" id="subscribe">
+      <a class="btn btn-primary" href="http://eepurl.com/dfB6q5" target="_blank">Subscribe to Siderus Newsletter</a>
     </section>
   </main>
   <footer class="my-5 pt-5 text-muted text-center text-small" itemprop="author">
