@@ -2,6 +2,7 @@ import React from 'react'
 import ReactDom from 'react-dom'
 
 import { initIPFSClient } from '../../api'
+import { trackEvent } from '../../stats'
 
 // Load Components
 import { Window, Content } from 'react-photonkit'
@@ -15,6 +16,10 @@ import Footer from './Components/Footer'
 import StatsStore from './Stores/Stats'
 
 class ImportWindow extends React.Component {
+  componentDidMount () {
+    trackEvent('ImportIPFSWindowOpen', {})
+  }
+
   render () {
     return (
       <Window>

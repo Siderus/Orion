@@ -1,9 +1,10 @@
 import React from 'react'
 import ReactDom from 'react-dom'
 
-import { initIPFSClient, resolveName } from '../../api'
 import { remote } from 'electron'
 import { multihash as isMultiHash } from 'is-ipfs'
+import { initIPFSClient, resolveName } from '../../api'
+import { trackEvent } from '../../stats'
 
 // Load Components
 import {
@@ -26,6 +27,10 @@ class ResolveIPNSWindow extends React.Component {
   constructor () {
     super()
     this.handleSubmit = this.handleSubmit.bind(this)
+  }
+
+  componentDidMount () {
+    trackEvent('ResolveIPNSWindowOpen', {})
   }
 
   handleSubmit (event) {

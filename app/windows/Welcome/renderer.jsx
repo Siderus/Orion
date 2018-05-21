@@ -1,10 +1,11 @@
 import React from 'react'
 import ReactDom from 'react-dom'
+import { remote } from 'electron'
+import Settings from 'electron-settings'
 
 import WelcomePage from './Components/WelcomePage'
 import TermsOfServicePage from './Components/TermsOfServicePage'
-import { remote } from 'electron'
-import Settings from 'electron-settings'
+import { trackEvent } from '../../stats'
 
 class WelcomeWindow extends React.Component {
   state = {
@@ -21,6 +22,7 @@ class WelcomeWindow extends React.Component {
 
   handleAccept = () => {
     Settings.setSync('userAgreement', true)
+    trackEvent('userAgreementAccepted', {})
     remote.app.emit('start-orion')
     window.close()
   }

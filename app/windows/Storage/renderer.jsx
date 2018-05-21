@@ -2,6 +2,7 @@ import React from 'react'
 import ReactDom from 'react-dom'
 // Load Components
 import { Window, Content } from 'react-photonkit'
+import { trackEvent } from '../../stats'
 
 // Load API and custom stuff
 import {
@@ -61,6 +62,7 @@ function startLoop () {
 
 class App extends React.Component {
   componentDidMount () {
+    trackEvent('StorageWindowOpen', {})
     promiseIPFSReady().then(startLoop)
   }
 
