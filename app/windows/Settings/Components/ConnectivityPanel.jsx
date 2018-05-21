@@ -23,7 +23,7 @@ class ConnectivityPanel extends React.Component {
     disablePubSubIPNS: false
   }
 
-  componentWillMount () {
+  UNSAFE_componentWillMount () {
     /**
      * Retrieve settings from persistent storage
      */

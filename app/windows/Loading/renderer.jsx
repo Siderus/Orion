@@ -50,7 +50,7 @@ class LoadingWindow extends React.Component {
     percentage: 0
   }
 
-  componentWillMount () {
+  UNSAFE_componentWillMount () {
     ipcRenderer.on('set-progress', (event, data) => this.setState(data))
   }
 
