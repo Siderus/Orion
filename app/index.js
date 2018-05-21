@@ -32,7 +32,6 @@ app.mainWindow = null
 
 // A little space for IPFS processes
 global.IPFS_PROCESS = null
-global.IPFS_CLIENT = null
 
 // Sets default values for IPFS configurations
 global.IPFS_BINARY_PATH = `${rootDir.get()}/go-ipfs/ipfs`
@@ -184,7 +183,6 @@ function startOrion () {
       .then(initIPFSClient)
       .then(client => {
         console.log('Connecting to the IPFS Daemon')
-        global.IPFS_CLIENT = client
         loadingWindow.webContents.send('set-progress', {
           text: 'Connecting to the IPFS Daemon...',
           percentage: 40

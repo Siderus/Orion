@@ -21,22 +21,14 @@ export function setClientInstance (client) {
 }
 
 /**
- * initIPFSClient will set up a new ipfs-api instance. It will try to get an
- * existing instance and the configuration (api endpoint) from global vars
+ * initIPFSClient will set up a new ipfs-api instance. It will try to get
+ * the configuration (api endpoint) from global vars
  *
  * @returns Promise<IPFS_CLIENT>
  */
 export function initIPFSClient () {
   if (IPFS_CLIENT !== null) return Promise.resolve(IPFS_CLIENT)
 
-  // get IPFS client from the main process
-  if (remote) {
-    const globalClient = remote.getGlobal('IPFS_CLIENT')
-    if (globalClient) {
-      setClientInstance(globalClient)
-      return Promise.resolve(IPFS_CLIENT)
-    }
-  }
   // Configure the endpoint for the api. It will try to get the value from the
   // global variables IPFS_MULTIADDR_APIs
   let apiMultiaddr
