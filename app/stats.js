@@ -25,7 +25,7 @@ export function setUpUser (ipAddress) {
 
   UserID = Settings.getSync(SettingsUserIDKey)
   client.people.set(UserID, {
-    $first_name: UserID,
+    $name: UserID,
     version: `${pjson.version}`,
     os_release: `${release()}`,
     os_platform: `${platform()}`

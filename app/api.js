@@ -102,7 +102,7 @@ export function wrapFiles (links) {
  */
 export function addFilesFromFSPath (filePaths, _queryGateways = queryGateways) {
   if (!IPFS_CLIENT) return Promise.reject(ERROR_IPFS_UNAVAILABLE)
-  
+
   const options = { recursive: true }
   const promises = filePaths.map(path => IPFS_CLIENT.util.addFromFs(path, options))
 
