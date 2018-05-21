@@ -102,6 +102,7 @@ export function wrapFiles (links) {
  */
 export function addFilesFromFSPath (filePaths, _queryGateways = queryGateways) {
   if (!IPFS_CLIENT) return Promise.reject(ERROR_IPFS_UNAVAILABLE)
+  trackEvent('addFilesFromFSPath', { count: filePaths.length })
 
   const options = { recursive: true }
   const promises = filePaths.map(path => IPFS_CLIENT.util.addFromFs(path, options))
@@ -151,8 +152,6 @@ export function addFilesFromFSPath (filePaths, _queryGateways = queryGateways) {
             // Query the wrapper
             _queryGateways(wrapper.hash)
           }
-
-          trackEvent('addFilesFromFSPath', { count: fileUploadResults.length })
 
           return Promise.resolve(wrapper)
         })
