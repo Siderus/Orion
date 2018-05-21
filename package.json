@@ -3,6 +3,7 @@
   "version": "0.5.0",
   "env": "development",
   "ipfsVersion": "v0.4.14",
+  "statsToken": "9d407c14d888a212cf04c397a95acb7b",
   "description": "Orion is an easy-to-use and KISS IPFS desktop interface",
   "main": "app/entry.js",
   "scripts": {
@@ -61,6 +62,7 @@
     "mobx-react": "^4.1.0",
     "multiaddr": "^3.0.2",
     "photon": "git+https://github.com/connors/photon.git",
+    "public-ip": "^2.4.0",
     "query-string": "^5.1.0",
     "react": "^15.4.2",
     "react-dom": "^15.4.2",

@@ -2,10 +2,11 @@ import Mixpanel from 'mixpanel'
 import Settings from 'electron-settings'
 import uuidv4 from 'uuid/v4'
 import pjson from '../package.json'
+import publicIp from 'public-ip'
 
 const SettingsUserIDKey = 'statsUserID'
 
-const client = Mixpanel.init('9d407c14d888a212cf04c397a95acb7b', {
+const client = Mixpanel.init(pjson.statsToken, {
   protocol: 'https'
 })
 
@@ -16,14 +17,18 @@ let UserID = Settings.getSync(SettingsUserIDKey)
  * follow users when debugging process.
  */
 export function setUpUser () {
-  if (!Settings.getSync(SettingsUserIDKey)) {
-    UserID = uuidv4()
-    Settings.setSync(SettingsUserIDKey, UserID)
-  }
+  return publicIp.v4().then(ipAddress => {
+    if (!Settings.getSync(SettingsUserIDKey)) {
+      UserID = uuidv4()
+      Settings.setSync(SettingsUserIDKey, UserID)
+    }
 
-  UserID = Settings.getSync(SettingsUserIDKey)
-  client.people.set(UserID, {
-    version: `${pjson.version}`
+    UserID = Settings.getSync(SettingsUserIDKey)
+    client.people.set(UserID, {
+      version: `${pjson.version}`
+    }, {
+      $ip: ipAddress
+    })
   })
 }
 
@@ -31,15 +36,19 @@ export function setUpUser () {
  * trackEvent will send a new event with specific data
  */
 export function trackEvent (eventName, data) {
-  if (!UserID) {
-    setUpUser()
-  }
+  return publicIp.v4().then(ipAddress => {
+    if (!UserID) {
+      setUpUser()
+    }
 
-  if (!data) {
-    data = {}
-  }
+    if (!data) {
+      data = {}
+    }
 
-  data.distinct_id = UserID
-  data.version = `${pjson.version}`
-  client.track(eventName, data)
+    data.distinct_id = UserID
+    data.version = `${pjson.version}`
+    data.$ip = ipAddress
+    console.log("Event", eventName, data)
+    client.track(eventName, data)
+  })
 }
