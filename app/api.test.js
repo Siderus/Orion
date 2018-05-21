@@ -14,13 +14,19 @@ jest.mock('./gateways', () => {
   return ['mock-gateway-1', 'mock-gateway-2']
 })
 
+jest.mock('./stats', () => {
+  return {
+    trackEvent: jest.fn().mockReturnValue(Promise.resolve())
+  }
+})
+
 jest.mock('request-promise-native', () => {
   return jest.fn().mockReturnValue(Promise.resolve())
 })
 
 jest.mock('electron-settings', () => {
   const getSyncMock = jest.fn()
-    // getSync('skipGatewayQuery)
+    // getSync('skipGatewayQuery')
     .mockReturnValueOnce(true)
     .mockReturnValueOnce(false)
   return {
