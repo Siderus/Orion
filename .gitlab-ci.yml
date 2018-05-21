@@ -11,6 +11,9 @@ before_script:
   - mv package.json package.json.old
   - cat package.json.old | jq 'to_entries | map(if .key == "env" then .value = "release" else . end) | from_entries' > package.json
   - rm -f package.json.old
+  - mv package.json package.json.old
+  - cat package.json.old | jq 'to_entries | map(if .key == "statsToken" then .value = "bcd802fa2e699f85cc19e1ff6079e3c7" else . end) | from_entries' > package.json
+  - rm -f package.json.old
 
 yarn-test:
   stage: test
