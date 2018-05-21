@@ -11,7 +11,7 @@ import {
   PaneGroup
 } from 'react-photonkit'
 
-import { initIPFSClient } from '../../api'
+import { initIPFSClient, promiseIPFSReady } from '../../api'
 
 import Sidebar from './Components/Sidebar'
 import RepositoryPanel from './Components/RepositoryPanel'
@@ -23,7 +23,7 @@ import InformationStore from './Stores/Information'
 
 class SettingsWindow extends React.Component {
   componentDidMount () {
-    InformationStore.loadData()
+    promiseIPFSReady().then(() => InformationStore.loadData())
   }
 
   render () {

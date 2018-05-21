@@ -8,6 +8,7 @@ import {
   saveFileToPath,
   isObjectPinned,
   pinObject,
+  promiseIPFSReady,
   unpinObject
 } from '../../api'
 import { openInBrowser } from '../Storage/fileIntegration'
@@ -32,16 +33,11 @@ class DetailsWindow extends React.Component {
     currentTab: 0
   }
 
-  constructor (props) {
-    super(props)
-
-    this.handleDownload = this.handleDownload.bind(this)
-    this.handleOpenInBrowser = this.handleOpenInBrowser.bind(this)
-    this.handlePin = this.handlePin.bind(this)
-    this.handleUnpin = this.handleUnpin.bind(this)
+  componentDidMount () {
+    promiseIPFSReady().then(this.fetchData)
   }
 
-  componentDidMount () {
+  fetchData = () => {
     Promise.all([
       getObjectStat(hash),
       getObjectDag(hash),
@@ -54,7 +50,7 @@ class DetailsWindow extends React.Component {
       }))
   }
 
-  handleDownload () {
+  handleDownload = () => {
     const options = {
       title: 'Where should I save?',
       properties: ['openDirectory'],
@@ -76,11 +72,11 @@ class DetailsWindow extends React.Component {
     }
   }
 
-  handleOpenInBrowser () {
+  handleOpenInBrowser = () => {
     openInBrowser([hash])
   }
 
-  handlePin () {
+  handlePin = () => {
     this.setState({ isUpdatingPin: true })
     pinObject(hash)
       .then(result => this.setState({ isPinned: true, isUpdatingPin: false }))
@@ -90,7 +86,7 @@ class DetailsWindow extends React.Component {
       })
   }
 
-  handleUnpin () {
+  handleUnpin = () => {
     this.setState({ isUpdatingPin: true })
     unpinObject(hash)
       .then(result => this.setState({ isPinned: false, isUpdatingPin: false }))

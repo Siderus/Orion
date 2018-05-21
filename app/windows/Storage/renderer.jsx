@@ -9,7 +9,8 @@ import {
   getPeersInfo,
   getRepoInfo,
   getStorageList,
-  getObjectList
+  getObjectList,
+  promiseIPFSReady
 } from '../../api'
 import { setupAddAppOnDrop } from './fileIntegration'
 
@@ -60,7 +61,7 @@ function startLoop () {
 
 class App extends React.Component {
   componentDidMount () {
-    startLoop()
+    promiseIPFSReady().then(startLoop)
   }
 
   componentWillUnmount () {
