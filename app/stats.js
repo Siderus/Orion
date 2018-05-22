@@ -3,7 +3,7 @@ import Settings from 'electron-settings'
 import uuidv4 from 'uuid/v4'
 import pjson from '../package.json'
 import publicIp from 'public-ip'
-import {release, platform} from 'os'
+import { release, platform } from 'os'
 
 const SettingsUserIDKey = 'statsUserID'
 
@@ -43,6 +43,11 @@ export function setUpUser (ipAddress) {
  */
 export function trackEvent (eventName, data) {
   return new Promise((resolve, reject) => {
+    const skipTracking = Settings.getSync('skipUserTracking')
+    if (skipTracking) {
+      return resolve()
+    }
+
     return publicIp.v4().then(ipAddress => {
       setUpUser(ipAddress)
 

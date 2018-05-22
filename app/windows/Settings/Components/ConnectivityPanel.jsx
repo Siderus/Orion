@@ -20,10 +20,11 @@ class ConnectivityPanel extends React.Component {
     gateway: GatewayEnum.SIDERUS,
     skipGatewayQuery: true,
     runInBackground: true,
-    disablePubSubIPNS: false
+    disablePubSubIPNS: false,
+    skipUserTracking: false
   }
 
-  UNSAFE_componentWillMount () {
+  componentWillMount () {
     /**
      * Retrieve settings from persistent storage
      */
@@ -31,7 +32,8 @@ class ConnectivityPanel extends React.Component {
       Settings.get('gatewayURL'),
       Settings.get('skipGatewayQuery'),
       Settings.get('runInBackground'),
-      Settings.get('disablePubSubIPNS')
+      Settings.get('disablePubSubIPNS'),
+      Settings.get('skipUserTracking')
     ])
       // .then(console.log)
       .then(values => this.setState({
@@ -39,7 +41,8 @@ class ConnectivityPanel extends React.Component {
         skipGatewayQuery: values[1] || false,
         // the default (undefined) is considered true
         runInBackground: typeof values[2] !== 'boolean' ? true : values[2],
-        disablePubSubIPNS: values[3] || false
+        disablePubSubIPNS: values[3] || false,
+        skipUserTracking: values[4] || false
       }))
   }
 
@@ -99,6 +102,13 @@ class ConnectivityPanel extends React.Component {
     })
   }
 
+  _handleUserTrackingChange = () => {
+    const nextValue = !this.state.skipUserTracking
+    Settings.setSync('skipUserTracking', nextValue)
+
+    this.setState({ skipUserTracking: nextValue })
+  }
+
   render () {
     if (this.props.navigationStore.selected !== 0) return null
     if (!this.props.informationStore) return null
@@ -140,6 +150,12 @@ class ConnectivityPanel extends React.Component {
           onChange={this._handleSkipGatewayQueryChange}
         />
 
+        <CheckBox
+          label="Disable IPNS over PubSub (experimental feature)"
+          checked={this.state.disablePubSubIPNS}
+          onChange={this._handlePubSubIPNSChange}
+        />
+
         {
           !isMac &&
           <CheckBox
@@ -150,9 +166,9 @@ class ConnectivityPanel extends React.Component {
         }
 
         <CheckBox
-          label="Disable IPNS over PubSub (experimental feature)"
-          checked={this.state.disablePubSubIPNS}
-          onChange={this._handlePubSubIPNSChange}
+          label='Send anonymized statistics to help improve this app'
+          checked={!this.state.skipUserTracking}
+          onChange={this._handleUserTrackingChange}
         />
       </Pane>
     )
