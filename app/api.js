@@ -7,6 +7,7 @@ import multiaddr from 'multiaddr'
 import request from 'request-promise-native'
 import pjson from '../package.json'
 import gateways from './gateways.json'
+import { trackEvent } from './stats'
 
 import Settings from 'electron-settings'
 
@@ -101,6 +102,7 @@ export function wrapFiles (links) {
  */
 export function addFilesFromFSPath (filePaths, _queryGateways = queryGateways) {
   if (!IPFS_CLIENT) return Promise.reject(ERROR_IPFS_UNAVAILABLE)
+  trackEvent('addFilesFromFSPath', { count: filePaths.length })
 
   const options = { recursive: true }
   const promises = filePaths.map(path => IPFS_CLIENT.util.addFromFs(path, options))

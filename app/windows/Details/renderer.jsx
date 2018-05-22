@@ -17,6 +17,7 @@ import queryString from 'query-string'
 import cx from 'classnames'
 import { Window, Toolbar, Actionbar, ButtonGroup } from 'react-photonkit'
 import Button from '../../components/Button'
+import { trackEvent } from '../../stats'
 
 // Load Components
 import InformationTab from './Components/InformationTab'
@@ -34,6 +35,7 @@ class DetailsWindow extends React.Component {
   }
 
   componentDidMount () {
+    trackEvent('DetailsWindowOpen', {})
     promiseIPFSReady().then(this.fetchData)
   }
 

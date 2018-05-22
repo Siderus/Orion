@@ -21,6 +21,7 @@
       "error",
       "unix"
     ],
+    "camelcase": 0,
     "prefer-promise-reject-errors": 0,
     "react/prop-types": 0
   }

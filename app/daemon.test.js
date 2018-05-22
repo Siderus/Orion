@@ -2,6 +2,12 @@ import * as daemon from './daemon'
 
 global.IPFS_REPO_PATH = '/custom/path/to/ipfs'
 
+jest.mock('./stats', () => {
+  return {
+    trackEvent: jest.fn().mockReturnValue(Promise.resolve())
+  }
+})
+
 jest.mock('electron-settings', () => {
   const getSyncMock = jest.fn()
     .mockReturnValueOnce(null)

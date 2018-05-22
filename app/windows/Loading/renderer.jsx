@@ -2,8 +2,9 @@ import React from 'react'
 import ReactDom from 'react-dom'
 import { shell, ipcRenderer } from 'electron'
 import styled from 'styled-components'
-
 import 'react-photonkit'
+
+import { trackEvent } from '../../stats'
 import ProgressBar from '../../components/ProgressBar'
 import OrionLogo from '../../../docs/logo.svg'
 import SiderusLogo from '../../../docs/siderus-logo.svg'
@@ -49,8 +50,12 @@ class LoadingWindow extends React.Component {
     percentage: 0
   }
 
-  componentWillMount () {
+  UNSAFE_componentWillMount () {
     ipcRenderer.on('set-progress', (event, data) => this.setState(data))
+  }
+
+  componentDidMount () {
+    trackEvent('LoadingWindowOpen', {})
   }
 
   componentWillUnmount () {

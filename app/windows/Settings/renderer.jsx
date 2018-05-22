@@ -1,5 +1,6 @@
 import React from 'react'
 import ReactDom from 'react-dom'
+import { trackEvent } from '../../stats'
 
 // Load Components
 import {
@@ -23,6 +24,8 @@ import InformationStore from './Stores/Information'
 
 class SettingsWindow extends React.Component {
   componentDidMount () {
+    trackEvent('SettingsWindowOpen', {})
+
     promiseIPFSReady().then(() => InformationStore.loadData())
   }
 
