@@ -19,13 +19,13 @@ const template = [{
     }
   }, {
     label: 'Resolve IPNS',
-    accelerator: 'CmdOrCtrl+E',
+    accelerator: 'CmdOrCtrl+F',
     click () {
       ResolveIPNS.create(app)
     }
   }, {
-    label: 'PublishToIPNS',
-    accelerator: 'CmdOrCtrl+F',
+    label: 'Publish to IPNS',
+    accelerator: 'CmdOrCtrl+E',
     click () {
       PublishToIPNS.create(app)
     }
