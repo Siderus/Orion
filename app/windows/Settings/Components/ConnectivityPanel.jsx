@@ -1,6 +1,7 @@
 import React from 'react'
 import Settings from 'electron-settings'
 import { observer } from 'mobx-react'
+import { trackEvent } from '../../../stats'
 
 import { Pane, Input, CheckBox } from 'react-photonkit'
 
@@ -104,7 +105,17 @@ class ConnectivityPanel extends React.Component {
 
   _handleUserTrackingChange = () => {
     const nextValue = !this.state.allowUserTracking
+    if (!nextValue) {
+      // we should no longer track the user, track only this last event
+      trackEvent('userTrackingDisabled')
+    }
+
     Settings.setSync('allowUserTracking', nextValue)
+
+    if (nextValue) {
+      // now that tracking is enabled (in the settings), we can start tracking
+      trackEvent('userTrackingEnabled')
+    }
 
     this.setState({ allowUserTracking: nextValue })
   }
