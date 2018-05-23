@@ -60,7 +60,7 @@ class StorageElement extends React.Component {
   }
 
   // Setup the Menu
-  UNSAFE_componentWillMount () {
+  componentDidMount () {
     if (this.hideMenu === false) {
       this.menu = remote.Menu.buildFromTemplate(this.menuTemplate)
     }

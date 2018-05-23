@@ -1,6 +1,7 @@
 import React from 'react'
 import Settings from 'electron-settings'
 import { observer } from 'mobx-react'
+import { trackEvent } from '../../../stats'
 
 import { Pane, Input, CheckBox } from 'react-photonkit'
 
@@ -20,10 +21,11 @@ class ConnectivityPanel extends React.Component {
     gateway: GatewayEnum.SIDERUS,
     skipGatewayQuery: true,
     runInBackground: true,
-    disablePubSubIPNS: false
+    disablePubSubIPNS: false,
+    allowUserTracking: false
   }
 
-  UNSAFE_componentWillMount () {
+  componentDidMount () {
     /**
      * Retrieve settings from persistent storage
      */
@@ -31,7 +33,8 @@ class ConnectivityPanel extends React.Component {
       Settings.get('gatewayURL'),
       Settings.get('skipGatewayQuery'),
       Settings.get('runInBackground'),
-      Settings.get('disablePubSubIPNS')
+      Settings.get('disablePubSubIPNS'),
+      Settings.get('allowUserTracking')
     ])
       // .then(console.log)
       .then(values => this.setState({
@@ -39,7 +42,8 @@ class ConnectivityPanel extends React.Component {
         skipGatewayQuery: values[1] || false,
         // the default (undefined) is considered true
         runInBackground: typeof values[2] !== 'boolean' ? true : values[2],
-        disablePubSubIPNS: values[3] || false
+        disablePubSubIPNS: values[3] || false,
+        allowUserTracking: values[4] || false
       }))
   }
 
@@ -99,6 +103,23 @@ class ConnectivityPanel extends React.Component {
     })
   }
 
+  _handleUserTrackingChange = () => {
+    const nextValue = !this.state.allowUserTracking
+    if (!nextValue) {
+      // we should no longer track the user, track only this last event
+      trackEvent('userTrackingDisabled')
+    }
+
+    Settings.setSync('allowUserTracking', nextValue)
+
+    if (nextValue) {
+      // now that tracking is enabled (in the settings), we can start tracking
+      trackEvent('userTrackingEnabled')
+    }
+
+    this.setState({ allowUserTracking: nextValue })
+  }
+
   render () {
     if (this.props.navigationStore.selected !== 0) return null
     if (!this.props.informationStore) return null
@@ -140,6 +161,12 @@ class ConnectivityPanel extends React.Component {
           onChange={this._handleSkipGatewayQueryChange}
         />
 
+        <CheckBox
+          label="Disable IPNS over PubSub (experimental feature)"
+          checked={this.state.disablePubSubIPNS}
+          onChange={this._handlePubSubIPNSChange}
+        />
+
         {
           !isMac &&
           <CheckBox
@@ -150,9 +177,9 @@ class ConnectivityPanel extends React.Component {
         }
 
         <CheckBox
-          label="Disable IPNS over PubSub (experimental feature)"
-          checked={this.state.disablePubSubIPNS}
-          onChange={this._handlePubSubIPNSChange}
+          label='Send anonymized statistics to help improve this app'
+          checked={this.state.allowUserTracking}
+          onChange={this._handleUserTrackingChange}
         />
       </Pane>
     )

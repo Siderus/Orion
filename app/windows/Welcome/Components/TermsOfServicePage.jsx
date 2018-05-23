@@ -2,6 +2,7 @@ import React from 'react'
 import styled from 'styled-components'
 import ToS from './ToS'
 import { shell } from 'electron'
+import Settings from 'electron-settings'
 
 import {
   Window,
@@ -20,7 +21,7 @@ const StyledContent = styled.div`
 
 const TermsSection = styled.section`
   background: white;
-  height: calc(100vh - 250px);
+  height: calc(100vh - 270px);
   overflow: auto;
   padding: 0px 10px;
 `
@@ -31,23 +32,31 @@ const checkboxLabel = <span>I have read and I agree to {ToSLink} and {PrivacyLin
 
 class TermsOfServicePage extends React.Component {
   state = {
-    checked: false
+    tosChecked: false,
+    allowUserTracking: false
   }
 
-  handleCheckChange = () => {
-    this.setState(prevState => ({ checked: !prevState.checked }))
+  handleToSChange = () => {
+    const nextValue = !this.state.tosChecked
+    this.setState({ tosChecked: nextValue })
+  }
+
+  handleUserTrackingChange = () => {
+    const nextValue = !this.state.allowUserTracking
+    Settings.setSync('allowUserTracking', nextValue)
+    this.setState({ allowUserTracking: nextValue })
   }
 
   handleSubmit = (event) => {
     event.preventDefault()
-    if (!this.state.checked) return
+    if (!this.state.tosChecked) return
 
     this.props.onAccept()
   }
 
   render () {
     const { onQuit } = this.props
-    const { checked } = this.state
+    const { tosChecked, allowUserTracking } = this.state
 
     return (
       <form onSubmit={this.handleSubmit}>
@@ -61,8 +70,13 @@ class TermsOfServicePage extends React.Component {
               </TermsSection>
               <CheckBox
                 label={checkboxLabel}
-                checked={checked}
-                onChange={this.handleCheckChange}
+                checked={tosChecked}
+                onChange={this.handleToSChange}
+              />
+              <CheckBox
+                label='Send anonymized statistics to help improve this app'
+                checked={allowUserTracking}
+                onChange={this.handleUserTrackingChange}
               />
             </StyledContent>
           </Content>
@@ -70,7 +84,7 @@ class TermsOfServicePage extends React.Component {
             <Actionbar>
               <Button text="Quit" ptStyle="default" onClick={onQuit} />
               {
-                checked &&
+                tosChecked &&
                 <Button
                   text="Done"
                   ptStyle="primary"
