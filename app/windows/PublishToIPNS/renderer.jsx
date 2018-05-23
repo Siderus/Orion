@@ -35,7 +35,7 @@ class PublishToIPNSWindow extends React.Component {
       .then(result => {
         this.setState({ loading: false })
         const message = `Successfully published ${result.value} to IPNS!`
-        remote.dialog.showMessageBox({ type: 'info', message })
+        remote.dialog.showMessageBox({ type: 'info', message, cancelId: 0, buttons: ['Ok'] })
         window.close()
       })
       .catch(err => {
