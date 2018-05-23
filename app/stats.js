@@ -43,8 +43,8 @@ export function setUpUser (ipAddress) {
  */
 export function trackEvent (eventName, data) {
   return new Promise((resolve, reject) => {
-    const skipTracking = Settings.getSync('skipUserTracking')
-    if (skipTracking) {
+    const allowUserTracking = Settings.getSync('allowUserTracking')
+    if (!allowUserTracking) {
       return resolve()
     }
 

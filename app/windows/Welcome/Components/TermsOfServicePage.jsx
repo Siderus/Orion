@@ -33,7 +33,7 @@ const checkboxLabel = <span>I have read and I agree to {ToSLink} and {PrivacyLin
 class TermsOfServicePage extends React.Component {
   state = {
     tosChecked: false,
-    skipUserTracking: false
+    allowUserTracking: false
   }
 
   handleToSChange = () => {
@@ -42,9 +42,9 @@ class TermsOfServicePage extends React.Component {
   }
 
   handleUserTrackingChange = () => {
-    const nextValue = !this.state.skipUserTracking
-    Settings.setSync('skipUserTracking', nextValue)
-    this.setState({ skipUserTracking: nextValue })
+    const nextValue = !this.state.allowUserTracking
+    Settings.setSync('allowUserTracking', nextValue)
+    this.setState({ allowUserTracking: nextValue })
   }
 
   handleSubmit = (event) => {
@@ -56,7 +56,7 @@ class TermsOfServicePage extends React.Component {
 
   render () {
     const { onQuit } = this.props
-    const { tosChecked, skipUserTracking } = this.state
+    const { tosChecked, allowUserTracking } = this.state
 
     return (
       <form onSubmit={this.handleSubmit}>
@@ -75,7 +75,7 @@ class TermsOfServicePage extends React.Component {
               />
               <CheckBox
                 label='Send anonymized statistics to help improve this app'
-                checked={!skipUserTracking}
+                checked={allowUserTracking}
                 onChange={this.handleUserTrackingChange}
               />
             </StyledContent>

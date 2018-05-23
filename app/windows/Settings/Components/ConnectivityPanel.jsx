@@ -21,10 +21,10 @@ class ConnectivityPanel extends React.Component {
     skipGatewayQuery: true,
     runInBackground: true,
     disablePubSubIPNS: false,
-    skipUserTracking: false
+    allowUserTracking: false
   }
 
-  componentWillMount () {
+  componentDidMount () {
     /**
      * Retrieve settings from persistent storage
      */
@@ -33,7 +33,7 @@ class ConnectivityPanel extends React.Component {
       Settings.get('skipGatewayQuery'),
       Settings.get('runInBackground'),
       Settings.get('disablePubSubIPNS'),
-      Settings.get('skipUserTracking')
+      Settings.get('allowUserTracking')
     ])
       // .then(console.log)
       .then(values => this.setState({
@@ -42,7 +42,7 @@ class ConnectivityPanel extends React.Component {
         // the default (undefined) is considered true
         runInBackground: typeof values[2] !== 'boolean' ? true : values[2],
         disablePubSubIPNS: values[3] || false,
-        skipUserTracking: values[4] || false
+        allowUserTracking: values[4] || false
       }))
   }
 
@@ -103,10 +103,10 @@ class ConnectivityPanel extends React.Component {
   }
 
   _handleUserTrackingChange = () => {
-    const nextValue = !this.state.skipUserTracking
-    Settings.setSync('skipUserTracking', nextValue)
+    const nextValue = !this.state.allowUserTracking
+    Settings.setSync('allowUserTracking', nextValue)
 
-    this.setState({ skipUserTracking: nextValue })
+    this.setState({ allowUserTracking: nextValue })
   }
 
   render () {
@@ -167,7 +167,7 @@ class ConnectivityPanel extends React.Component {
 
         <CheckBox
           label='Send anonymized statistics to help improve this app'
-          checked={!this.state.skipUserTracking}
+          checked={this.state.allowUserTracking}
           onChange={this._handleUserTrackingChange}
         />
       </Pane>
