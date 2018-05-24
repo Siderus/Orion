@@ -202,7 +202,7 @@ export function getRepoInfo () {
   return IPFS_CLIENT.repo.stat({ human: false })
     .then((stats) => {
       // Providing {value, unit} to the stats.RepoSize
-      stats.RepoSize = byteSize(stats.RepoSize)
+      stats.RepoSize = byteSize(stats.repoSize)
       return Promise.resolve(stats)
     })
 }
