@@ -105,7 +105,7 @@ class Header extends React.Component {
   render () {
     const { isSavingOnDisk, isRemoving } = this.state
     return (
-      <Toolbar title='Storage'>
+      <Toolbar>
         <Actionbar>
           <ButtonGroup>
             <Button glyph='plus-circled' onClick={this._handleAddButtonClick.bind(this)} />
