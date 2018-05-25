@@ -4,6 +4,7 @@ import ReactDom from 'react-dom'
 import { remote } from 'electron'
 import { initIPFSClient, publishToIPNS, getPeer } from '../../api'
 import { trackEvent } from '../../stats'
+import { multihash as isMultiHash } from 'is-ipfs'
 
 // Load Components
 import {
@@ -19,7 +20,8 @@ import Input from '../../components/Input'
 
 class PublishToIPNSWindow extends React.Component {
   state = {
-    loading: false
+    loading: false,
+    hashValue: ''
   }
 
   componentDidMount () {
@@ -36,8 +38,14 @@ class PublishToIPNSWindow extends React.Component {
 
   handleSubmit = (event) => {
     event.preventDefault()
+    const hash = this.state.hashValue
+
+    if (!isMultiHash(hash)) {
+      remote.dialog.showErrorBox('Error', 'Please provide a valid hash.')
+      return
+    }
+
     this.setState({ loading: true })
-    const hash = event.target[1].value
     publishToIPNS(hash)
       .then(result => {
         this.setState({ loading: false })
@@ -51,8 +59,12 @@ class PublishToIPNSWindow extends React.Component {
       })
   }
 
+  handleHashChange = (event) => {
+    this.setState({ hashValue: event.target.value })
+  }
+
   render () {
-    const { loading, peer } = this.state
+    const { loading, peer, hashValue } = this.state
 
     return (
       <form onSubmit={this.handleSubmit}>
@@ -73,6 +85,8 @@ class PublishToIPNSWindow extends React.Component {
               }
             />
             <Input
+              value={hashValue}
+              onChange={this.handleHashChange}
               label="Hash"
               type="text"
               placeholder="what would you like to publish?"
