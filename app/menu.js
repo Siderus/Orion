@@ -113,9 +113,19 @@ const template = [{
   label: 'Help',
   role: 'help',
   submenu: [{
+    label: 'Suggest new feature',
+    click () {
+      electron.shell.openExternal('https://github.com/Siderus/Orion/issues/new?template=Feature_request.md')
+    }
+  }, {
+    label: 'Report a bug',
+    click () {
+      electron.shell.openExternal('https://github.com/Siderus/Orion/issues/new?template=Bug_report.md')
+    }
+  }, {
     label: 'Learn More',
     click () {
-      electron.shell.openExternal('https://github.com/Siderus/Orion')
+      electron.shell.openExternal('https://orion.siderus.io')
     }
   }]
 }]
