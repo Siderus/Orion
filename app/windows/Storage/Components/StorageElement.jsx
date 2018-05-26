@@ -3,7 +3,7 @@ import { remote } from 'electron'
 import React from 'react'
 import { Icon } from 'react-photonkit'
 
-import { saveFileToPath } from '../../../api'
+import { saveFileToPath, publishToIPNS } from '../../../api'
 
 import {
   proptAndRemoveObjects, openInBrowser
@@ -39,6 +39,19 @@ class StorageElement extends React.Component {
           const opts = { properties: ['openDirectory'], buttonLabel: 'Save here' }
           const dest = remote.dialog.showOpenDialog(remote.app.mainWindow, opts)
           saveFileToPath(this.props.element.hash, dest[0])
+        }
+      },
+      {
+        label: 'Publish to IPNS',
+        click: (item) => {
+          publishToIPNS(this.props.element.hash)
+            .then(result => {
+              const message = `IPNS ${result.name} has been successfully updated to ${result.value}!`
+              remote.dialog.showMessageBox({ type: 'info', message, cancelId: 0, buttons: ['Ok'] })
+            })
+            .catch(err => {
+              remote.dialog.showErrorBox('Error', err.message)
+            })
         }
       },
       {

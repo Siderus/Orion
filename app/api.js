@@ -411,6 +411,21 @@ export function resolveName (name) {
 }
 
 /**
+ * Publishes an IPFS hash to IPNS (the PeerID).
+ *
+ * Result looks like:
+ * {
+ *  name:"QmPoXQhVxRAjMXLz7BaAAN1pQyKqHECK3K453oBRGnNvTQ"
+ *  value:"/ipfs/QmPgcYEGLSBPJ8scQTsFRz8sz8X32cdZNQt3dSQb5fMMEQ"
+ * }
+ */
+export function publishToIPNS (hash) {
+  if (!IPFS_CLIENT) return Promise.reject(ERROR_IPFS_UNAVAILABLE)
+
+  return IPFS_CLIENT.name.publish(hash)
+}
+
+/**
  * connectTo allows easily to connect to a node by specifying a str multiaddress
  * example: connectTo("/ip4/192.168.0.22/tcp/4001/ipfs/Qm...")
  */

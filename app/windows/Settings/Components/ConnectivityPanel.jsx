@@ -3,7 +3,8 @@ import Settings from 'electron-settings'
 import { observer } from 'mobx-react'
 import { trackEvent } from '../../../stats'
 
-import { Pane, Input, CheckBox } from 'react-photonkit'
+import { Pane, Button, CheckBox } from 'react-photonkit'
+import Input from '../../../components/Input'
 
 const GatewayEnum = {
   SIDERUS: 'https://siderus.io',
@@ -120,6 +121,13 @@ class ConnectivityPanel extends React.Component {
     this.setState({ allowUserTracking: nextValue })
   }
 
+  _handleCopyToClipboard = (event) => {
+    event.preventDefault()
+    const peerIdInput = document.getElementById('peer-id-input')
+    peerIdInput.select()
+    document.execCommand('copy')
+  }
+
   render () {
     if (this.props.navigationStore.selected !== 0) return null
     if (!this.props.informationStore) return null
@@ -130,10 +138,18 @@ class ConnectivityPanel extends React.Component {
     return (
       <Pane className="settings">
         <Input
+          id='peer-id-input'
           label="Your peer ID"
           type="text"
-          value={data.peer.id || '...'}
-          placeholder="Hey girl..." readOnly
+          value={data.peer ? data.peer.id : 'Loading...'}
+          // using onChange instead of readOnly to allow the input to be selected
+          onChange={() => { }}
+          button={
+            <Button
+              glyph='doc-text'
+              onClick={this._handleCopyToClipboard}
+            />
+          }
         />
 
         <Input
