@@ -14,7 +14,7 @@ const Centered = styled.div`
   text-align: center !important;
 `
 
-function WelcomePage ({ onNext }) {
+function WelcomePage ({ onNext, onSubscribe }) {
   return (
     <Window>
       <Content>
@@ -24,6 +24,7 @@ function WelcomePage ({ onNext }) {
           <h3>Welcome</h3>
           <p>Siderus Orion is the easiest way to start using the decentralised web with IPFS and Siderus Network. It supports a larger number of dApps as wel as the IPFS Browser Companion, to speed up your connection when surfing the decentralised web.</p>
           <p>This wizard will help you with the initial requirements.</p>
+          <Button text="Subscribe to Siderus Newsletter" ptStyle="positive" ptSize="large" onClick={onSubscribe} />
         </Centered>
       </Content>
       <Toolbar ptType="footer">
