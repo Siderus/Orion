@@ -25,7 +25,7 @@ module.exports.create = function createResolveIPNSWindow (app) {
   let thisWindow = new BrowserWindowClass({
     title: 'Welcome',
     parent: app.mainWindow,
-    modal: true,
+    modal: false,
 
     width: 600,
     minWidth: 600,

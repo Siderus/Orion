@@ -93,8 +93,10 @@ function startWelcome () {
     const welcomeWindow = WelcomeWindow.create(app)
     app.mainWindow = welcomeWindow
     welcomeWindow.on('closed', () => {
-      Settings.setSync('welcomeVersion', 1)
-      resolve()
+      if(Settings.getSync('welcomeVersion') == 1) {
+        return resolve()
+      }
+      app.quit()
     })
   })
 }

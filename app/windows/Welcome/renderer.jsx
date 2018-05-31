@@ -1,5 +1,6 @@
 import React from 'react'
 import ReactDom from 'react-dom'
+import Settings from 'electron-settings'
 
 import WelcomePage from './Components/WelcomePage'
 // import ServicesPage from './Components/ServicesPage'
@@ -11,10 +12,11 @@ class WelcomeWindow extends React.Component {
   }
 
   handleNext = () => {
-    this.setState({ pageIndex: this.state.pageIndex+1 })
+    this.setState({ pageIndex: this.state.pageIndex + 1 })
   }
 
   handleQuit = () => {
+    Settings.setSync('welcomeVersion', 1)
     window.close()
   }
 
