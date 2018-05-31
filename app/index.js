@@ -85,6 +85,23 @@ function askWhichNodeToUse (apiVersion) {
  *  8. show storage window
  */
 function startOrion () {
+
+  const userAgreement = Settings.getSync('userAgreement')
+
+  if (!userAgreement) {
+    // If the user did not accept our ToS, show the welcome window
+    const welcomeWindow = WelcomeWindow.create(app)
+    app.mainWindow = welcomeWindow
+    welcomeWindow.on('closed', () => {
+      // If the user did not accept ToS, but closed the welcome window, quit (don't run the the bg)
+      const userAgreement = Settings.getSync('userAgreement')
+      if (!userAgreement) {
+        app.quit()
+      }
+    })
+    return
+  }
+
   // On MacOS it's expected for the app not to close, and to re-open it from Launchpad
   if (process.platform !== 'darwin') {
     setupTrayIcon()
@@ -107,6 +124,7 @@ function startOrion () {
 
   const loadingWindow = LoadingWindow.create(app)
   loadingWindow.on('ready-to-show', () => {
+    app.mainWindow = loadingWindow
     console.log('Loading window ready to show')
     loadingWindow.webContents.send('set-progress', {
       text: 'Getting started...',
@@ -256,21 +274,7 @@ app.on('start-orion', () => {
 })
 
 app.on('ready', () => {
-  const userAgreement = Settings.getSync('userAgreement')
-
-  if (userAgreement) {
-    startOrion()
-  } else {
-    // If the user did not accept our ToS, show the welcome window
-    const welcomeWindow = WelcomeWindow.create(app)
-    welcomeWindow.on('closed', () => {
-      // If the user did not accept ToS, but closed the welcome window, quit (don't run the the bg)
-      const userAgreement = Settings.getSync('userAgreement')
-      if (!userAgreement) {
-        app.quit()
-      }
-    })
-  }
+  startOrion()
 })
 
 app.on('activate', () => {
