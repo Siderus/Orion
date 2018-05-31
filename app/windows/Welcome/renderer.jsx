@@ -1,40 +1,34 @@
 import React from 'react'
 import ReactDom from 'react-dom'
-import { remote } from 'electron'
-import Settings from 'electron-settings'
 
 import WelcomePage from './Components/WelcomePage'
-import TermsOfServicePage from './Components/TermsOfServicePage'
-import { trackEvent } from '../../stats'
+import ServicesPage from './Components/ServicesPage'
+import StatsPage from './Components/StatsPage'
 
 class WelcomeWindow extends React.Component {
   state = {
-    page: 0
+    pageIndex: 0
   }
 
   handleNext = () => {
-    this.setState({ page: 1 })
+    this.setState({ pageIndex: this.state.pageIndex+1 })
   }
 
   handleQuit = () => {
     window.close()
   }
 
-  handleAccept = () => {
-    Settings.setSync('userAgreement', true)
-    trackEvent('userAgreementAccepted', {})
-    remote.app.emit('start-orion')
-    window.close()
-  }
-
   render () {
-    const { page } = this.state
+    const { pageIndex } = this.state
+    switch (pageIndex) {
+      case 1:
+        return <StatsPage onNext={this.handleNext} />
+      case 2:
+        return <ServicesPage onNext={this.handleQuit} />
+      default:
+        return <WelcomePage onNext={this.handleNext} />
 
-    return (
-      page === 0
-        ? <WelcomePage onNext={this.handleNext} />
-        : <TermsOfServicePage onQuit={this.handleQuit} onAccept={this.handleAccept} />
-    )
+    }
   }
 }
 

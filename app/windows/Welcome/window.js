@@ -29,8 +29,8 @@ module.exports.create = function createResolveIPNSWindow (app) {
 
     width: 600,
     minWidth: 600,
-    height: 600,
-    minHeight: 600,
+    height: 610,
+    minHeight: 610,
 
     maximizable: false,
     resizable: true,
