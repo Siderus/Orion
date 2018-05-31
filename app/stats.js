@@ -2,7 +2,6 @@ import Mixpanel from 'mixpanel'
 import Settings from 'electron-settings'
 import uuidv4 from 'uuid/v4'
 import pjson from '../package.json'
-import publicIp from 'public-ip'
 import { release, platform } from 'os'
 
 const SettingsUserIDKey = 'statsUserID'
@@ -17,7 +16,7 @@ let UserID = Settings.getSync(SettingsUserIDKey)
  * setUpUser will configure the client in order to track errors, events and
  * follow users when debugging process.
  */
-export function setUpUser (ipAddress) {
+export function setUpUser () {
   if (!Settings.getSync(SettingsUserIDKey)) {
     UserID = uuidv4()
     Settings.setSync(SettingsUserIDKey, UserID)
@@ -29,8 +28,6 @@ export function setUpUser (ipAddress) {
     version: `${pjson.version}`,
     os_release: `${release()}`,
     os_platform: `${platform()}`
-  }, {
-    $ip: ipAddress
   })
 }
 
@@ -48,21 +45,18 @@ export function trackEvent (eventName, data) {
       return resolve()
     }
 
-    return publicIp.v4().then(ipAddress => {
-      setUpUser(ipAddress)
+    setUpUser()
+    if (!data) {
+      data = {}
+    }
 
-      if (!data) {
-        data = {}
+    data.distinct_id = UserID
+    data.version = `${pjson.version}`
+    client.track(eventName, data, (err) => {
+      if (err) {
+        return reject(err)
       }
-
-      data.distinct_id = UserID
-      data.version = `${pjson.version}`
-      client.track(eventName, data, (err) => {
-        if (err) {
-          return reject(err)
-        }
-        return resolve()
-      })
+      return resolve()
     })
   })
 }
