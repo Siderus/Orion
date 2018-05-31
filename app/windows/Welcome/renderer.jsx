@@ -2,7 +2,7 @@ import React from 'react'
 import ReactDom from 'react-dom'
 
 import WelcomePage from './Components/WelcomePage'
-import ServicesPage from './Components/ServicesPage'
+// import ServicesPage from './Components/ServicesPage'
 import StatsPage from './Components/StatsPage'
 
 class WelcomeWindow extends React.Component {
@@ -22,9 +22,9 @@ class WelcomeWindow extends React.Component {
     const { pageIndex } = this.state
     switch (pageIndex) {
       case 1:
-        return <StatsPage onNext={this.handleNext} />
-      case 2:
-        return <ServicesPage onNext={this.handleQuit} />
+        return <StatsPage onNext={this.handleQuit} />
+      // case 2:
+      //   return <ServicesPage onNext={this.handleQuit} />
       default:
         return <WelcomePage onNext={this.handleNext} />
 
