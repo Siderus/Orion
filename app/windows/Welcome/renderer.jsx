@@ -29,7 +29,6 @@ class WelcomeWindow extends React.Component {
       //   return <ServicesPage onNext={this.handleQuit} />
       default:
         return <WelcomePage onNext={this.handleNext} />
-
     }
   }
 }

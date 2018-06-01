@@ -8,7 +8,7 @@ import {
   Content,
   Toolbar,
   Actionbar,
-  Button,
+  Button
 } from 'react-photonkit'
 
 const StyledContent = styled.div`

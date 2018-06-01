@@ -8,7 +8,7 @@ import {
   Content,
   Toolbar,
   Actionbar,
-  Button,
+  Button
 } from 'react-photonkit'
 
 class ServicesPage extends React.Component {
@@ -27,12 +27,12 @@ class ServicesPage extends React.Component {
               user experience of IPFS. Orion will always connect to Siderus IPFS
               Nodes and you can enable the services to gain some benefits,
               including, but not limiting to:
-                <ul>
-                  <li>Pre-fetching of the content on public Gateways</li>
-                  <li>Siderus Mercury, ACL and Encryption</li>
-                  <li>Siderus Hera, remote syncronization</li>
-                  <li>Siderus Hera, remote pinning</li>
-                </ul>
+              <ul>
+                <li>Pre-fetching of the content on public Gateways</li>
+                <li>Siderus Mercury, ACL and Encryption</li>
+                <li>Siderus Hera, remote syncronization</li>
+                <li>Siderus Hera, remote pinning</li>
+              </ul>
             </LeftAligned>
             <Button text="Enable Siderus Services" ptStyle="positive" ptSize="large"/>
           </Centered>

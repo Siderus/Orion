@@ -93,7 +93,7 @@ function startWelcome () {
     const welcomeWindow = WelcomeWindow.create(app)
     app.mainWindow = welcomeWindow
     welcomeWindow.on('closed', () => {
-      if(Settings.getSync('welcomeVersion') == 1) {
+      if (Settings.getSync('welcomeVersion') === 1) {
         return resolve()
       }
       app.quit()
@@ -113,7 +113,6 @@ function startWelcome () {
  *  8. show storage window
  */
 function startOrion () {
-
   // On MacOS it's expected for the app not to close, and to re-open it from Launchpad
   if (process.platform !== 'darwin') {
     setupTrayIcon()
