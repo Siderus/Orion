@@ -1,6 +1,6 @@
 import React from 'react'
 import OrionLogo from '../../../../docs/logo.svg'
-import styled from 'styled-components'
+import { Centered } from '../../../components/TextDiv'
 import { shell } from 'electron'
 
 import {
@@ -11,10 +11,6 @@ import {
   Button
 } from 'react-photonkit'
 
-const Centered = styled.div`
-  text-align: center !important;
-`
-
 const handleSubscribe = () => {
   shell.openExternal('http://eepurl.com/dfB6q5')
 }
@@ -24,7 +20,7 @@ function WelcomePage ({ onNext }) {
     <Window>
       <Content>
         <Centered>
-          <OrionLogo width='150px' />
+          <OrionLogo width='150px' height='150px' />
           <h1>Siderus Orion</h1>
           <h3>Welcome</h3>
           <p>Siderus Orion is the easiest way to start using the decentralised web with IPFS and Siderus Network. It supports a larger number of dApps as wel as the IPFS Browser Companion, to speed up your connection when surfing the decentralised web.</p>

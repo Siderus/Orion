@@ -74,6 +74,34 @@ function askWhichNodeToUse (apiVersion) {
 }
 
 /**
+ * startWelcome will open a new window and waint until the user closes it by
+ * ending the Welcome Flow.
+ * It checks if the user has already been through the Welcome page by validating
+ * it as a version. This will help Orion to show the welcome page if there are
+ * important changes to show.
+ * It returns a promise.
+ */
+function startWelcome () {
+  const welcomeVersion = Settings.getSync('welcomeVersion')
+  // To do, change this to a variable?
+  if (welcomeVersion <= 1) {
+    return Promise.resolve()
+  }
+
+  return new Promise((resolve, reject) => {
+    // If the user did not accept our ToS, show the welcome window
+    const welcomeWindow = WelcomeWindow.create(app)
+    app.mainWindow = welcomeWindow
+    welcomeWindow.on('closed', () => {
+      if (Settings.getSync('welcomeVersion') === 1) {
+        return resolve()
+      }
+      app.quit()
+    })
+  })
+}
+
+/**
  * This method will:
  *  1. setup the tray icon (except on macOS)
  *  2. check for updates
@@ -107,6 +135,7 @@ function startOrion () {
 
   const loadingWindow = LoadingWindow.create(app)
   loadingWindow.on('ready-to-show', () => {
+    app.mainWindow = loadingWindow
     console.log('Loading window ready to show')
     loadingWindow.webContents.send('set-progress', {
       text: 'Getting started...',
@@ -252,25 +281,11 @@ function startOrion () {
 }
 
 app.on('start-orion', () => {
-  startOrion()
+  startWelcome().then(startOrion)
 })
 
 app.on('ready', () => {
-  const userAgreement = Settings.getSync('userAgreement')
-
-  if (userAgreement) {
-    startOrion()
-  } else {
-    // If the user did not accept our ToS, show the welcome window
-    const welcomeWindow = WelcomeWindow.create(app)
-    welcomeWindow.on('closed', () => {
-      // If the user did not accept ToS, but closed the welcome window, quit (don't run the the bg)
-      const userAgreement = Settings.getSync('userAgreement')
-      if (!userAgreement) {
-        app.quit()
-      }
-    })
-  }
+  startWelcome().then(startOrion)
 })
 
 app.on('activate', () => {
