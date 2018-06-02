@@ -38,8 +38,8 @@ class StatsPage extends React.Component {
             <h1>Support Orion development</h1>
             <p>
               Siderus Orion is integrated with Mixpanel and Sentry to help us
-              debugging errors and understanding how to improve the
-              application and the your <b>user experience with IPFS</b>. <br />
+              debugging errors, understanding how to improve the
+              application and your <b>user experience with IPFS</b>. <br />
               <br />
               Both the integrations are using anonymized information, and
               focusing on only the important details. Some of them are:
@@ -54,7 +54,7 @@ class StatsPage extends React.Component {
               By enabling this feature, you will provide extra valuable metrics
               and data useful for improving your user experience, the
               services and fixing bugs <b>on top of the default Sentry anonymous
-              errors reporting</b>.<br />
+              errors reporting</b> always enabled.<br />
               <br />
               You can validate these information by reading and checking the
               source code on GitHub. You can also read Siderus {PrivacyLink}.
