@@ -12,14 +12,10 @@ import { runGarbageCollector } from '../../../api'
 @observer
 class RepositoryPanel extends React.Component {
   /** Perform garbage collector and reload the view when done */
-  _handleButtonGarbageCollectorClick (event) {
+  _handleButtonGarbageCollectorClick = (event) => {
+    event.preventDefault()
     runGarbageCollector()
-      .then(this.props.informationStore.loadData)
-      .then(this.forceUpdate)
-  }
-
-  _handelOnSubit (event) {
-
+      .then(() => this.props.informationStore.loadData())
   }
 
   render () {
@@ -32,23 +28,19 @@ class RepositoryPanel extends React.Component {
 
     return (
       <Pane className="settings">
-        <form onSubmit={this._handelOnSubit.bind(this)}>
+        <Input
+          label="Repository Size:"
+          type="text"
+          value={repoSize}
+          placeholder="Hey girl..." readOnly
+        />
 
-          <Input
-            label="Repository Size:"
-            type="text"
-            value={repoSize}
-            placeholder="Hey girl..." readOnly
-          />
-
-          <Button
-            onClick={this._handleButtonGarbageCollectorClick.bind(this)}
-            ptSize="large"
-            glyph="trash"
-            text="Run Garbage Collector"
-          />
-
-        </form>
+        <Button
+          onClick={this._handleButtonGarbageCollectorClick}
+          ptSize="large"
+          glyph="trash"
+          text="Run Garbage Collector"
+        />
       </Pane>
     )
   }
