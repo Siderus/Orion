@@ -11,7 +11,7 @@ import { runGarbageCollector } from '../../../api'
 
 @observer
 class RepositoryPanel extends React.Component {
-  /** Perform garbage collector and reload the view when done */
+  /** Perform garbage collection and refetch the data when done */
   _handleButtonGarbageCollectorClick = (event) => {
     event.preventDefault()
     runGarbageCollector()
