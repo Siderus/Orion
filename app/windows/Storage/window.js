@@ -31,7 +31,7 @@ module.exports.create = function createStorageWindow (app) {
 
     show: false,
     webPreferences: {
-      preload: path.join(__dirname, '../../report.js')
+      preload: path.join(__dirname, '../../lib/report/preload.js')
     }
   })
 

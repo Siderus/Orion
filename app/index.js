@@ -3,7 +3,7 @@ import { autoUpdater } from 'electron-updater'
 import { join as pathJoin } from 'path'
 import pjson from '../package.json'
 import Settings from 'electron-settings'
-import './report'
+import './lib/report/node'
 import rootDir from 'app-root-dir'
 import setupTrayIcon from './setup-tray-icon'
 
