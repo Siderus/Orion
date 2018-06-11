@@ -81,7 +81,7 @@ class StorageElement extends React.Component {
 
   _handleContextMenu (event) {
     event.preventDefault()
-    this.menu.popup()
+    this.menu.popup({})
   }
 
   _handleCheckboxOnClick (element, proxy, event) {

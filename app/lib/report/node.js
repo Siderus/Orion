@@ -1,4 +1,4 @@
-const pjson = require('../package.json')
+const pjson = require('../../../package.json')
 const { init } = require('@sentry/electron')
 
 init({

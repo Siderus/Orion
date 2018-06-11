@@ -38,7 +38,7 @@ module.exports.create = function createResolveIPNSWindow (app) {
 
     show: false,
     webPreferences: {
-      preload: path.join(__dirname, '../../report.js')
+      preload: path.join(__dirname, '../../lib/report/preload.js')
     }
   })
 

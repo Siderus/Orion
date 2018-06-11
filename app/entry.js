@@ -1,5 +1,5 @@
 const path = require('path')
-require('./report.js')
+require('./lib/report/node.js')
 
 // First parameter is the app folder (containing package.json)
 // Second parameter is the entry point of the app, i.e. app/index.js

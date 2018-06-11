@@ -37,7 +37,7 @@ module.exports.create = function createDetailsWindow (app, hash) {
 
     show: false,
     webPreferences: {
-      preload: path.join(__dirname, '../../report.js')
+      preload: path.join(__dirname, '../../lib/report/preload.js')
     }
   })
 
