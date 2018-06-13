@@ -2,16 +2,41 @@
  * Import/require this file to set up the Menu of the windows
  */
 
-import electron, { BrowserWindow, Menu, app } from 'electron'
+import electron, { BrowserWindow, Menu, app, dialog } from 'electron'
 
 import ImportWindow from './windows/Import/window'
 import SettingsWindow from './windows/Settings/window'
 import ResolveIPNS from './windows/ResolveIPNS/window'
 import PublishToIPNS from './windows/PublishToIPNS/window'
 
+import { addFilesPaths } from './windows/Storage/fileIntegration'
+
 const template = [{
   label: 'File',
   submenu: [{
+    label: 'Add File',
+    click () {
+      const selectOptions = {
+        title: 'Add File',
+        properties: ['openFile', 'multiSelections']
+      }
+
+      const paths = dialog.showOpenDialog(app.mainWindow, selectOptions)
+      addFilesPaths(paths)
+    }
+  }, {
+    label: 'Add Directory',
+    click () {
+      const selectOptions = {
+        title: 'Add Directory',
+        properties: ['openDirectory', 'multiSelections']
+      }
+
+      const paths = dialog.showOpenDialog(selectOptions)
+      addFilesPaths(paths)
+    }
+  },
+  {
     label: 'Import from hash',
     accelerator: 'CmdOrCtrl+D',
     click () {

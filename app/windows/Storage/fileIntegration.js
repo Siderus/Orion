@@ -1,9 +1,7 @@
-import { remote } from 'electron'
+import { dialog, app, shell } from 'electron'
 import Settings from 'electron-settings'
 import { addFilesFromFSPath, unpinObject } from '../../api'
 import DetailsWindow from '../Details/window'
-
-const { app, dialog, shell } = remote
 
 /**
  * Returns `true` if the user wants to wrap all files under a single dir,
@@ -126,7 +124,7 @@ export function proptAndRemoveObjects (hashes) {
     cancelId: 0
   }
 
-  const btnClicked = remote.dialog.showMessageBox(remote.app.mainWindow, opts)
+  const btnClicked = dialog.showMessageBox(app.mainWindow, opts)
   // Check the electron dialog documentation, cancel button is always 0
   if (btnClicked !== 0) {
     const promises = hashes.map(hash => unpinObject(hash))
