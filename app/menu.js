@@ -32,7 +32,7 @@ const template = [{
         properties: ['openDirectory', 'multiSelections']
       }
 
-      const paths = dialog.showOpenDialog(selectOptions)
+      const paths = dialog.showOpenDialog(app.mainWindow, selectOptions)
       addFilesPaths(paths)
     }
   },
