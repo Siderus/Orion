@@ -57,7 +57,7 @@ class StorageElement extends React.Component {
       {
         label: 'Remove',
         click: (item) => {
-          proptAndRemoveObjects([this.props.element.hash])
+          proptAndRemoveObjects([this.props.element])
         }
       },
       {

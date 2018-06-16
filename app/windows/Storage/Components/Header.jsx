@@ -41,10 +41,8 @@ class Header extends React.Component {
     if (!this.props.storageStore) return
     if (this.props.storageStore.selected.length === 0) return
 
-    const hashes = this.props.storageStore.selected.map(el => el.hash)
-
     this.setState({ isRemoving: true })
-    proptAndRemoveObjects(hashes)
+    proptAndRemoveObjects(this.props.storageStore.selected)
       .then(() => {
         this.props.storageStore.selected.clear()
         this.props.storageStore.elements.clear()
