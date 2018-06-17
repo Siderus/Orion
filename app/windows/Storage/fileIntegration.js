@@ -125,14 +125,14 @@ export function proptAndRemoveObjects (elements) {
   const message = `Are you sure you want to delete the selected ${isOneFile ? 'file?' : `${elements.length} files?`}`
   const elementsDetails = elements
     .map(el => {
-      return `${el.hash} - ${el.stat.CumulativeSize.value} ${el.stat.CumulativeSize.unit}`
+      return `${el.hash.substring(0, 25)} - ${el.stat.CumulativeSize.value} ${el.stat.CumulativeSize.unit}`
     })
     .join('\n')
 
   const opts = {
     title,
     message,
-    detail: `This includes: \n${elementsDetails}\nYou can't undo this action.`,
+    detail: `This includes: \n\n${elementsDetails}\n\nYou can't undo this action.`,
     type: 'warning',
     buttons: ['Cancel', 'Delete'],
     cancelId: 0,
