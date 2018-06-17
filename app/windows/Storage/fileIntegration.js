@@ -132,9 +132,9 @@ export function proptAndRemoveObjects (elements) {
   const opts = {
     title,
     message,
-    detail: `This includes: \n\n${elementsDetails}\n\nYou can't undo this action.`,
+    detail: `This includes: \n\n${elementsDetails}\n\nOnce done, you can't restore the files.`,
     type: 'warning',
-    buttons: ['Cancel', 'Delete'],
+    buttons: ['Cancel', 'Ok'],
     cancelId: 0,
     defaultId: 1
   }
