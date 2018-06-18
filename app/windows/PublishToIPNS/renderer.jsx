@@ -2,9 +2,10 @@ import React from 'react'
 import ReactDom from 'react-dom'
 
 import { remote } from 'electron'
-import { initIPFSClient, publishToIPNS, getPeer, getObjectStat } from '../../api'
+import { initIPFSClient, publishToIPNS, getPeer, getObjectStat, getObjectDag } from '../../api'
 import { trackEvent } from '../../stats'
 import { multihash as isMultiHash } from 'is-ipfs'
+import formatElement from '../../util/format-element'
 
 // Load Components
 import {
@@ -45,17 +46,21 @@ class PublishToIPNSWindow extends React.Component {
       return
     }
 
-    let name = ''
     this.setState({ loading: true })
-    publishToIPNS(hash)
-      .then(result => {
-        name = result.name
-        return getObjectStat(hash)
-      })
-      .then(result => {
+    Promise.all([
+      publishToIPNS(hash),
+      getObjectStat(hash),
+      getObjectDag(hash)
+    ])
+      .then(results => {
         this.setState({ loading: false })
-        const newHash = `${result.Hash} - ${result.CumulativeSize.value} ${result.CumulativeSize.unit}`
-        const message = `IPNS ${name} has been successfully updated to ${newHash}!`
+        const name = results[0].name
+        const stat = results[1]
+        const dag = results[2]
+        const element = { hash, stat, dag }
+
+        const message = `IPNS ${name} has been successfully updated to:\n\n${formatElement(element)}!`
+
         remote.dialog.showMessageBox({ type: 'info', message, cancelId: 0, buttons: ['Ok'] })
         window.close()
       })

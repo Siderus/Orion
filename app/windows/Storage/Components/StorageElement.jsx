@@ -10,6 +10,7 @@ import {
 } from '../fileIntegration'
 
 import DetailsWindow from '../../Details/window'
+import formatElement from '../../../util/format-element'
 
 class StorageElement extends React.Component {
   constructor (props) {
@@ -47,8 +48,7 @@ class StorageElement extends React.Component {
           const el = this.props.element
           publishToIPNS(el.hash)
             .then(result => {
-              const newHash = `${el.hash} - ${el.stat.CumulativeSize.value} ${el.stat.CumulativeSize.unit}`
-              const message = `IPNS ${result.name} has been successfully updated to ${newHash}!`
+              const message = `IPNS ${name} has been successfully updated to:\n\n${formatElement(el)}!`
               remote.dialog.showMessageBox({ type: 'info', message, cancelId: 0, buttons: ['Ok'] })
             })
             .catch(err => {

@@ -1,6 +1,7 @@
 import Settings from 'electron-settings'
-import { addFilesFromFSPath, unpinObject, getObjectStat } from '../../api'
+import { addFilesFromFSPath, unpinObject, getObjectStat, getObjectDag } from '../../api'
 import DetailsWindow from '../Details/window'
+import formatElement from '../../util/format-element'
 
 const electron = require('electron')
 const { shell } = electron
@@ -58,18 +59,25 @@ export function addFilesPaths (paths) {
       } else {
         // the old fashion way: show an alert with the `Open in browser` button
         // but we must fetch the stats first (to show the size)
-        const promises = results.map(wrapper => getObjectStat(wrapper.hash))
+        const promises = results.map(wrapper => {
+          return getObjectStat(wrapper.hash)
+            .then(result => {
+              wrapper.stat = result
+              return getObjectDag(wrapper.hash)
+            })
+            .then(result => {
+              wrapper.dag = result
+              return Promise.resolve(wrapper)
+            })
+        })
         return Promise.all(promises)
       }
     })
     .then(results => {
       if (!results) return
-
       const buttons = ['Close', 'Open in the browser']
       const elementsDetails = results
-        .map(el => {
-          return `${el.Hash} - ${el.CumulativeSize.value} ${el.CumulativeSize.unit}`
-        })
+        .map(formatElement)
         .join('\n')
 
       const successMessageOption = {
@@ -132,9 +140,7 @@ export function proptAndRemoveObjects (elements) {
   const title = isOneFile ? 'Delete file' : 'Delete files'
   const message = `Are you sure you want to delete the selected ${isOneFile ? 'file?' : `${elements.length} files?`}`
   const elementsDetails = elements
-    .map(el => {
-      return `${el.hash} - ${el.stat.CumulativeSize.value} ${el.stat.CumulativeSize.unit}`
-    })
+    .map(formatElement)
     .join('\n')
 
   const opts = {
