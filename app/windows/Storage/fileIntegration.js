@@ -1,5 +1,5 @@
 import Settings from 'electron-settings'
-import { addFilesFromFSPath, unpinObject } from '../../api'
+import { addFilesFromFSPath, unpinObject, getObjectStat } from '../../api'
 import DetailsWindow from '../Details/window'
 
 const electron = require('electron')
@@ -47,45 +47,53 @@ export function addFilesPaths (paths) {
     promises = paths.map(path => addFilesFromFSPath([path]))
   }
 
-  const buttons = ['Close', 'Open in the browser']
-  const successMessageOption = {
-    type: 'info',
-    title: 'File/s added successfully',
-    message: 'All the files selected were added successfully! \n',
-    cancelId: 0,
-    buttons
-  }
-
-  const errorMessageOption = {
-    type: 'error',
-    title: 'Adding the file failed'
-  }
-
   return Promise.all(promises)
     .then(results => {
       // Array of wrappers expected
       // If the user upload only one file (or wrapped everything), open the Property Window (Details)
       if (results.length === 1) {
         const wrapper = results[0]
-        return DetailsWindow.create(app, wrapper.hash)
+        DetailsWindow.create(app, wrapper.hash)
+        return Promise.resolve()
+      } else {
+        // the old fashion way: show an alert with the `Open in browser` button
+        // but we must fetch the stats first (to show the size)
+        const promises = results.map(wrapper => getObjectStat(wrapper.hash))
+        return Promise.all(promises)
+      }
+    })
+    .then(results => {
+      if (!results) return
+
+      const buttons = ['Close', 'Open in the browser']
+      const elementsDetails = results
+        .map(el => {
+          return `${el.Hash} - ${el.CumulativeSize.value} ${el.CumulativeSize.unit}`
+        })
+        .join('\n')
+
+      const successMessageOption = {
+        type: 'info',
+        title: 'Files added successfully',
+        message: 'All the files selected were added successfully!',
+        detail: `This includes: \n\n${elementsDetails}`,
+        cancelId: 0,
+        buttons
       }
 
-      // the old fashion way: show an alert with the `Open in browser` button
-      // building the lines of the text messages, containing only the wrappers
-      const textLines = results.map(wrapper => wrapper.hash)
-
-      // ToDo: improve this, maybe show a custom window with more details.
-      //       it is ugly!!!
-      successMessageOption.message += `This includes the following hashes: \n${textLines.join('\n')}`
       const btnId = dialog.showMessageBox(app.mainWindow, successMessageOption)
 
-      // if(btnId === buttons.indexOf('Open on the browser'))
       if (btnId === 1) {
         openInBrowser(results.map(wrapper => wrapper.hash))
       }
     })
     .catch((err) => {
-      errorMessageOption.message = `Error: ${err}`
+      const errorMessageOption = {
+        type: 'error',
+        title: 'Adding the file failed',
+        message: `Error: ${err}`
+      }
+
       dialog.showMessageBox(app.mainWindow, errorMessageOption)
     })
 }
@@ -125,7 +133,7 @@ export function proptAndRemoveObjects (elements) {
   const message = `Are you sure you want to delete the selected ${isOneFile ? 'file?' : `${elements.length} files?`}`
   const elementsDetails = elements
     .map(el => {
-      return `${el.hash.substring(0, 25)} - ${el.stat.CumulativeSize.value} ${el.stat.CumulativeSize.unit}`
+      return `${el.hash} - ${el.stat.CumulativeSize.value} ${el.stat.CumulativeSize.unit}`
     })
     .join('\n')
 

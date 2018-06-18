@@ -44,9 +44,11 @@ class StorageElement extends React.Component {
       {
         label: 'Publish to IPNS',
         click: (item) => {
-          publishToIPNS(this.props.element.hash)
+          const el = this.props.element
+          publishToIPNS(el.hash)
             .then(result => {
-              const message = `IPNS ${result.name} has been successfully updated to ${result.value}!`
+              const newHash = `${el.hash} - ${el.stat.CumulativeSize.value} ${el.stat.CumulativeSize.unit}`
+              const message = `IPNS ${result.name} has been successfully updated to ${newHash}!`
               remote.dialog.showMessageBox({ type: 'info', message, cancelId: 0, buttons: ['Ok'] })
             })
             .catch(err => {
