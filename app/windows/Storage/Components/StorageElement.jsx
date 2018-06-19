@@ -60,6 +60,9 @@ class StorageElement extends React.Component {
         label: 'Remove',
         click: (item) => {
           proptAndRemoveObjects([this.props.element])
+            .catch(err => {
+              remote.dialog.showErrorBox('Removing the file(s) has failed', err.message)
+            })
         }
       },
       {

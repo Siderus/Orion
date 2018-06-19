@@ -44,8 +44,9 @@ class Header extends React.Component {
     this.setState({ isRemoving: true })
     proptAndRemoveObjects(this.props.storageStore.selected)
       .then(() => {
+        // we don't clear the items, only the selected ones
+        // we wait for the storagelist to update itself to avoid a short empty table
         this.props.storageStore.selected.clear()
-        this.props.storageStore.elements.clear()
         this.setState({ isRemoving: false })
       })
       .catch(err => {

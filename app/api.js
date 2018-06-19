@@ -10,6 +10,7 @@ import gateways from './gateways.json'
 import { trackEvent } from './stats'
 
 import Settings from 'electron-settings'
+import { reportAndReject } from './lib/report/util'
 
 export const ERROR_IPFS_UNAVAILABLE = 'IPFS NOT AVAILABLE'
 export const ERROR_IPFS_TIMEOUT = 'TIMEOUT'
@@ -82,6 +83,7 @@ export function wrapFiles (links) {
 
       return wrapper
     })
+    .catch(reportAndReject)
 }
 
 /**
@@ -156,6 +158,7 @@ export function addFilesFromFSPath (filePaths, _queryGateways = queryGateways) {
           return Promise.resolve(wrapper)
         })
     })
+    .catch(reportAndReject)
 }
 
 /**
@@ -180,6 +183,7 @@ export function unpinObject (hash) {
   if (!IPFS_CLIENT) return Promise.reject(ERROR_IPFS_UNAVAILABLE)
   const options = { recursive: true }
   return IPFS_CLIENT.pin.rm(hash, options)
+    .catch(reportAndReject)
 }
 
 /**
@@ -190,6 +194,7 @@ export function pinObject (hash) {
   if (!IPFS_CLIENT) return Promise.reject(ERROR_IPFS_UNAVAILABLE)
 
   return IPFS_CLIENT.pin.add(hash)
+    .catch(reportAndReject)
 }
 
 /**
@@ -205,6 +210,7 @@ export function getRepoInfo () {
       stats.RepoSize = byteSize(stats.repoSize)
       return Promise.resolve(stats)
     })
+    .catch(reportAndReject)
 }
 
 /**
@@ -215,6 +221,7 @@ export function getPeersInfo () {
   if (!IPFS_CLIENT) return Promise.reject(ERROR_IPFS_UNAVAILABLE)
 
   return IPFS_CLIENT.swarm.peers()
+    .catch(reportAndReject)
 }
 
 /**
@@ -224,6 +231,7 @@ export function getPeer () {
   if (!IPFS_CLIENT) return Promise.reject(ERROR_IPFS_UNAVAILABLE)
 
   return IPFS_CLIENT.id()
+    .catch(reportAndReject)
 }
 
 /**
@@ -234,6 +242,7 @@ export function getObjectList () {
   if (!IPFS_CLIENT) return Promise.reject(ERROR_IPFS_UNAVAILABLE)
 
   return IPFS_CLIENT.pin.ls()
+    .catch(reportAndReject)
 }
 
 /**
@@ -248,6 +257,7 @@ export function isObjectPinned (hash) {
       // find returns the object, we need to cast it to boolean
       return Promise.resolve(!!pins.find(pin => pin.hash === hash))
     })
+    .catch(reportAndReject)
 }
 
 /**
@@ -255,41 +265,37 @@ export function isObjectPinned (hash) {
  * values are a byteSize object (ex: {value, unit}) to make it human readable
  */
 export function getObjectStat (objectMultiHash) {
-  return new Promise((resolve, reject) => {
-    if (!IPFS_CLIENT) return reject(ERROR_IPFS_UNAVAILABLE)
+  if (!IPFS_CLIENT) return Promise.reject(ERROR_IPFS_UNAVAILABLE)
 
-    return IPFS_CLIENT.object.stat(objectMultiHash)
-      .then((stat) => {
-        stat.BlockSize = byteSize(stat.BlockSize)
-        stat.LinksSize = byteSize(stat.LinksSize)
-        stat.DataSize = byteSize(stat.DataSize)
-        stat.CumulativeSize = byteSize(stat.CumulativeSize)
-        return resolve(stat)
-      })
-      .catch(reject)
-  })
+  return IPFS_CLIENT.object.stat(objectMultiHash)
+    .then((stat) => {
+      stat.BlockSize = byteSize(stat.BlockSize)
+      stat.LinksSize = byteSize(stat.LinksSize)
+      stat.DataSize = byteSize(stat.DataSize)
+      stat.CumulativeSize = byteSize(stat.CumulativeSize)
+      return Promise.resolve(stat)
+    })
+    .catch(reportAndReject)
 }
 
 /**
  * Provides using a Promise the serialized dag of an IPFS object.
  */
 export function getObjectDag (objectMultiHash) {
-  return new Promise((resolve, reject) => {
-    if (!IPFS_CLIENT) return reject(ERROR_IPFS_UNAVAILABLE)
+  if (!IPFS_CLIENT) return Promise.reject(ERROR_IPFS_UNAVAILABLE)
 
-    return IPFS_CLIENT.object.get(objectMultiHash)
-      .then((dag) => {
-        dag = dag.toJSON()
-        dag.size = byteSize(dag.size)
-        dag.links = dag.links.map(link => {
-          link.size = byteSize(link.size)
-          return link
-        })
-
-        return resolve(dag)
+  return IPFS_CLIENT.object.get(objectMultiHash)
+    .then((dag) => {
+      dag = dag.toJSON()
+      dag.size = byteSize(dag.size)
+      dag.links = dag.links.map(link => {
+        link.size = byteSize(link.size)
+        return link
       })
-      .catch(reject)
-  })
+
+      return Promise.resolve(dag)
+    })
+    .catch(reportAndReject)
 }
 
 /**
@@ -305,33 +311,32 @@ export function isDagDirectory (dag) {
  * details, ex: Sizes, Links, Hash, Data. Used by the Interface to render the table
  */
 export function getStorageList (pins) {
-  return new Promise((resolve, reject) => {
-    // Filter out the indirect objects. Required to reduce API Calls
-    pins = pins.filter(pin => pin.type !== 'indirect')
+  // Filter out the indirect objects. Required to reduce API Calls
+  pins = pins.filter(pin => pin.type !== 'indirect')
 
-    // Get a list of promises that will return the pin object with the
-    // stat and dag injected
-    const promises = pins.map(pin => {
-      // Use the promises to perform multiple injections, so always
-      // resolve with the pin object
-      return getObjectStat(pin.hash)
-        .then(stat => {
-          pin.stat = pin.stat || stat
+  // Get a list of promises that will return the pin object with the
+  // stat and dag injected
+  const promises = pins.map(pin => {
+    // Use the promises to perform multiple injections, so always
+    // resolve with the pin object
+    return getObjectStat(pin.hash)
+      .then(stat => {
+        pin.stat = pin.stat || stat
 
-          return getObjectDag(pin.hash)
-        })
-        .then(dag => {
-          pin.dag = dag
-          pin.isDirectory = isDagDirectory(dag)
+        return getObjectDag(pin.hash)
+      })
+      .then(dag => {
+        pin.dag = dag
+        pin.isDirectory = isDagDirectory(dag)
 
-          return Promise.resolve(pin)
-        })
-    })
-
-    // Return a promise that will complete when all the data will be
-    // available. When done, it will run the main promise success()
-    return Promise.all(promises).then(resolve, reject)
+        return Promise.resolve(pin)
+      })
   })
+
+  // Return a promise that will complete when all the data will be
+  // available. When done, it will run the main promise success()
+  return Promise.all(promises)
+    .catch(reportAndReject)
 }
 
 /**
@@ -341,6 +346,7 @@ export function getStorageList (pins) {
 export function getPeersWithObjectbyHash (hash) {
   if (!IPFS_CLIENT) return Promise.reject(ERROR_IPFS_UNAVAILABLE)
   return IPFS_CLIENT.dht.findprovs(hash)
+    .catch(reportAndReject)
 }
 
 /**
@@ -351,6 +357,7 @@ export function importObjectByHash (hash) {
   if (!IPFS_CLIENT) return Promise.reject(ERROR_IPFS_UNAVAILABLE)
   const options = { recursive: true }
   return IPFS_CLIENT.pin.add(hash, options)
+    .catch(reportAndReject)
 }
 
 /**
@@ -399,6 +406,7 @@ export function saveFileToPath (hash, dest) {
 export function runGarbageCollector () {
   if (!IPFS_CLIENT) return Promise.reject(ERROR_IPFS_UNAVAILABLE)
   return IPFS_CLIENT.repo.gc()
+    .catch(reportAndReject)
 }
 
 /**
@@ -408,6 +416,7 @@ export function resolveName (name) {
   if (!IPFS_CLIENT) return Promise.reject(ERROR_IPFS_UNAVAILABLE)
 
   return IPFS_CLIENT.name.resolve(name)
+    .catch(reportAndReject)
 }
 
 /**
@@ -423,6 +432,7 @@ export function publishToIPNS (hash) {
   if (!IPFS_CLIENT) return Promise.reject(ERROR_IPFS_UNAVAILABLE)
 
   return IPFS_CLIENT.name.publish(hash)
+    .catch(reportAndReject)
 }
 
 /**
@@ -433,6 +443,7 @@ export function connectTo (strMultiddr) {
   if (!IPFS_CLIENT) return Promise.reject(ERROR_IPFS_UNAVAILABLE)
   const addr = multiaddr(strMultiddr)
   return IPFS_CLIENT.swarm.connect(addr)
+    .catch(reportAndReject)
 }
 
 /**
