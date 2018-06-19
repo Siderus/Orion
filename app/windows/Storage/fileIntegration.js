@@ -1,7 +1,12 @@
-import { dialog, app, shell } from 'electron'
 import Settings from 'electron-settings'
-import { addFilesFromFSPath, unpinObject } from '../../api'
+import { addFilesFromFSPath, unpinObject, getObjectStat, getObjectDag } from '../../api'
 import DetailsWindow from '../Details/window'
+import formatElement from '../../util/format-element'
+
+const electron = require('electron')
+const { shell } = electron
+const dialog = electron.dialog || electron.remote.dialog
+const app = electron.app || electron.remote.app
 
 /**
  * Returns `true` if the user wants to wrap all files under a single dir,
@@ -43,45 +48,60 @@ export function addFilesPaths (paths) {
     promises = paths.map(path => addFilesFromFSPath([path]))
   }
 
-  const buttons = ['Close', 'Open in the browser']
-  const successMessageOption = {
-    type: 'info',
-    title: 'File/s added successfully',
-    message: 'All the files selected were added successfully! \n',
-    cancelId: 0,
-    buttons
-  }
-
-  const errorMessageOption = {
-    type: 'error',
-    title: 'Adding the file failed'
-  }
-
   return Promise.all(promises)
     .then(results => {
       // Array of wrappers expected
       // If the user upload only one file (or wrapped everything), open the Property Window (Details)
       if (results.length === 1) {
         const wrapper = results[0]
-        return DetailsWindow.create(app, wrapper.hash)
+        DetailsWindow.create(app, wrapper.hash)
+        return Promise.resolve()
+      } else {
+        // the old fashion way: show an alert with the `Open in browser` button
+        // but we must fetch the stats first (to show the size)
+        const promises = results.map(wrapper => {
+          return getObjectStat(wrapper.hash)
+            .then(result => {
+              wrapper.stat = result
+              return getObjectDag(wrapper.hash)
+            })
+            .then(result => {
+              wrapper.dag = result
+              return Promise.resolve(wrapper)
+            })
+        })
+        return Promise.all(promises)
+      }
+    })
+    .then(results => {
+      if (!results) return
+      const buttons = ['Close', 'Open in the browser']
+      const elementsDetails = results
+        .map(formatElement)
+        .join('\n')
+
+      const successMessageOption = {
+        type: 'info',
+        title: 'Files added successfully',
+        message: 'All the files selected were added successfully!',
+        detail: `This includes: \n\n${elementsDetails}`,
+        cancelId: 0,
+        buttons
       }
 
-      // the old fashion way: show an alert with the `Open in browser` button
-      // building the lines of the text messages, containing only the wrappers
-      const textLines = results.map(wrapper => wrapper.hash)
-
-      // ToDo: improve this, maybe show a custom window with more details.
-      //       it is ugly!!!
-      successMessageOption.message += `This includes the following hashes: \n${textLines.join('\n')}`
       const btnId = dialog.showMessageBox(app.mainWindow, successMessageOption)
 
-      // if(btnId === buttons.indexOf('Open on the browser'))
       if (btnId === 1) {
         openInBrowser(results.map(wrapper => wrapper.hash))
       }
     })
     .catch((err) => {
-      errorMessageOption.message = `Error: ${err}`
+      const errorMessageOption = {
+        type: 'error',
+        title: 'Adding the file failed',
+        message: `Error: ${err}`
+      }
+
       dialog.showMessageBox(app.mainWindow, errorMessageOption)
     })
 }
@@ -114,20 +134,29 @@ export function setupAddAppOnDrop () {
  * Prompt the user if he is sure that we should remove a file
  * return a Promise
  */
-export function proptAndRemoveObjects (hashes) {
-  const buttons = ['Abort', 'Of course, Duh!']
+export function proptAndRemoveObjects (elements) {
+  const isOneFile = elements.length === 1
+
+  const title = isOneFile ? 'Delete file' : 'Delete files'
+  const message = `Are you sure you want to delete the selected ${isOneFile ? 'file?' : `${elements.length} files?`}`
+  const elementsDetails = elements
+    .map(formatElement)
+    .join('\n')
+
   const opts = {
-    title: 'Continue?',
-    message: `Are you sure you want to delete ${hashes.length} files?`,
-    detail: `This includes: \n${hashes.join('\n')}`,
-    buttons,
-    cancelId: 0
+    title,
+    message,
+    detail: `This includes: \n\n${elementsDetails}\n\nOnce done, you can't restore the files.`,
+    type: 'warning',
+    buttons: ['Cancel', 'Ok'],
+    cancelId: 0,
+    defaultId: 1
   }
 
   const btnClicked = dialog.showMessageBox(app.mainWindow, opts)
   // Check the electron dialog documentation, cancel button is always 0
   if (btnClicked !== 0) {
-    const promises = hashes.map(hash => unpinObject(hash))
+    const promises = elements.map(el => unpinObject(el.hash))
 
     // ToDo: Handle failure
     return Promise.all(promises)
