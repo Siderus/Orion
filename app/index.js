@@ -6,6 +6,7 @@ import Settings from 'electron-settings'
 import './lib/report/node'
 import rootDir from 'app-root-dir'
 import setupTrayIcon from './setup-tray-icon'
+import { report } from './lib/report/util'
 
 import {
   startIPFSDaemon,
@@ -274,6 +275,7 @@ function startOrion () {
         } else {
           message = JSON.stringify(err)
         }
+        report(message)
         dialog.showMessageBox({ type: 'warning', message })
         app.quit()
       })
