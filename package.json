@@ -1,6 +1,6 @@
 {
   "name": "Orion",
-  "version": "0.6.0",
+  "version": "0.6.1",
   "env": "development",
   "ipfsVersion": "v0.4.15",
   "statsToken": "9d407c14d888a212cf04c397a95acb7b",
