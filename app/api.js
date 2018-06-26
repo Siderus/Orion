@@ -2,7 +2,7 @@ import { remote } from 'electron'
 import byteSize from 'byte-size'
 import ipfsAPI from 'ipfs-api'
 import { join } from 'path'
-import { createWriteStream, mkdirSync } from 'fs'
+import { createWriteStream, mkdirSync, statSync } from 'fs'
 import multiaddr from 'multiaddr'
 import request from 'request-promise-native'
 import pjson from '../package.json'
@@ -11,6 +11,7 @@ import { trackEvent } from './stats'
 
 import Settings from 'electron-settings'
 import { reportAndReject } from './lib/report/util'
+import uuidv4 from 'uuid/v4'
 
 export const ERROR_IPFS_UNAVAILABLE = 'IPFS NOT AVAILABLE'
 export const ERROR_IPFS_TIMEOUT = 'TIMEOUT'
@@ -106,8 +107,30 @@ export function addFilesFromFSPath (filePaths, _queryGateways = queryGateways) {
   if (!IPFS_CLIENT) return Promise.reject(ERROR_IPFS_UNAVAILABLE)
   trackEvent('addFilesFromFSPath', { count: filePaths.length })
 
-  const options = { recursive: true }
-  const promises = filePaths.map(path => IPFS_CLIENT.util.addFromFs(path, options))
+  const promises = filePaths.map(path => {
+    const stats = statSync(path)
+    const uuid = uuidv4()
+
+    const options = {
+      recursive: true,
+      progress: (progress) => {
+        remote.app.emit('patch-activity', {
+          uuid,
+          progress
+        })
+      }
+    }
+
+    remote.app.emit('new-activity', {
+      uuid,
+      path,
+      type: 'add',
+      size: stats.size,
+      progress: 0
+    })
+
+    return IPFS_CLIENT.util.addFromFs(path, options)
+  })
 
   return Promise.all(promises)
     .then(fileUploadResults => {

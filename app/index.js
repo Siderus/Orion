@@ -1,4 +1,4 @@
-import { app, dialog, shell } from 'electron'
+import { app, dialog, shell, ipcMain } from 'electron'
 import { autoUpdater } from 'electron-updater'
 import { join as pathJoin } from 'path'
 import pjson from '../package.json'
@@ -27,9 +27,15 @@ import {
 import LoadingWindow from './windows/Loading/window'
 import StorageWindow from './windows/Storage/window'
 import WelcomeWindow from './windows/Welcome/window'
+import ActivitiesWindow from './windows/Activities/window'
 
 // Let's create the main window
 app.mainWindow = null
+
+// activities window
+let activitiesWindow = null
+const activitiesById = []
+const activities = {}
 
 // A little space for IPFS processes
 global.IPFS_PROCESS = null
@@ -285,6 +291,44 @@ function startOrion () {
 app.on('start-orion', () => {
   startWelcome().then(startOrion)
 })
+
+app.on('show-activities-window', () => {
+  if (!activitiesWindow) {
+    activitiesWindow = ActivitiesWindow.create(app)
+    activitiesWindow.on('closed', () => {
+      activitiesWindow = null
+    })
+  } else {
+    activitiesWindow.show()
+  }
+})
+
+app.on('new-activity', (event) => {
+  activitiesById.push(event.uuid)
+  activities[event.uuid] = event
+
+  updateActivitiesWindow()
+})
+
+app.on('patch-activity', (event) => {
+  let activity = activities[event.uuid]
+  const patched = Object.assign({}, activity, event)
+  activities[event.uuid] = patched
+
+  updateActivitiesWindow()
+})
+
+// after activities window is mounted, it will emit this event
+ipcMain.on('update-activities', () => {
+  updateActivitiesWindow()
+})
+
+function updateActivitiesWindow () {
+  // update the activitiesWindow
+  if (activitiesWindow) {
+    activitiesWindow.webContents.send('update', { activities, activitiesById })
+  }
+}
 
 app.on('ready', () => {
   startWelcome().then(startOrion)
