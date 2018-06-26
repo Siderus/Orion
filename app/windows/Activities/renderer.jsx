@@ -2,6 +2,15 @@ import React from 'react'
 import ReactDom from 'react-dom'
 import { Window } from 'react-photonkit'
 import { ipcRenderer } from 'electron'
+import styled from 'styled-components'
+import Activity from './Components/Activity'
+
+const ActivityList = styled.div`
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  overflow-y: auto;
+`
 
 class ActivitiesWindow extends React.Component {
   state = {
@@ -11,7 +20,6 @@ class ActivitiesWindow extends React.Component {
 
   componentDidMount () {
     ipcRenderer.on('update', (event, data) => {
-      console.log('hello from main')
       this.setState(data)
     })
     ipcRenderer.send('update-activities')
@@ -22,13 +30,14 @@ class ActivitiesWindow extends React.Component {
 
   render () {
     const { activities, activitiesById } = this.state
-    console.log('render', activitiesById, activities)
 
     return (
       <Window>
-        {
-          activitiesById.map(id => JSON.stringify(activities[id]))
-        }
+        <ActivityList>
+          {
+            activitiesById.map(id => <Activity key={id} activity={activities[id]} />)
+          }
+        </ActivityList>
       </Window>
     )
   }

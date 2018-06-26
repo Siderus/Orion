@@ -22,7 +22,7 @@ module.exports.create = function createDetailsWindow (app) {
 
     width: 650,
     height: 350,
-    minWidth: 450,
+    minWidth: 650,
     minHeight: 200,
 
     maximizable: false,
@@ -37,7 +37,7 @@ module.exports.create = function createDetailsWindow (app) {
   })
 
   // Show menu only on StorageList
-  // thisWindow.setMenu(null) TODO
+  thisWindow.setMenu(null)
 
   // Show the window only when ready
   thisWindow.once('ready-to-show', () => {

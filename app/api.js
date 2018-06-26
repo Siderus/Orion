@@ -1,7 +1,6 @@
-import { remote } from 'electron'
 import byteSize from 'byte-size'
 import ipfsAPI from 'ipfs-api'
-import { join } from 'path'
+import { join, parse } from 'path'
 import { createWriteStream, mkdirSync, statSync } from 'fs'
 import multiaddr from 'multiaddr'
 import request from 'request-promise-native'
@@ -23,6 +22,9 @@ export function setClientInstance (client) {
   IPFS_CLIENT = client
 }
 
+const electron = require('electron')
+const remote = electron.remote
+const app = remote ? remote.app : electron.app
 /**
  * initIPFSClient will set up a new ipfs-api instance. It will try to get
  * the configuration (api endpoint) from global vars
@@ -109,23 +111,25 @@ export function addFilesFromFSPath (filePaths, _queryGateways = queryGateways) {
 
   const promises = filePaths.map(path => {
     const stats = statSync(path)
+    const filename = parse(path).base
     const uuid = uuidv4()
 
     const options = {
       recursive: true,
       progress: (progress) => {
-        remote.app.emit('patch-activity', {
+        app.emit('patch-activity', {
           uuid,
-          progress
+          progress: byteSize(progress)
         })
       }
     }
 
-    remote.app.emit('new-activity', {
+    app.emit('new-activity', {
       uuid,
       path,
+      filename,
       type: 'add',
-      size: stats.size,
+      size: byteSize(stats.size),
       progress: 0
     })
 
