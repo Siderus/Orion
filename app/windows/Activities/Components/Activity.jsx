@@ -6,6 +6,9 @@ const NameAndPath = styled.div`
   display: flex;
   flex-direction: column;
   width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 
   h4 {
     margin: 0px;
@@ -47,7 +50,7 @@ const ActivityWrapper = styled.div`
 `
 
 const Activity = ({ activity }) => {
-  const finished = activity.progress.value === activity.size.value
+  const finished = activity.progress.bytes === activity.size.bytes
 
   return (
     <ActivityWrapper>
@@ -58,7 +61,7 @@ const Activity = ({ activity }) => {
       </NameAndPath>
       <Progress>
         {
-          !finished && <ProgressBar percentage={activity.progress.value / activity.size.value * 100} />
+          !finished && <ProgressBar percentage={activity.progress.bytes / activity.size.bytes * 100} />
         }
         {
           finished ? <span>{activity.size.value} {activity.size.unit}</span>

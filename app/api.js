@@ -12,6 +12,7 @@ import Settings from 'electron-settings'
 import { reportAndReject } from './lib/report/util'
 import uuidv4 from 'uuid/v4'
 
+export const ACTIVITIES_WINDOW_THRESHOLD = 16 * 1000 * 1000 // 16 MB
 export const ERROR_IPFS_UNAVAILABLE = 'IPFS NOT AVAILABLE'
 export const ERROR_IPFS_TIMEOUT = 'TIMEOUT'
 let IPFS_CLIENT = null
@@ -110,16 +111,30 @@ export function addFilesFromFSPath (filePaths, _queryGateways = queryGateways) {
   trackEvent('addFilesFromFSPath', { count: filePaths.length })
 
   const promises = filePaths.map(path => {
-    const stats = statSync(path)
+    const size = statSync(path).size
     const filename = parse(path).base
     const uuid = uuidv4()
+
+    if (size >= ACTIVITIES_WINDOW_THRESHOLD) {
+      app.emit('show-activities-window')
+    }
 
     const options = {
       recursive: true,
       progress: (progress) => {
         app.emit('patch-activity', {
           uuid,
-          progress: byteSize(progress)
+          /**
+           * {
+           *   bytes: 2200,
+           *   value: 2.2,
+           *   unit: 'kB'
+           * }
+           */
+          progress: {
+            bytes: progress,
+            ...byteSize(progress)
+          }
         })
       }
     }
@@ -129,7 +144,10 @@ export function addFilesFromFSPath (filePaths, _queryGateways = queryGateways) {
       path,
       filename,
       type: 'add',
-      size: byteSize(stats.size),
+      size: {
+        bytes: size,
+        ...byteSize(size)
+      },
       progress: 0
     })
 

@@ -12,24 +12,37 @@ const ActivityList = styled.div`
   overflow-y: auto;
 `
 
+// This will store the loop's timeout ID
+window.loopTimeoutID = null
+
 class ActivitiesWindow extends React.Component {
-  state = {
+  data = {
     activitiesById: [],
     activities: {}
   }
 
   componentDidMount () {
     ipcRenderer.on('update', (event, data) => {
-      this.setState(data)
+      this.data = data
     })
+
     ipcRenderer.send('update-activities')
+    this.startUpdateLoop()
   }
+
+  startUpdateLoop = () => {
+    this.forceUpdate()
+    // update with 50fps
+    window.loopTimeoutID = setTimeout(this.startUpdateLoop, 20)
+  }
+
   componentWillUnmount () {
     ipcRenderer.removeAllListeners('update')
+    clearTimeout(window.loopTimeoutID)
   }
 
   render () {
-    const { activities, activitiesById } = this.state
+    const { activities, activitiesById } = this.data
 
     return (
       <Window>
