@@ -165,11 +165,7 @@ const template = [{
 function addUpdateMenuItems (items, position) {
   if (process.mas) return
 
-  const version = app.getVersion()
   const updateItems = [{
-    label: `Version ${version}`,
-    enabled: false
-  }, {
     label: 'Checking for Update',
     enabled: false,
     key: 'checkingForUpdate'
