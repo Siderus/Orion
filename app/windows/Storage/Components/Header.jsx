@@ -101,6 +101,13 @@ class Header extends React.Component {
     settingsWindow.show()
   }
 
+  /**
+   * Opens SettingsWindow from the button
+   */
+  _handleActivitiesButtonClick () {
+    remote.app.emit('show-activities-window')
+  }
+
   render () {
     const { isSavingOnDisk, isRemoving } = this.state
     return (
@@ -121,6 +128,7 @@ class Header extends React.Component {
           </ButtonGroup>
 
           <Button glyph='cog' pullRight onClick={this._handleSettingsButtonClick.bind(this)} />
+          <Button glyph='bell' pullRight onClick={this._handleActivitiesButtonClick.bind(this)} />
         </Actionbar>
       </Toolbar>
     )
