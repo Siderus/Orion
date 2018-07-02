@@ -2,9 +2,21 @@ import * as api from './api'
 import ipfsApi from 'ipfs-api'
 import multiaddr from 'multiaddr'
 import request from 'request-promise-native'
-// import gateways from './gateways'
 import pjson from '../package'
-// import Settings from 'electron-settings'
+
+jest.mock('fs', () => {
+  return {
+    statSync: jest.fn().mockReturnValue({ size: 13 })
+  }
+})
+
+jest.mock('electron', () => {
+  return {
+    app: {
+      emit: jest.fn()
+    }
+  }
+})
 
 jest.mock('ipfs-api', () => {
   return jest.fn().mockReturnValue('new-instance')
@@ -16,12 +28,12 @@ jest.mock('./gateways', () => {
 
 jest.mock('./stats', () => {
   return {
-    trackEvent: jest.fn().mockReturnValue(Promise.resolve())
+    trackEvent: jest.fn().mockResolvedValue()
   }
 })
 
 jest.mock('request-promise-native', () => {
-  return jest.fn().mockReturnValue(Promise.resolve())
+  return jest.fn().mockResolvedValue()
 })
 
 jest.mock('electron-settings', () => {
@@ -237,7 +249,10 @@ describe('api.js', () => {
       return api.addFilesFromFSPath(['./textfiles'], queryGatewaysMock)
         .then(result => {
           // assert
-          expect(addFromFsMock).toHaveBeenCalledWith('./textfiles', { recursive: true })
+          expect(addFromFsMock).toHaveBeenCalledWith('./textfiles', {
+            recursive: true,
+            progress: expect.any(Function)
+          })
           expect(objectPutMock).toHaveBeenCalledWith({
             Data: Buffer.from('\u0008\u0001'),
             Links: [{
