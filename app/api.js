@@ -1,8 +1,7 @@
-import { remote } from 'electron'
 import byteSize from 'byte-size'
 import ipfsAPI from 'ipfs-api'
-import { join } from 'path'
-import { createWriteStream, mkdirSync } from 'fs'
+import { join, parse } from 'path'
+import { createWriteStream, mkdirSync, statSync } from 'fs'
 import multiaddr from 'multiaddr'
 import request from 'request-promise-native'
 import pjson from '../package.json'
@@ -11,7 +10,9 @@ import { trackEvent } from './stats'
 
 import Settings from 'electron-settings'
 import { reportAndReject } from './lib/report/util'
+import uuidv4 from 'uuid/v4'
 
+export const ACTIVITIES_WINDOW_THRESHOLD = 16 * 1000 * 1000 // 16 MB
 export const ERROR_IPFS_UNAVAILABLE = 'IPFS NOT AVAILABLE'
 export const ERROR_IPFS_TIMEOUT = 'TIMEOUT'
 let IPFS_CLIENT = null
@@ -22,6 +23,9 @@ export function setClientInstance (client) {
   IPFS_CLIENT = client
 }
 
+const electron = require('electron')
+const remote = electron.remote
+const app = remote ? remote.app : electron.app
 /**
  * initIPFSClient will set up a new ipfs-api instance. It will try to get
  * the configuration (api endpoint) from global vars
@@ -106,8 +110,54 @@ export function addFilesFromFSPath (filePaths, _queryGateways = queryGateways) {
   if (!IPFS_CLIENT) return Promise.reject(ERROR_IPFS_UNAVAILABLE)
   trackEvent('addFilesFromFSPath', { count: filePaths.length })
 
-  const options = { recursive: true }
-  const promises = filePaths.map(path => IPFS_CLIENT.util.addFromFs(path, options))
+  const promises = filePaths.map(path => {
+    const size = statSync(path).size
+    const filename = parse(path).base
+    const uuid = uuidv4()
+
+    // when uploading big files we want to show the progress in the activities window
+    if (size >= ACTIVITIES_WINDOW_THRESHOLD) {
+      app.emit('show-activities-window')
+    }
+
+    /**
+     * The fuction we pass under `progress` will be called with the byte length of chunks
+     * as they are added to IPFS
+     */
+    const options = {
+      recursive: true,
+      progress: (progress) => {
+        app.emit('patch-activity', {
+          uuid,
+          /**
+           * {
+           *   bytes: 2200,
+           *   value: 2.2,
+           *   unit: 'kB'
+           * }
+           */
+          progress: {
+            bytes: progress,
+            ...byteSize(progress)
+          }
+        })
+      }
+    }
+
+    app.emit('new-activity', {
+      uuid,
+      path,
+      filename,
+      type: 'add',
+      size: {
+        bytes: size,
+        ...byteSize(size)
+      },
+      progress: 0
+    })
+
+    return IPFS_CLIENT.util.addFromFs(path, options)
+  })
 
   return Promise.all(promises)
     .then(fileUploadResults => {
