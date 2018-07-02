@@ -22,7 +22,6 @@ class Form extends React.Component {
       this.props.statsStore.isValid = isValid
       this.props.statsStore.check()
         .then(() => { this.forceUpdate() })
-      // this.forceUpdate()
     }
   }
 
