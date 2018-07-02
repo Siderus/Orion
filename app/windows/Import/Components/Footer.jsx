@@ -4,37 +4,13 @@ import React from 'react'
 import { Toolbar, Actionbar, Button } from 'react-photonkit'
 import { observer } from 'mobx-react'
 
-import { getObjectStat, getPeersWithObjectbyHash, importObjectByHash } from '../../../api'
+import { importObjectByHash } from '../../../api'
 
 @observer
 class Footer extends React.Component {
   _handleCheckButton () {
-    const storage = this.props.statsStore
-
-    // Prepare the promise to check the Peers
-    const pPeers = getPeersWithObjectbyHash(storage.hash)
-      .then(peers => {
-        storage.peersAmount = peers.length
-        storage.isLoading = false
-        this.forceUpdate()
-      })
-
-    // Prepare the promise to check the stats
-    const pStats = getObjectStat(storage.hash)
-      .then(stats => {
-        storage.stats = stats
-        storage.isLoading = false
-        this.forceUpdate()
-      })
-
-    storage.isLoading = true
-    storage.wasLoadingStats = true
-    // Now race! The first one shows stuff!
-    Promise.race([pPeers, pStats])
-      .catch(err => {
-        storage.isLoading = false
-        remote.dialog.showErrorBox('Gurl, an error occurred', `${err}`)
-      })
+    this.props.statsStore.check()
+      .then(() => { this.forceUpdate() })
   }
 
   _handleImportButton () {
