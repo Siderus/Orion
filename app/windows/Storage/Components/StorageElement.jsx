@@ -38,8 +38,11 @@ class StorageElement extends React.Component {
         label: 'Save on disk',
         click: (item) => {
           const opts = { properties: ['openDirectory'], buttonLabel: 'Save here' }
-          const dest = remote.dialog.showOpenDialog(remote.app.mainWindow, opts)
-          saveFileToPath(this.props.element.hash, dest[0])
+          const response = remote.dialog.showOpenDialog(remote.app.mainWindow, opts)
+          if (response) {
+            const destination = response[0]
+            saveFileToPath(this.props.element.hash, destination)
+          }
         }
       },
       {
