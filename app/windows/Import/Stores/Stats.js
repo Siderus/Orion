@@ -38,25 +38,18 @@ export class StatStorage {
   }
 
   check () {
-    // Prepare the promise to check the Peers
-    const pPeers = getPeersWithObjectbyHash(this.hash)
-      .then(peers => {
-        console.log('got peers', peers)
-        this.peersAmount = peers.length
-        this.isLoading = false
-      })
-
-    // Prepare the promise to check the stats
-    const pStats = getObjectStat(this.hash)
-      .then(stats => {
-        console.log('got stats')
-        this.stats = stats
-        this.isLoading = false
-      })
-
     this.isLoading = true
     this.wasLoadingStats = true
-    return Promise.all([pPeers, pStats])
+
+    return Promise.all([
+      getPeersWithObjectbyHash(this.hash),
+      getObjectStat(this.hash)
+    ])
+      .then(values => {
+        this.peersAmount = values[0].length
+        this.stats = values[1]
+        this.isLoading = false
+      })
       .catch(err => {
         this.isLoading = false
         remote.dialog.showErrorBox('Gurl, an error occurred', `${err}`)
