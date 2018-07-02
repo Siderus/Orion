@@ -115,10 +115,15 @@ export function addFilesFromFSPath (filePaths, _queryGateways = queryGateways) {
     const filename = parse(path).base
     const uuid = uuidv4()
 
+    // when uploading big files we want to show the progress in the activities window
     if (size >= ACTIVITIES_WINDOW_THRESHOLD) {
       app.emit('show-activities-window')
     }
 
+    /**
+     * The fuction we pass under `progress` will be called with the byte length of chunks
+     * as they are added to IPFS
+     */
     const options = {
       recursive: true,
       progress: (progress) => {

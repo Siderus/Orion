@@ -292,6 +292,10 @@ app.on('start-orion', () => {
   startWelcome().then(startOrion)
 })
 
+/**
+ * This will create a new Activities window or bring to focus the existing one.
+ * We use this method instead of creating the window ourselves to ensure it's a singleton.
+ */
 app.on('show-activities-window', () => {
   if (!activitiesWindow) {
     activitiesWindow = ActivitiesWindow.create(app)
