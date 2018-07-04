@@ -4,6 +4,7 @@ import { Window, Toolbar, Actionbar } from 'react-photonkit'
 import Button from '../../components/Button'
 import { ipcRenderer } from 'electron'
 import ActivityList from './Components/ActivityList'
+import { trackEvent } from '../../stats'
 
 // This will store the loop's timeout ID
 window.loopTimeoutID = null
@@ -15,6 +16,7 @@ class ActivitiesWindow extends React.Component {
   }
 
   componentDidMount () {
+    trackEvent('ActivitiesWindowOpen', {})
     ipcRenderer.on('update', (event, data) => {
       this.data = data
     })
