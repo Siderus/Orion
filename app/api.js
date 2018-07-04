@@ -153,7 +153,8 @@ export function addFilesFromFSPath (filePaths, _queryGateways = queryGateways) {
         bytes: size,
         ...byteSize(size)
       },
-      progress: 0
+      progress: 0,
+      timestamp: new Date()
     })
 
     return IPFS_CLIENT.util.addFromFs(path, options)

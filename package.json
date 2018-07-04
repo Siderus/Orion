@@ -60,6 +60,7 @@
     "mixpanel": "^0.9.1",
     "mobx": "^3.0.2",
     "mobx-react": "^4.1.0",
+    "moment": "^2.22.2",
     "multiaddr": "^3.0.2",
     "photon": "git+https://github.com/connors/photon.git",
     "query-string": "^5.1.0",

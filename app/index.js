@@ -34,8 +34,8 @@ app.mainWindow = null
 
 // activities window
 let activitiesWindow = null
-const activitiesById = []
-const activities = {}
+let activitiesById = []
+let activities = {}
 
 // A little space for IPFS processes
 global.IPFS_PROCESS = null
@@ -324,6 +324,12 @@ app.on('patch-activity', (event) => {
 
 // after activities window is mounted, it will emit this event
 ipcMain.on('update-activities', () => {
+  updateActivitiesWindow()
+})
+
+ipcMain.on('clear-activities', () => {
+  activitiesById = []
+  activities = {}
   updateActivitiesWindow()
 })
 

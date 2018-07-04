@@ -1,16 +1,9 @@
 import React from 'react'
 import ReactDom from 'react-dom'
-import { Window } from 'react-photonkit'
+import { Window, Toolbar, Actionbar } from 'react-photonkit'
+import Button from '../../components/Button'
 import { ipcRenderer } from 'electron'
-import styled from 'styled-components'
-import Activity from './Components/Activity'
-
-const ActivityList = styled.div`
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  overflow-y: auto;
-`
+import ActivityList from './Components/ActivityList'
 
 // This will store the loop's timeout ID
 window.loopTimeoutID = null
@@ -41,16 +34,26 @@ class ActivitiesWindow extends React.Component {
     clearTimeout(window.loopTimeoutID)
   }
 
+  handleClearActivities = () => {
+    ipcRenderer.send('clear-activities')
+  }
+
   render () {
     const { activities, activitiesById } = this.data
 
     return (
       <Window>
-        <ActivityList>
-          {
-            activitiesById.map(id => <Activity key={id} activity={activities[id]} />)
-          }
-        </ActivityList>
+        <Toolbar>
+          <Actionbar>
+            <Button
+              text='Clear'
+              glyph='cancel-circled'
+              onClick={this.handleClearActivities}
+              pullRight
+            />
+          </Actionbar>
+        </Toolbar>
+        <ActivityList activities={activities} activitiesById={activitiesById} />
       </Window>
     )
   }
