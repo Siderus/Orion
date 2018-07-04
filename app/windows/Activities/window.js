@@ -20,9 +20,9 @@ module.exports.create = function createDetailsWindow (app) {
   let thisWindow = new BrowserWindowClass({
     title: 'Activities',
 
-    width: 650,
+    width: 700,
     height: 350,
-    minWidth: 650,
+    minWidth: 700,
     minHeight: 200,
 
     maximizable: false,
