@@ -20,7 +20,8 @@ class Form extends React.Component {
     if (isValid) {
       this.props.statsStore.hash = hash
       this.props.statsStore.isValid = isValid
-      this.forceUpdate()
+      this.props.statsStore.check()
+        .then(() => { this.forceUpdate() })
     }
   }
 

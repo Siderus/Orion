@@ -1,4 +1,7 @@
 import { observable } from 'mobx'
+import { remote } from 'electron'
+
+import { getObjectStat, getPeersWithObjectbyHash } from '../../../api'
 
 /**
  * StatStorage will contain the status and few information about the Object.
@@ -31,6 +34,33 @@ export class StatStorage {
     this.isLoading = false
     this.wasLoading = false
     this.importing = false
+    this.wasLoadingStats = false
+  }
+
+  check () {
+    // Prepare the promise to check the Peers
+    const pPeers = getPeersWithObjectbyHash(this.hash)
+      .then(peers => {
+        console.log('got peers', peers)
+        this.peersAmount = peers.length
+        this.isLoading = false
+      })
+
+    // Prepare the promise to check the stats
+    const pStats = getObjectStat(this.hash)
+      .then(stats => {
+        console.log('got stats')
+        this.stats = stats
+        this.isLoading = false
+      })
+
+    this.isLoading = true
+    this.wasLoadingStats = true
+    return Promise.all([pPeers, pStats])
+      .catch(err => {
+        this.isLoading = false
+        remote.dialog.showErrorBox('Gurl, an error occurred', `${err}`)
+      })
   }
 }
 
