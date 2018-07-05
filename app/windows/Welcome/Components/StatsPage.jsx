@@ -47,7 +47,7 @@ class StatsPage extends React.Component {
                 <li>An unique random ID generated on the first usage</li>
                 <li>Features used (Windows, Screens and Sessions)</li>
                 <li>Operative System and release/version</li>
-                <li>Amount of files shared, NOT the hashes</li>
+                <li>Amount of files shared and the size, NOT the hashes/content</li>
               </ul>
               You can opt-in as well as opt out at any time from the Settings.<br />
               <br />
