@@ -16,9 +16,17 @@ const PhotonInput = ({ label, className, button, ...rest }) => {
 
 const Input = styled(PhotonInput)`
   ${props => props.button && css`
-    .form-control {
-      width: calc(100% - 37px);
+    display: flex;
+    flex-wrap: wrap;
+
+    label {
+      width: 100%;
     }
+
+    .form-control {
+      flex: 1;
+    }
+
     button {
       margin-left: 5px;
       height: 31px;
