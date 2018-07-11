@@ -95,28 +95,23 @@ class StorageElement extends React.Component {
   _handleRowSelection = (event, element) => {
     if (!this.props.storageStore) return
 
-    /*
-
     const { elements, selected } = this.props.storageStore
     const lastSelectedElement = selected[selected.length - 1]
 
     if (event.shiftKey && lastSelectedElement) {
       // multi select
       // find the position of the elemented selected last and current
-      const a = elements.indexOf(element)
-      const b = elements.indexOf(lastSelectedElement)
-      console.log('a, b', a, b)
-      console.log('a.hash, b.hash', element.hash, lastSelectedElement.hash)
+      const firstIndex = elements.indexOf(element)
+      // ugly hack because lastSelectedElement does not have the same ref (it's coming from `selected`)
+      const lastIndex = elements.indexOf(elements.find(x => x.hash === lastSelectedElement.hash))
 
       // select every element between current and last
-      if (a < b) {
-        for (let i = a; i <= b; i++) {
-          console.log('i', i, elements[i].hash)
+      if (firstIndex < lastIndex) {
+        for (let i = firstIndex; i < lastIndex; i++) {
           this._selectElement(elements[i])
         }
       } else {
-        for (let i = b; i <= a; i++) {
-          console.log('i', i, elements[i].hash)
+        for (let i = lastIndex + 1; i <= firstIndex; i++) {
           this._selectElement(elements[i])
         }
       }
@@ -124,16 +119,13 @@ class StorageElement extends React.Component {
       // single select
       this._selectElement(element)
     }
-
-    */
-    this._selectElement(element)
   }
 
   _selectElement = (element) => {
     const { selected } = this.props.storageStore
 
     if (selected.find(el => el.hash === element.hash)) {
-      selected.pop(element)
+      this.props.storageStore.selected = selected.filter(el => el.hash !== element.hash)
       this.forceUpdate()
     } else {
       selected.push(element)
