@@ -92,25 +92,63 @@ class StorageElement extends React.Component {
     this.menu.popup({})
   }
 
-  _handleCheckboxOnClick (element, proxy, event) {
+  _handleRowSelection = (event, element) => {
     if (!this.props.storageStore) return
 
-    if (this.props.storageStore.selected.find(el => el.hash === element.hash)) {
-      this.props.storageStore.selected.pop(element)
+    const { elements, selected } = this.props.storageStore
+    const lastSelectedElement = selected[selected.length - 1]
+
+    if (event.shiftKey && lastSelectedElement) {
+      // multi select
+      // find the position of the elemented selected last and current
+      const firstIndex = elements.indexOf(element)
+      // ugly hack because lastSelectedElement does not have the same ref (it's coming from `selected`)
+      const lastIndex = elements.indexOf(elements.find(x => x.hash === lastSelectedElement.hash))
+
+      // select every element between current and last
+      if (firstIndex < lastIndex) {
+        for (let i = firstIndex; i < lastIndex; i++) {
+          this._selectElement(elements[i])
+        }
+      } else {
+        for (let i = lastIndex + 1; i <= firstIndex; i++) {
+          this._selectElement(elements[i])
+        }
+      }
     } else {
-      this.props.storageStore.selected.push(element)
+      // single select
+      this._selectElement(element)
+    }
+  }
+
+  _selectElement = (element) => {
+    const { selected } = this.props.storageStore
+
+    if (selected.find(el => el.hash === element.hash)) {
+      this.props.storageStore.selected = selected.filter(el => el.hash !== element.hash)
+      this.forceUpdate()
+    } else {
+      selected.push(element)
+      this.forceUpdate()
     }
   }
 
   render () {
     const el = this.props.element
+    const selected = this.props.storageStore.selected.find(x => x.hash === el.hash) !== undefined
+
     return (
-      <tr key={el.hash} onContextMenu={this._handleContextMenu.bind(this)}>
+      <tr
+        className={ selected ? 'active' : ''}
+        onClick={(event) => { this._handleRowSelection(event, el) }}
+        key={el.hash}
+        onContextMenu={this._handleContextMenu.bind(this)}
+      >
 
         { this.props.storageStore
           ? <td>
             <input
-              onClick={this._handleCheckboxOnClick.bind(this, el)}
+              checked={selected}
               type='checkbox'
             />
           </td>
