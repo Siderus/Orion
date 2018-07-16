@@ -65,7 +65,7 @@ function askWhichNodeToUse (apiVersion) {
   alertMessage += '\n\nWould you like Orion to connect to the available node, instead of using its own?'
 
   if (apiVersion !== pjson.ipfsVersion) {
-    alertMessage += `\n\nPlease note: Orion was design with IPFS ${pjson.ipfsVersion} in mind, `
+    alertMessage += `\n\nPlease note: Orion was designed with IPFS ${pjson.ipfsVersion} in mind, `
     alertMessage += `while the available API is running ${apiVersion}.`
   }
 
