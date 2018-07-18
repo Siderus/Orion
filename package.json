@@ -4,7 +4,7 @@
   "env": "development",
   "ipfsVersion": "v0.4.15",
   "statsToken": "9d407c14d888a212cf04c397a95acb7b",
-  "description": "Orion is an easy-to-use and KISS IPFS desktop interface",
+  "description": "Siderus Orion is an easy-to-use IPFS desktop client",
   "main": "app/entry.js",
   "scripts": {
     "test": "jest",

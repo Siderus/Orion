@@ -3,12 +3,14 @@
 [![js-standard-style](https://img.shields.io/badge/code%20style-standard-brightgreen.svg)](http://standardjs.com)
 [![codebeat badge](https://codebeat.co/badges/55b6d66b-3b3f-41b1-a26f-9a79209e7feb)](https://codebeat.co/projects/github-com-koalalorenzo-Orion-master) [![Build Status](https://travis-ci.org/Siderus/Orion.svg?branch=master)](https://travis-ci.org/Siderus/Orion)
 
-# Siderus Orion - Easy and KISS desktop client for IPFS
-Orion is an easy and KISS [inter planetary file system](http://ipfs.io) desktop
-client. It allows you to easily add and remove files, and manage the repository,
-the daemon and basic configuration.
+# Siderus Orion - Easy to use IPFS desktop client
+Siderus Orion is an easy to use [inter planetary file system](http://ipfs.io) desktop
+client. It allows you to easily add, share, remove files and manage the IPFS
+repository from an UI. It includes all the dependencies needed, and works on
+every major operative system.
+It is developed and maintained by [Siderus](https://siderus.io).
 
-To download the latest version for Windows, Linux and macOS [check the latest release](https://github.com/Siderus/Orion/releases/latest)!
+To download the latest version for Windows, GNU/Linux and macOS [check the latest release](https://github.com/Siderus/Orion/releases/latest)!
 
 ![Screenshots](docs/main.png)
 
