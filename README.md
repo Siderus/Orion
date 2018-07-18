@@ -31,14 +31,14 @@ files/directory, not just CID)
 - [x] Integrates with OS actions like drag-and-drop or URI
 - [x] Provides information and statistics about the repository and the daemon
 - [x] Integrates with [Siderus](https://siderus.io/) IPFS for faster network and gateway connections
-- [ ] Allows to maintain a daemon from the interface
+- [x] Allows to maintain a daemon from the interface
 - [ ] Integration external services/tools for encryption and content distribution
 
 ## Learn more
 You can find more documentation in the following pages:
 
- * [How to run Orion](docs/RUN.md)
- * [How to build Orion standalone App](docs/BUILD.md)
+ * [How to run Siderus Orion](docs/RUN.md)
+ * [How to build Siderus Orion standalone App](docs/BUILD.md)
  * ...More in [docs directory](https://github.com/Siderus/Orion/tree/master/docs/)
 
 ## How To Help
@@ -46,7 +46,7 @@ Note: This project is not ready for a stable use. Help is needed!
 It is developed using *Electron* and *React*, but we have a lot of things to do!
 
 You can contribute by checking what should be done in the
-[Issue Board](https://dev.siderus.io/projects/Orion/agile/board).
+[Issue Board](https://gitlab.com/siderus/Orion/boards?=).
 
 If you need to report something, please send an email to [hello@siderus.io](mailto:hello@siderus.io) or
 contact us directly in the [chatroom on Matrix](https://riot.im/app/#/room/#orion:matrix.org)!
