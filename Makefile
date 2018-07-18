@@ -89,12 +89,6 @@ build: _test_variables prepare_ipfs_bin _prepkg
 	./node_modules/.bin/build ${BUILD_ARGS}
 .PHONY: build
 
-build_repo: # needs dpkg-dev and gnupg2 installed
-	@test -e ".ppa-script" || git clone git@github.com:mkg20001/ppa-script .ppa-script
-	CONFIG="$(PWD)/deb-repo-config.sh" bash .ppa-script/ppa-script.sh
-	cp ./app/repo/* ./repo
-.PHONY: build_repo
-
 build_all: clean
 	$(MAKE) build -e OS="Darwin" -e UNAME_S="Darwin"
 	$(MAKE) build -e OS="Linux" -e UNAME_S="Linux"
@@ -106,15 +100,9 @@ release: _test_variables prepare_ipfs_bin _prepkg
 	./node_modules/.bin/build ${BUILD_ARGS} --publish onTagOrDraft
 .PHONY: release
 
-release_repo: build_repo
-	@test -e ".dnslink-update" || git clone git@github.com:mkg20001/ipfs-dnslink-update .dnslink-update
-	bash ./.dnslink-update/ipfs-dnslink-update.sh cf deb.siderus.io "/ipfs/$(shell ipfs add -Qr repo)"
-.PHONY: release_repo
-
 release_all: clean
 	@test -n "$(GH_TOKEN)" || (echo "Variable GH_TOKEN not set"; exit 1)
 	$(MAKE) release -e OS="Darwin" -e UNAME_S="Darwin"
 	$(MAKE) release -e OS="Linux" -e UNAME_S="Linux"
 	$(MAKE) release -e OS="Windows_NT"
-	$(MAKE) release_repo
 .PHONY: release_all
