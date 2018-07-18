@@ -168,7 +168,7 @@ export function proptAndRemoveObjects (elements) {
  * Open hashes in a browser
  */
 export function openInBrowser (hashes) {
-  const gatewayURL = Settings.getSync('gatewayURL') || 'https://siderus.io'
+  const gatewayURL = Settings.get('gatewayURL') || 'https://siderus.io'
   hashes.forEach(hash => {
     shell.openExternal(`${gatewayURL}/ipfs/${hash}`)
   })

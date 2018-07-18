@@ -10,19 +10,19 @@ const client = Mixpanel.init(pjson.statsToken, {
   protocol: 'https'
 })
 
-let UserID = Settings.getSync(SettingsUserIDKey)
+let UserID = Settings.get(SettingsUserIDKey)
 
 /*
  * setUpUser will configure the client in order to track errors, events and
  * follow users when debugging process.
  */
 export function setUpUser () {
-  if (!Settings.getSync(SettingsUserIDKey)) {
+  if (!Settings.get(SettingsUserIDKey)) {
     UserID = uuidv4()
-    Settings.setSync(SettingsUserIDKey, UserID)
+    Settings.set(SettingsUserIDKey, UserID)
   }
 
-  UserID = Settings.getSync(SettingsUserIDKey)
+  UserID = Settings.get(SettingsUserIDKey)
   client.people.set(UserID, {
     $name: UserID,
     version: `${pjson.version}`,
@@ -40,7 +40,7 @@ export function setUpUser () {
  */
 export function trackEvent (eventName, data) {
   return new Promise((resolve, reject) => {
-    const allowUserTracking = Settings.getSync('allowUserTracking')
+    const allowUserTracking = Settings.get('allowUserTracking')
     if (!allowUserTracking) {
       return resolve()
     }

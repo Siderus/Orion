@@ -16,7 +16,7 @@ class WelcomeWindow extends React.Component {
   }
 
   handleQuit = () => {
-    Settings.setSync('welcomeVersion', 1)
+    Settings.set('welcomeVersion', 1)
     window.close()
   }
 

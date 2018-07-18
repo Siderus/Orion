@@ -53,7 +53,7 @@ class ConnectivityPanel extends React.Component {
     /**
      * Save setting persistently
      */
-    Settings.setSync('skipGatewayQuery', nextValue)
+    Settings.set('skipGatewayQuery', nextValue)
     /**
      * Update component's state
      */
@@ -67,7 +67,7 @@ class ConnectivityPanel extends React.Component {
     /**
      * Save setting persistently
      */
-    Settings.setSync('gatewayURL', value)
+    Settings.set('gatewayURL', value)
     /**
      * Update component's state
      */
@@ -81,7 +81,7 @@ class ConnectivityPanel extends React.Component {
     /**
      * Save setting persistently
      */
-    Settings.setSync('runInBackground', nextValue)
+    Settings.set('runInBackground', nextValue)
     /**
      * Update component's state
      */
@@ -95,7 +95,7 @@ class ConnectivityPanel extends React.Component {
     /**
      * Save setting persistently
      */
-    Settings.setSync('disablePubSubIPNS', nextValue)
+    Settings.set('disablePubSubIPNS', nextValue)
     /**
      * Update component's state
      */
@@ -111,7 +111,7 @@ class ConnectivityPanel extends React.Component {
       trackEvent('userTrackingDisabled')
     }
 
-    Settings.setSync('allowUserTracking', nextValue)
+    Settings.set('allowUserTracking', nextValue)
 
     if (nextValue) {
       // now that tracking is enabled (in the settings), we can start tracking

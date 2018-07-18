@@ -52,7 +52,7 @@
     "byte-size": "^3.0.0",
     "classnames": "^2.2.5",
     "electron-compile": "^6.4.2",
-    "electron-settings": "^2.2.2",
+    "electron-settings": "^3.0.0",
     "electron-updater": "^2.21.4",
     "ipfs-api": "^20.2.1",
     "is-electron-renderer": "^2.0.1",
