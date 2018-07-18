@@ -37,12 +37,12 @@ jest.mock('request-promise-native', () => {
 })
 
 jest.mock('electron-settings', () => {
-  const getSyncMock = jest.fn()
-    // getSync('skipGatewayQuery')
+  const getMock = jest.fn()
+    // get('skipGatewayQuery')
     .mockReturnValueOnce(true)
     .mockReturnValueOnce(false)
   return {
-    getSync: getSyncMock
+    get: getMock
   }
 })
 
