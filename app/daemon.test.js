@@ -9,12 +9,12 @@ jest.mock('./stats', () => {
 })
 
 jest.mock('electron-settings', () => {
-  const getSyncMock = jest.fn()
+  const getMock = jest.fn()
     .mockReturnValueOnce(null)
     .mockReturnValueOnce('/custom/path/to/ipfs')
 
   return {
-    getSync: getSyncMock
+    get: getMock
   }
 })
 

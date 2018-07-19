@@ -114,7 +114,7 @@ export function getAPIVersion () {
  */
 export function startIPFSDaemon () {
   return new Promise((resolve, reject) => {
-    const disablePubSubIPNS = Settings.getSync('disablePubSubIPNS')
+    const disablePubSubIPNS = Settings.get('disablePubSubIPNS')
 
     const args = [
       '--init',

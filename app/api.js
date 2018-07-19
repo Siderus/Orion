@@ -201,7 +201,7 @@ export function addFilesFromFSPath (filePaths, _queryGateways = queryGateways) {
         .then(results => {
           const wrapper = results[0]
 
-          if (!Settings.getSync('skipGatewayQuery')) {
+          if (!Settings.get('skipGatewayQuery')) {
             // Query all the uploaded files
             fileUploadResults.forEach(files => files.forEach(file => _queryGateways(file.hash)))
             // Query the wrapper

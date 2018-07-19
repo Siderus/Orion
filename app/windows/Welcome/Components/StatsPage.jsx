@@ -21,12 +21,12 @@ const PrivacyLink = <a onClick={() => shell.openExternal('https://siderus.io/pri
 
 class StatsPage extends React.Component {
   enableStats = () => {
-    Settings.setSync('allowUserTracking', true)
+    Settings.set('allowUserTracking', true)
     this.props.onNext()
   }
 
   disableStats = () => {
-    Settings.setSync('allowUserTracking', false)
+    Settings.set('allowUserTracking', false)
     this.props.onNext()
   }
 

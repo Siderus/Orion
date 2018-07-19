@@ -3,12 +3,14 @@
 [![js-standard-style](https://img.shields.io/badge/code%20style-standard-brightgreen.svg)](http://standardjs.com)
 [![codebeat badge](https://codebeat.co/badges/55b6d66b-3b3f-41b1-a26f-9a79209e7feb)](https://codebeat.co/projects/github-com-koalalorenzo-Orion-master) [![Build Status](https://travis-ci.org/Siderus/Orion.svg?branch=master)](https://travis-ci.org/Siderus/Orion)
 
-# Siderus Orion - Easy and KISS desktop client for IPFS
-Orion is an easy and KISS [inter planetary file system](http://ipfs.io) desktop
-client. It allows you to easily add and remove files, and manage the repository,
-the daemon and basic configuration.
+# Siderus Orion - Easy to use IPFS desktop client
+Siderus Orion is an easy to use [inter planetary file system](http://ipfs.io) desktop
+client. It allows you to easily add, share, remove files and manage the IPFS
+repository from an UI. It includes all the dependencies needed, and works on
+every major operative system.
+It is developed and maintained by [Siderus](https://siderus.io).
 
-To download the latest version for Windows, Linux and macOS [check the latest release](https://github.com/Siderus/Orion/releases/latest)!
+To download the latest version for Windows, GNU/Linux and macOS [check the latest release](https://github.com/Siderus/Orion/releases/latest)!
 
 ![Screenshots](docs/main.png)
 
@@ -31,14 +33,14 @@ files/directory, not just CID)
 - [x] Integrates with OS actions like drag-and-drop or URI
 - [x] Provides information and statistics about the repository and the daemon
 - [x] Integrates with [Siderus](https://siderus.io/) IPFS for faster network and gateway connections
-- [ ] Allows to maintain a daemon from the interface
+- [x] Allows to maintain a daemon from the interface
 - [ ] Integration external services/tools for encryption and content distribution
 
 ## Learn more
 You can find more documentation in the following pages:
 
- * [How to run Orion](docs/RUN.md)
- * [How to build Orion standalone App](docs/BUILD.md)
+ * [How to run Siderus Orion](docs/RUN.md)
+ * [How to build Siderus Orion standalone App](docs/BUILD.md)
  * ...More in [docs directory](https://github.com/Siderus/Orion/tree/master/docs/)
 
 ## How To Help
@@ -46,7 +48,7 @@ Note: This project is not ready for a stable use. Help is needed!
 It is developed using *Electron* and *React*, but we have a lot of things to do!
 
 You can contribute by checking what should be done in the
-[Issue Board](https://dev.siderus.io/projects/Orion/agile/board).
+[Issue Board](https://gitlab.com/siderus/Orion/boards?=).
 
 If you need to report something, please send an email to [hello@siderus.io](mailto:hello@siderus.io) or
 contact us directly in the [chatroom on Matrix](https://riot.im/app/#/room/#orion:matrix.org)!

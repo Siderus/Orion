@@ -89,7 +89,7 @@ function askWhichNodeToUse (apiVersion) {
  * It returns a promise.
  */
 function startWelcome () {
-  const welcomeVersion = Settings.getSync('welcomeVersion')
+  const welcomeVersion = Settings.get('welcomeVersion')
   // To do, change this to a variable?
   if (welcomeVersion <= 1) {
     return Promise.resolve()
@@ -100,7 +100,7 @@ function startWelcome () {
     const welcomeWindow = WelcomeWindow.create(app)
     app.mainWindow = welcomeWindow
     welcomeWindow.on('closed', () => {
-      if (Settings.getSync('welcomeVersion') === 1) {
+      if (Settings.get('welcomeVersion') === 1) {
         return resolve()
       }
       app.quit()
@@ -368,7 +368,7 @@ app.on('window-all-closed', () => {
   // On MacOS this is already the expected behavior, no need to alert the user/close the app
   if (process.platform === 'darwin') return
 
-  const systemTrayNotification = Settings.getSync('systemTrayNotification')
+  const systemTrayNotification = Settings.get('systemTrayNotification')
 
   if (systemTrayNotification === undefined) {
     const options = {
@@ -381,7 +381,7 @@ app.on('window-all-closed', () => {
     Settings.set('systemTrayNotification', true)
   }
 
-  const runInBackground = Settings.getSync('runInBackground')
+  const runInBackground = Settings.get('runInBackground')
 
   // if it's undefined or true don't quit
   if (runInBackground === false) {
