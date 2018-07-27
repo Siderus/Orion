@@ -122,6 +122,8 @@ class StorageElement extends React.Component {
   }
 
   _selectElement = (element) => {
+    if (!this.props.storageStore) return
+
     const { selected } = this.props.storageStore
 
     if (selected.find(el => el.hash === element.hash)) {
@@ -135,7 +137,11 @@ class StorageElement extends React.Component {
 
   render () {
     const el = this.props.element
-    const selected = this.props.storageStore.selected.find(x => x.hash === el.hash) !== undefined
+
+    let selected = false
+    if (this.props.storageStore) {
+      selected = this.props.storageStore.selected.find(x => x.hash === el.hash) !== undefined
+    }
 
     return (
       <tr
