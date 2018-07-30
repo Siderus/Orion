@@ -7,6 +7,7 @@ import './lib/report/node'
 import rootDir from 'app-root-dir'
 import setupTrayIcon from './setup-tray-icon'
 import { report } from './lib/report/util'
+import { trackEvent } from './stats'
 
 import {
   startIPFSDaemon,
@@ -138,6 +139,12 @@ function startOrion () {
     if (btnId === 1) {
       shell.openExternal(`${pjson.repository}/releases/latest`)
     }
+  })
+  autoUpdater.on('update-downloaded', (info) => {
+    trackEvent('updateDownloaded', {
+      from: pjson.version,
+      to: info.version
+    })
   })
 
   const loadingWindow = LoadingWindow.create(app)
