@@ -25,7 +25,6 @@ module.exports.create = function createImportModal (app) {
   let thisWindow = new BrowserWindowClass({
     title: 'Import a new Object/File',
     parent: app.mainWindow,
-    modal: true,
 
     width: 430,
     height: 250,

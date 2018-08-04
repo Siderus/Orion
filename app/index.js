@@ -22,7 +22,8 @@ import {
 
 import {
   promiseIPFSReady,
-  initIPFSClient
+  initIPFSClient,
+  importObjectByHash
 } from './api'
 
 import LoadingWindow from './windows/Loading/window'
@@ -297,6 +298,16 @@ function startOrion () {
 
 app.on('start-orion', () => {
   startWelcome().then(startOrion)
+})
+
+app.on('import-from-hash', (hash) => {
+  app.emit('show-activities-window')
+
+  importObjectByHash(hash)
+    .then(() => {})
+    .catch(err => {
+      dialog.showErrorBox('Gurl, an error occurred!', `${err}`)
+    })
 })
 
 /**

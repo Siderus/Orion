@@ -119,7 +119,7 @@ export function addFilesFromFSPath (filePaths, _queryGateways = queryGateways) {
     // window
     if (size >= ACTIVITIES_WINDOW_THRESHOLD) {
       app.emit('show-activities-window')
-      trackEvent('BigFileAdded', {size})
+      trackEvent('BigFileAdded', { size })
     }
 
     /**
@@ -155,7 +155,7 @@ export function addFilesFromFSPath (filePaths, _queryGateways = queryGateways) {
         bytes: size,
         ...byteSize(size)
       },
-      progress: 0,
+      progress: { bytes: 0 },
       timestamp: new Date()
     })
 
@@ -408,8 +408,33 @@ export function getPeersWithObjectbyHash (hash) {
  */
 export function importObjectByHash (hash) {
   if (!IPFS_CLIENT) return Promise.reject(ERROR_IPFS_UNAVAILABLE)
+  const uuid = uuidv4()
+
+  app.emit('new-activity', {
+    uuid,
+    hash,
+    type: 'import-from-hash',
+    finished: false,
+    timestamp: new Date()
+  })
+
+  getObjectStat(hash).then(stat => {
+    app.emit('patch-activity', {
+      uuid,
+      size: stat.CumulativeSize
+    })
+  })
+
   const options = { recursive: true }
   return IPFS_CLIENT.pin.add(hash, options)
+    .then(() => {
+      app.emit('patch-activity', {
+        uuid,
+        finished: true
+      })
+
+      return Promise.resolve()
+    })
     .catch(reportAndReject)
 }
 
