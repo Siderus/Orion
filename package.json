@@ -76,6 +76,9 @@
     "underscore": "^1.8.3",
     "uuid": "^3.2.1"
   },
+  "jest": {
+    "testURL": "http://localhost/"
+  },
   "build": {
     "appId": "io.siderus.orion",
     "files": [
