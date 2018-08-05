@@ -10,9 +10,31 @@ repository from an UI. It includes all the dependencies needed, and works on
 every major operative system.
 It is developed and maintained by [Siderus](https://siderus.io).
 
-To download the latest version for Windows, GNU/Linux and macOS [check the latest release](https://github.com/Siderus/Orion/releases/latest)!
-
 ![Screenshots](docs/main.png)
+
+## Download
+To download the latest version, you can [check the latest release page](https://github.com/Siderus/Orion/releases/latest)
+
+We support the following operative systems, but feel free to try it on different ones:
+
+ * macOS (latest)
+ * Windows 10
+ * GNU/Linux
+
+### Ubuntu / Debian Repository
+To download Siderus Orion for Ubuntu, you can add Siderus debian reposiotry:
+
+```
+wget -qO - https://get.siderus.io/key.public.asc | sudo apt-key add -
+echo "deb https://get.siderus.io/ apt/" | sudo tee -a /etc/apt/sources.list.d/siderus.list
+sudo apt update
+```
+
+And then you can install the `orion` package by running:
+
+```
+sudo apt install orion
+```
 
 ## About the project
 The user should be able to manage the repository by adding, downloading and
