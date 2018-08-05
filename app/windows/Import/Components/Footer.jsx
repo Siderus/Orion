@@ -4,8 +4,6 @@ import React from 'react'
 import { Toolbar, Actionbar, Button } from 'react-photonkit'
 import { observer } from 'mobx-react'
 
-import { importObjectByHash } from '../../../api'
-
 @observer
 class Footer extends React.Component {
   _handleCheckButton () {
@@ -18,15 +16,9 @@ class Footer extends React.Component {
 
     storage.isLoading = true
     storage.importing = true
-    importObjectByHash(storage.hash).then(() => {
-      // Object added. Yay!
-      storage.importing = false
-      window.close()
-    })
-      .catch(err => {
-        storage.isLoading = false
-        remote.dialog.showErrorBox('Gurl, an error occurred!', `${err}`)
-      })
+
+    remote.app.emit('import-from-hash', storage.hash)
+    window.close()
   }
 
   render () {

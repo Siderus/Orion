@@ -12,6 +12,15 @@ import Settings from 'electron-settings'
 import { reportAndReject } from './lib/report/util'
 import uuidv4 from 'uuid/v4'
 
+const electron = require('electron')
+const remote = electron.remote
+const app = remote ? remote.app : electron.app
+
+export const activityTypes = {
+  ADD: 'add',
+  IMPORT_FROM_HASH: 'import-from-hash'
+}
+
 export const ACTIVITIES_WINDOW_THRESHOLD = 16 * 1000 * 1000 // 16 MB
 export const ERROR_IPFS_UNAVAILABLE = 'IPFS NOT AVAILABLE'
 export const ERROR_IPFS_TIMEOUT = 'TIMEOUT'
@@ -23,9 +32,6 @@ export function setClientInstance (client) {
   IPFS_CLIENT = client
 }
 
-const electron = require('electron')
-const remote = electron.remote
-const app = remote ? remote.app : electron.app
 /**
  * initIPFSClient will set up a new ipfs-api instance. It will try to get
  * the configuration (api endpoint) from global vars
@@ -119,7 +125,7 @@ export function addFilesFromFSPath (filePaths, _queryGateways = queryGateways) {
     // window
     if (size >= ACTIVITIES_WINDOW_THRESHOLD) {
       app.emit('show-activities-window')
-      trackEvent('BigFileAdded', {size})
+      trackEvent('BigFileAdded', { size })
     }
 
     /**
@@ -150,12 +156,12 @@ export function addFilesFromFSPath (filePaths, _queryGateways = queryGateways) {
       uuid,
       path,
       filename,
-      type: 'add',
+      type: activityTypes.ADD,
       size: {
         bytes: size,
         ...byteSize(size)
       },
-      progress: 0,
+      progress: { bytes: 0 },
       timestamp: new Date()
     })
 
@@ -408,8 +414,33 @@ export function getPeersWithObjectbyHash (hash) {
  */
 export function importObjectByHash (hash) {
   if (!IPFS_CLIENT) return Promise.reject(ERROR_IPFS_UNAVAILABLE)
+  const uuid = uuidv4()
+
+  app.emit('new-activity', {
+    uuid,
+    hash,
+    type: activityTypes.IMPORT_FROM_HASH,
+    finished: false,
+    timestamp: new Date()
+  })
+
+  getObjectStat(hash).then(stat => {
+    app.emit('patch-activity', {
+      uuid,
+      size: stat.CumulativeSize
+    })
+  })
+
   const options = { recursive: true }
   return IPFS_CLIENT.pin.add(hash, options)
+    .then(() => {
+      app.emit('patch-activity', {
+        uuid,
+        finished: true
+      })
+
+      return Promise.resolve()
+    })
     .catch(reportAndReject)
 }
 

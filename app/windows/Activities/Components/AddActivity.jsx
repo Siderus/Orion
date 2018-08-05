@@ -2,6 +2,7 @@ import React from 'react'
 import ProgressBar from '../../../components/ProgressBar'
 import styled from 'styled-components'
 import moment from 'moment'
+import ActivityWrapper from './ActivityWrapper'
 
 const NameAndPath = styled.div`
   display: flex;
@@ -32,17 +33,6 @@ const Progress = styled.div`
 
   span {
     color: rgb(95,95,95);
-  }
-`
-const ActivityWrapper = styled.tr`
-  td:nth-child(1) {
-    transform: scale(2);
-    text-align: center;
-    color: rgb(95,95,95);
-  }
-
-  td:nth-child(4) {
-    text-align: right;
   }
 `
 

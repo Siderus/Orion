@@ -1,7 +1,9 @@
 import React from 'react'
 import Table from '../../../components/Table'
-import Activity from './Activity'
+import AddActivity from './AddActivity'
+import ImportActivity from './ImportActivity'
 import styled from 'styled-components'
+import { activityTypes } from '../../../api'
 
 const ResponsiveTable = styled(Table)`
   table-layout:fixed;
@@ -44,7 +46,11 @@ const ActivityList = ({ activities, activitiesById }) => (
       </thead>
       <tbody>
         {
-          activitiesById.map(id => <Activity key={id} activity={activities[id]} />)
+          activitiesById.map(id => (
+            activities[id].type === activityTypes.ADD
+              ? <AddActivity key={id} activity={activities[id]} />
+              : <ImportActivity key={id} activity={activities[id]} />
+          ))
         }
       </tbody>
     </ResponsiveTable>
