@@ -25,7 +25,7 @@ We support the following operative systems, but feel free to try it on different
 To download Siderus Orion for Ubuntu, you can add Siderus debian reposiotry:
 
 ```
-curl https://get.siderus.io/key.public.asc | sudo apt-key add -
+wget -qO - https://get.siderus.io/key.public.asc | sudo apt-key add -
 echo "deb https://get.siderus.io/ apt/" | sudo tee -a /etc/apt/sources.list.d/siderus.list
 sudo apt update
 ```
