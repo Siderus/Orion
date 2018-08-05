@@ -3,6 +3,7 @@ import Table from '../../../components/Table'
 import AddActivity from './AddActivity'
 import ImportActivity from './ImportActivity'
 import styled from 'styled-components'
+import { activityTypes } from '../../../api'
 
 const ResponsiveTable = styled(Table)`
   table-layout:fixed;
@@ -46,7 +47,7 @@ const ActivityList = ({ activities, activitiesById }) => (
       <tbody>
         {
           activitiesById.map(id => (
-            activities[id].type === 'add'
+            activities[id].type === activityTypes.ADD
               ? <AddActivity key={id} activity={activities[id]} />
               : <ImportActivity key={id} activity={activities[id]} />
           ))
