@@ -6,6 +6,7 @@ services:
 stages:
   - test
   - release
+  - postrelease
 
 before_script:
   - mv package.json package.json.old
@@ -27,5 +28,12 @@ yarn-release:
   retry: 2
   script:
     - docker run --rm -e GH_TOKEN="${GH_TOKEN}" -v ${PWD}:/project electronuserland/builder:wine /bin/bash -c "make release_all"
+  only:
+    - master
+
+trigger-repository:
+  stage: postrelease
+  script:
+    - curl -X POST -F token=${TRIGGER_REPO_TOKEN} -F ref=master https://gitlab.com/api/v4/projects/7744513/trigger/pipeline
   only:
     - master
