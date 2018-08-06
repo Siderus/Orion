@@ -44,7 +44,7 @@ module.exports.create = function createSettingsModal (app) {
   })
 
   // Show menu only on StorageList
-  thisWindow.setMenu(null)
+  // thisWindow.setMenu(null)
 
   // Show the window only when ready
   thisWindow.once('ready-to-show', () => {

@@ -23,7 +23,8 @@ import {
 import {
   promiseIPFSReady,
   initIPFSClient,
-  importObjectByHash
+  importObjectByHash,
+  addFilesFromFSPath
 } from './api'
 
 import LoadingWindow from './windows/Loading/window'
@@ -270,6 +271,7 @@ function startOrion () {
       // Log that we are ready
       .then(() => {
         console.log('READY')
+        addFilesIfRequested()
         loadingWindow.webContents.send('set-progress', {
           text: 'Ready!',
           percentage: 100
@@ -406,3 +408,13 @@ app.on('window-all-closed', () => {
     app.quit()
   }
 })
+
+function addFilesIfRequested() {
+  console.log('Orion was started with the arguments:', process.argv)
+  // take all the args after "--add"
+  const addIndex = process.argv.indexOf('--add')
+  if(addIndex > -1) {
+    const filesToAdd = process.argv.splice(addIndex + 1)
+    addFilesFromFSPath(filesToAdd)
+  }
+}
