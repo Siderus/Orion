@@ -5,8 +5,9 @@ services:
 
 stages:
   - test
+  - pre-release
   - release
-  - postrelease
+  - post-release
 
 before_script:
   - mv package.json package.json.old
@@ -24,8 +25,8 @@ yarn:test:
     - master
     - /release.*/
 
-yarn:pre-release:build:mac:
-  stage: release
+yarn:build:mac:
+  stage: pre-release
   retry: 2
   script:
     - docker run --rm -v ${PWD}:/project electronuserland/builder:wine /bin/bash -c "make build -e OS=Darwin -e UNAME_S=Darwin"
@@ -36,8 +37,8 @@ yarn:pre-release:build:mac:
   only:
     - /release.*/
 
-yarn:pre-release:build:win:
-  stage: release
+yarn:build:win:
+  stage: pre-release
   retry: 2
   script:
     - docker run --rm -v ${PWD}:/project electronuserland/builder:wine /bin/bash -c "make build -e OS=Windows_NT"
@@ -48,8 +49,8 @@ yarn:pre-release:build:win:
   only:
     - /release.*/
 
-yarn:pre-release:build:gnu:
-  stage: release
+yarn:build:gnu:
+  stage: pre-release
   retry: 2
   script:
     - docker run --rm -v ${PWD}:/project electronuserland/builder:wine /bin/bash -c "make build -e OS=Linux -e UNAME_S=Linux"
@@ -61,7 +62,7 @@ yarn:pre-release:build:gnu:
     - /release.*/
 
 
-yarn:release:publish:
+yarn:publish:
   stage: release
   retry: 2
   script:
@@ -69,8 +70,8 @@ yarn:release:publish:
   only:
     - master
 
-trigger-repository:
-  stage: postrelease
+trigger_repository:
+  stage: post-release
   script:
     - curl -X POST -F token=${TRIGGER_REPO_TOKEN} -F ref=master https://gitlab.com/api/v4/projects/7744513/trigger/pipeline
   only:
