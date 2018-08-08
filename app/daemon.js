@@ -117,6 +117,7 @@ export function startIPFSDaemon () {
     const disablePubSubIPNS = Settings.get('disablePubSubIPNS')
 
     const args = [
+      '--migrate',
       '--init',
       `--api=${global.IPFS_MULTIADDR_API}`
     ]
