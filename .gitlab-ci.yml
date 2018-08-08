@@ -33,7 +33,7 @@ yarn:release:build:
     - build
     expire_in: 1 week
   only:
-    - release/*
+    - /release.*/
 
 yarn:release:publish:
   stage: release
