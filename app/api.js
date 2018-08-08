@@ -136,6 +136,7 @@ export function addFilesFromFSPath (filePaths, _queryGateways = queryGateways) {
       recursive: true,
       progress: (progress) => {
         app.emit('patch-activity', {
+          finished: progress === size,
           uuid,
           /**
            * {

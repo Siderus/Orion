@@ -36,36 +36,36 @@ const Progress = styled.div`
   }
 `
 
-const Activity = ({ activity }) => {
-  const finished = activity.progress.bytes === activity.size.bytes
+const Activity = ({ activity }) => (
+  <ActivityWrapper>
+    <td>
+      <span className="icon icon-upload" title={activity.type}></span>
+    </td>
+    <td>
+      <NameAndPath>
+        <h4>{activity.filename}</h4>
+        <span>{activity.path}</span>
+      </NameAndPath>
+    </td>
+    <td>
+      <Progress>
+        {
+          activity.interrupted
+            ? 'Interrupted'
+            : activity.finished
+              ? <span>{activity.size.value} {activity.size.unit}</span>
+              : <React.Fragment>
+                <span>{activity.progress.value} {activity.progress.unit} of {activity.size.value} {activity.size.unit}</span>
+                <ProgressBar percentage={activity.progress.bytes / activity.size.bytes * 100} />
+              </React.Fragment>
 
-  return (
-    <ActivityWrapper>
-      <td>
-        <span className="icon icon-upload" title={activity.type}></span>
-      </td>
-      <td>
-        <NameAndPath>
-          <h4>{activity.filename}</h4>
-          <span>{activity.path}</span>
-        </NameAndPath>
-      </td>
-      <td>
-        <Progress>
-          {
-            !finished && <ProgressBar percentage={activity.progress.bytes / activity.size.bytes * 100} />
-          }
-          {
-            finished ? <span>{activity.size.value} {activity.size.unit}</span>
-              : <span>{activity.progress.value} {activity.progress.unit} of {activity.size.value} {activity.size.unit}</span>
-          }
-        </Progress>
-      </td>
-      <td>
-        {moment(activity.timestamp).fromNow()}
-      </td>
-    </ActivityWrapper>
-  )
-}
+        }
+      </Progress>
+    </td>
+    <td>
+      {moment(activity.timestamp).fromNow()}
+    </td>
+  </ActivityWrapper>
+)
 
 export default Activity

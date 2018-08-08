@@ -43,13 +43,15 @@ const Activity = ({ activity }) => {
       <td>
         <Progress>
           {
-            !activity.finished && <ProgressBar indeterminate />
+            !activity.finished && !activity.interrupted && <ProgressBar indeterminate />
           }
           {
-            activity.finished && (activity.size
-              ? <span>{activity.size.value} {activity.size.unit}</span>
-              : 'Unknown'
-            )
+            activity.interrupted
+              ? 'Interrupted'
+              : activity.finished && (activity.size
+                ? <span>{activity.size.value} {activity.size.unit}</span>
+                : 'Unknown'
+              )
           }
         </Progress>
       </td>

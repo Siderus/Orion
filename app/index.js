@@ -133,7 +133,12 @@ function startOrion () {
   if (existsSync(activityLogPath)) {
     const activityLog = JSON.parse(readFileSync(activityLogPath))
     activitiesById = activityLog.activitiesById
-    activities = activityLog.activities
+    // assign the activities as well, but first mark the ones that did not finish
+    activitiesById.forEach(id => {
+      const activity = activityLog.activities[id]
+      activity.interrupted = !activity.finished
+      activities[id] = activity
+    })
   }
 
   // Ask github whether there is an update
@@ -313,7 +318,7 @@ app.on('import-from-hash', (hash) => {
   app.emit('show-activities-window')
 
   importObjectByHash(hash)
-    .then(() => {})
+    .then(() => { })
     .catch(err => {
       dialog.showErrorBox('Gurl, an error occurred!', `${err}`)
     })
