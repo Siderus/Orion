@@ -50,14 +50,15 @@ const Activity = ({ activity }) => (
     <td>
       <Progress>
         {
+          !activity.finished && !activity.interrupted &&
+            <ProgressBar percentage={activity.progress.bytes / activity.size.bytes * 100} />
+        }
+        {
           activity.interrupted
             ? 'Interrupted'
             : activity.finished
               ? <span>{activity.size.value} {activity.size.unit}</span>
-              : <React.Fragment>
-                <span>{activity.progress.value} {activity.progress.unit} of {activity.size.value} {activity.size.unit}</span>
-                <ProgressBar percentage={activity.progress.bytes / activity.size.bytes * 100} />
-              </React.Fragment>
+              : <span>{activity.progress.value} {activity.progress.unit} of {activity.size.value} {activity.size.unit}</span>
 
         }
       </Progress>
