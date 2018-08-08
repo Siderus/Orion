@@ -139,6 +139,10 @@ class ConnectivityPanel extends React.Component {
     document.execCommand('copy')
   }
 
+  /**
+   * If the user wants to have "Add to IPFS via Orion" option in the context menu
+   * we need to register this change in the windows registry. For removal we need to deregister.
+   */
   _handleContextMenuChange = () => {
     if (isWindows) {
       if (this.state.contextMenu) {

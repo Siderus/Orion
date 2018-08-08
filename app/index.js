@@ -4,6 +4,7 @@ import { join as pathJoin } from 'path'
 import pjson from '../package.json'
 import Settings from 'electron-settings'
 import './lib/report/node'
+import './setup-add-requests'
 import rootDir from 'app-root-dir'
 import setupTrayIcon from './setup-tray-icon'
 import { report } from './lib/report/util'
@@ -23,8 +24,7 @@ import {
 import {
   promiseIPFSReady,
   initIPFSClient,
-  importObjectByHash,
-  addFilesFromFSPath
+  importObjectByHash
 } from './api'
 
 import LoadingWindow from './windows/Loading/window'
@@ -271,7 +271,7 @@ function startOrion () {
       // Log that we are ready
       .then(() => {
         console.log('READY')
-        addFilesIfRequested()
+        app.emit('orion-started')
         loadingWindow.webContents.send('set-progress', {
           text: 'Ready!',
           percentage: 100
@@ -408,13 +408,3 @@ app.on('window-all-closed', () => {
     app.quit()
   }
 })
-
-function addFilesIfRequested() {
-  console.log('Orion was started with the arguments:', process.argv)
-  // take all the args after "--add"
-  const addIndex = process.argv.indexOf('--add')
-  if(addIndex > -1) {
-    const filesToAdd = process.argv.splice(addIndex + 1)
-    addFilesFromFSPath(filesToAdd)
-  }
-}
