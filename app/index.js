@@ -122,11 +122,6 @@ function startWelcome () {
  *  8. show storage window
  */
 function startOrion () {
-  // On MacOS it's expected for the app not to close, and to re-open it from Launchpad
-  if (process.platform !== 'darwin') {
-    setupTrayIcon()
-  }
-
   // Ask github whether there is an update
   autoUpdater.checkForUpdates()
   autoUpdater.on('update-available', (info) => {
@@ -270,6 +265,10 @@ function startOrion () {
       // Log that we are ready
       .then(() => {
         console.log('READY')
+        // On MacOS it's expected for the app not to close, and to re-open it from Launchpad
+        if (process.platform !== 'darwin') {
+          setupTrayIcon()
+        }
         loadingWindow.webContents.send('set-progress', {
           text: 'Ready!',
           percentage: 100
@@ -304,7 +303,7 @@ app.on('import-from-hash', (hash) => {
   app.emit('show-activities-window')
 
   importObjectByHash(hash)
-    .then(() => {})
+    .then(() => { })
     .catch(err => {
       dialog.showErrorBox('Gurl, an error occurred!', `${err}`)
     })
