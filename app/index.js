@@ -1,6 +1,7 @@
 import { app, dialog, shell, ipcMain } from 'electron'
 import { autoUpdater } from 'electron-updater'
 import { join as pathJoin } from 'path'
+import { existsSync, writeFileSync, readFileSync } from 'fs'
 import pjson from '../package.json'
 import Settings from 'electron-settings'
 import './lib/report/node'
@@ -35,6 +36,7 @@ import ActivitiesWindow from './windows/Activities/window'
 app.mainWindow = null
 
 // activities window
+const activityLogPath = pathJoin(app.getPath('userData'), 'activity-log.json')
 let activitiesWindow = null
 let activitiesById = []
 let activities = {}
@@ -122,6 +124,18 @@ function startWelcome () {
  *  8. show storage window
  */
 function startOrion () {
+  // retrieve the activity log from file
+  if (existsSync(activityLogPath)) {
+    const activityLog = JSON.parse(readFileSync(activityLogPath))
+    activitiesById = activityLog.activitiesById
+    // assign the activities as well, but first mark the ones that did not finish
+    activitiesById.forEach(id => {
+      const activity = activityLog.activities[id]
+      activity.interrupted = !activity.finished
+      activities[id] = activity
+    })
+  }
+
   // Ask github whether there is an update
   autoUpdater.checkForUpdates()
   autoUpdater.on('update-available', (info) => {
@@ -379,6 +393,8 @@ app.on('will-quit', () => {
   if (global.IPFS_PROCESS) {
     global.IPFS_PROCESS.kill()
   }
+  // persist activities
+  writeFileSync(activityLogPath, JSON.stringify({ activitiesById, activities }))
 })
 
 app.on('window-all-closed', () => {
