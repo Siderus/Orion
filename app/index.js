@@ -1,6 +1,7 @@
 import { app, dialog, shell, ipcMain } from 'electron'
 import { autoUpdater } from 'electron-updater'
 import { join as pathJoin } from 'path'
+import { existsSync, writeFileSync, readFileSync } from 'fs'
 import pjson from '../package.json'
 import Settings from 'electron-settings'
 import './lib/report/node'
@@ -35,6 +36,7 @@ import ActivitiesWindow from './windows/Activities/window'
 app.mainWindow = null
 
 // activities window
+const activityLogPath = pathJoin(app.getPath('userData'), 'activity.log')
 let activitiesWindow = null
 let activitiesById = []
 let activities = {}
@@ -125,6 +127,13 @@ function startOrion () {
   // On MacOS it's expected for the app not to close, and to re-open it from Launchpad
   if (process.platform !== 'darwin') {
     setupTrayIcon()
+  }
+
+  // retrieve the activity log from file
+  if (existsSync(activityLogPath)) {
+    const activityLog = JSON.parse(readFileSync(activityLogPath))
+    activitiesById = activityLog.activitiesById
+    activities = activityLog.activities
   }
 
   // Ask github whether there is an update
@@ -380,6 +389,8 @@ app.on('will-quit', () => {
   if (global.IPFS_PROCESS) {
     global.IPFS_PROCESS.kill()
   }
+  // persist activities
+  writeFileSync(activityLogPath, JSON.stringify({ activitiesById, activities }))
 })
 
 app.on('window-all-closed', () => {
