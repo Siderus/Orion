@@ -124,11 +124,6 @@ function startWelcome () {
  *  8. show storage window
  */
 function startOrion () {
-  // On MacOS it's expected for the app not to close, and to re-open it from Launchpad
-  if (process.platform !== 'darwin') {
-    setupTrayIcon()
-  }
-
   // retrieve the activity log from file
   if (existsSync(activityLogPath)) {
     const activityLog = JSON.parse(readFileSync(activityLogPath))
@@ -284,6 +279,10 @@ function startOrion () {
       // Log that we are ready
       .then(() => {
         console.log('READY')
+        // On MacOS it's expected for the app not to close, and to re-open it from Launchpad
+        if (process.platform !== 'darwin') {
+          setupTrayIcon()
+        }
         loadingWindow.webContents.send('set-progress', {
           text: 'Ready!',
           percentage: 100
