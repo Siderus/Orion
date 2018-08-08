@@ -1,7 +1,7 @@
 import { app } from 'electron'
 import { join as pathJoin, resolve as pathResolve } from 'path'
 import { existsSync, readFileSync, writeFileSync, watchFile } from 'fs'
-import { addFilesFromFSPath } from './api'
+import { addFilesFromFSPath } from './../api'
 
 const addRequestsFile = pathJoin(app.getPath('userData'), 'add-requests.json')
 
