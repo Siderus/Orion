@@ -36,7 +36,7 @@ import ActivitiesWindow from './windows/Activities/window'
 app.mainWindow = null
 
 // activities window
-const activityLogPath = pathJoin(app.getPath('userData'), 'activity.log')
+const activityLogPath = pathJoin(app.getPath('userData'), 'activity-log.json')
 let activitiesWindow = null
 let activitiesById = []
 let activities = {}
