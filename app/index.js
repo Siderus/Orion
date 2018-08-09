@@ -218,9 +218,9 @@ function startOrion () {
               percentage: 10
             })
           })
+          .then(ensureRepoMigrated)
           // Then change the json of the configuration file
           .then(ensureDaemonConfigured)
-          .then(ensureRepoMigrated)
           .then(() => {
             // Show a message that we are starting the IPFS daemon
             console.log('IPFS Daemon: Starting')

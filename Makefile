@@ -81,9 +81,7 @@ _prepkg: dep _test_variables
 	NODE_ENV=${NODE_ENV} ./node_modules/.bin/electron-compile app
 .PHONY: _prepkg
 
-prepare_binaries:
-	$(MAKE) prepare_ipfs_bin
-	$(MAKE) prepare_repo_migrations_bin
+prepare_binaries: prepare_ipfs_bin prepare_repo_migrations_bin
 .PHONY: prepare_binaries
 
 # Download the go-ipfs binary from the URL
