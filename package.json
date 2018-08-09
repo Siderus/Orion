@@ -86,7 +86,8 @@
       "app/**/*",
       "docs/**",
       ".cache/**/*",
-      "go-ipfs/**"
+      "go-ipfs/**",
+      "fs-repo-migrations/**"
     ],
     "asar": false,
     "directories": {
