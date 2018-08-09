@@ -99,7 +99,7 @@ prepare_repo_migrations_bin: _test_variables
 	curl -o ./${REPO_MIGRATIONS_BINARY_NAME} ${REPO_MIGRATIONS_BINARY_URL}
 	rm -rf ./fs-repo-migrations
 	$(DECOMPRESSOR) ${REPO_MIGRATIONS_BINARY_NAME}
-	rm ${IPFS_BINARY_NAME}
+	rm ${REPO_MIGRATIONS_BINARY_NAME}
 .PHONY: prepare_repo_migrations_bin
 
 build_unpacked: _test_variables prepare_binaries _prepkg
