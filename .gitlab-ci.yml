@@ -68,7 +68,7 @@ yarn:release:mac:
   stage: release
   retry: 2
   script:
-    - docker run --rm -v ${PWD}:/project electronuserland/builder:wine /bin/bash -c "make release -e OS=Darwin -e UNAME_S=Darwin"
+    - docker run --rm -e GH_TOKEN="${GH_TOKEN}" -v ${PWD}:/project electronuserland/builder:wine /bin/bash -c "make release -e OS=Darwin -e UNAME_S=Darwin"
   only:
     - master
 
@@ -76,7 +76,7 @@ yarn:release:win:
   stage: release
   retry: 2
   script:
-    - docker run --rm -v ${PWD}:/project electronuserland/builder:wine /bin/bash -c "make release -e OS=Windows_NT"
+    - docker run --rm -e GH_TOKEN="${GH_TOKEN}" -v ${PWD}:/project electronuserland/builder:wine /bin/bash -c "make release -e OS=Windows_NT"
   only:
     - master
 
@@ -84,7 +84,7 @@ yarn:release:gnu:
   stage: release
   retry: 2
   script:
-    - docker run --rm -v ${PWD}:/project electronuserland/builder:wine /bin/bash -c "make release -e OS=Linux -e UNAME_S=Linux"
+    - docker run --rm -e GH_TOKEN="${GH_TOKEN}" -v ${PWD}:/project electronuserland/builder:wine /bin/bash -c "make release -e OS=Linux -e UNAME_S=Linux"
   only:
     - master
 
