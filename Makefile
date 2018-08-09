@@ -115,7 +115,7 @@ build_all: clean
 .PHONY: build_all
 
 release: _test_variables prepare_binaries _prepkg
-	@(test ! -z "$(REPO_KEY)" && echo "$(REPO_KEY)" | gpg --import /dev/stdin) || echo -n # checks if there is a REPO_KEY env var and imports the key from it
+	@test -n "$(GH_TOKEN)" || (echo "Variable GH_TOKEN not set"; exit 1)
 	./node_modules/.bin/build ${BUILD_ARGS} --publish onTagOrDraft
 .PHONY: release
 
