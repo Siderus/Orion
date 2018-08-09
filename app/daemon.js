@@ -1,4 +1,4 @@
-import { spawn, exec } from 'child_process'
+import { spawn, exec, execSync } from 'child_process'
 
 import {
   readFileSync,
@@ -117,7 +117,6 @@ export function startIPFSDaemon () {
     const disablePubSubIPNS = Settings.get('disablePubSubIPNS')
 
     const args = [
-      '--migrate',
       '--init',
       `--api=${global.IPFS_MULTIADDR_API}`
     ]
@@ -228,6 +227,27 @@ export function ensureDaemonConfigured () {
       if (err) return reject(err)
       return resolve()
     })
+  })
+}
+
+/**
+ * This will ensure the ipfs repo version is compatible with the daemon
+ * by running migrations on the ipfs repo
+ */
+export function ensureRepoMigrated () {
+  return new Promise((resolve, reject) => {
+    let options
+    if (global.IPFS_REPO_PATH.length > 0) {
+      options = { env: { IPFS_PATH: global.IPFS_REPO_PATH } }
+    }
+    // yes to all
+    const cmd = `${global.REPO_MIGRATIONS_BINARY_PATH} -y`
+
+    console.log('Running', cmd, options)
+    const result = execSync(cmd, options).toString('utf8')
+
+    console.log('Finished', cmd, 'with: ', result)
+    resolve()
   })
 }
 

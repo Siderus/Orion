@@ -3,6 +3,7 @@
   "version": "0.8.0",
   "env": "development",
   "ipfsVersion": "v0.4.17",
+  "ipfsRepoMigrationsVersion": "v1.4.0",
   "statsToken": "9d407c14d888a212cf04c397a95acb7b",
   "description": "Siderus Orion is an easy-to-use IPFS desktop client",
   "main": "app/entry.js",

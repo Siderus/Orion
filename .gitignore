@@ -6,6 +6,7 @@ Orion*
 coverage
 yarn-error.log
 go-ipfs*
+fs-repo-migrations*
 /repo/
 .dnslink-update
 .ppa-script
