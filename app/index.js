@@ -15,6 +15,7 @@ import {
   startIPFSDaemon,
   ensuresIPFSInitialised,
   ensureDaemonConfigured,
+  ensureRepoMigrated,
   getSiderusPeers,
   connectToCMD,
   addBootstrapAddr,
@@ -47,6 +48,7 @@ global.IPFS_PROCESS = null
 
 // Sets default values for IPFS configurations
 global.IPFS_BINARY_PATH = `${rootDir.get()}/go-ipfs/ipfs`
+global.REPO_MIGRATIONS_BINARY_PATH = `${rootDir.get()}/fs-repo-migrations/fs-repo-migrations`
 global.IPFS_MULTIADDR_API = '/ip4/127.0.0.1/tcp/5001'
 global.IPFS_MULTIADDR_GATEWAY = '/ip4/127.0.0.1/tcp/8080'
 global.IPFS_MULTIADDR_SWARM = ['/ip4/0.0.0.0/tcp/4001', '/ip6/::/tcp/4001']
@@ -194,6 +196,7 @@ function startOrion () {
       .then((shouldStart) => {
         // Logs the path and configuration used
         console.log('IPFS_BINARY_PATH', global.IPFS_BINARY_PATH)
+        console.log('REPO_MIGRATIONS_BINARY_PATH', global.REPO_MIGRATIONS_BINARY_PATH)
         console.log('IPFS_MULTIADDR_API', global.IPFS_MULTIADDR_API)
         console.log('IPFS_MULTIADDR_GATEWAY', global.IPFS_MULTIADDR_GATEWAY)
         console.log('IPFS_MULTIADDR_SWARM', global.IPFS_MULTIADDR_SWARM)
@@ -216,6 +219,7 @@ function startOrion () {
               percentage: 10
             })
           })
+          .then(ensureRepoMigrated)
           // Then change the json of the configuration file
           .then(ensureDaemonConfigured)
           .then(() => {
