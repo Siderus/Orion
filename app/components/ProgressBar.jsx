@@ -16,7 +16,7 @@ const ProgressBarRoot = styled.div`
   overflow: hidden;
 
   span {
-    width: ${props => props.percentage || 50}%;
+    width: ${props => props.percentage}%;
     display: block;
     height: 4px;
     background-color: rgb(127,127,127);
@@ -30,7 +30,7 @@ const ProgressBarRoot = styled.div`
 `
 
 const ProgressBar = ({ percentage = 0, indeterminate }) => (
-  <ProgressBarRoot percentage={percentage} indeterminate={indeterminate}>
+  <ProgressBarRoot percentage={indeterminate ? 50 : percentage} indeterminate={indeterminate}>
     <span></span>
   </ProgressBarRoot>
 )

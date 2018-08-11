@@ -8,6 +8,7 @@ import ImportWindow from './windows/Import/window'
 import SettingsWindow from './windows/Settings/window'
 import ResolveIPNS from './windows/ResolveIPNS/window'
 import PublishToIPNS from './windows/PublishToIPNS/window'
+import AboutWindow from './windows/About/window'
 
 import { addFilesPaths } from './windows/Storage/fileIntegration'
 
@@ -260,6 +261,17 @@ if (process.platform === 'darwin') {
   })
 
   addUpdateMenuItems(template[0].submenu, 1)
+} else {
+  // process.platform !== 'darwin'
+  // on windows and linux only
+  const aboutOrion = {
+    label: 'About Orion',
+    click () {
+      AboutWindow.create(app)
+    }
+  }
+
+  template[4].submenu.unshift(aboutOrion)
 }
 
 if (process.platform === 'win32') {
