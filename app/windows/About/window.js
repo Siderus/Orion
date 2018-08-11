@@ -18,10 +18,10 @@ module.exports = {}
 module.exports.create = function createResolveIPNSWindow (app) {
   // Create the browser modal window.
   let thisWindow = new BrowserWindowClass({
-    width: 260,
-    minWidth: 260,
-    height: 330,
-    minHeight: 330,
+    width: 600,
+    minWidth: 600,
+    height: 400,
+    minHeight: 400,
 
     maximizable: false,
     resizable: false,
