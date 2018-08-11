@@ -146,6 +146,11 @@ const template = [{
   label: 'Help',
   role: 'help',
   submenu: [{
+    label: 'About Orion',
+    click () {
+      AboutWindow.create(app)
+    }
+  }, {
     label: 'Suggest new feature',
     click () {
       electron.shell.openExternal('https://github.com/Siderus/Orion/issues/new?template=Feature_request.md')
@@ -212,11 +217,6 @@ if (process.platform === 'darwin') {
   template.unshift({
     label: name,
     submenu: [{
-      label: `About ${name}`,
-      role: 'about'
-    }, {
-      type: 'separator'
-    }, {
       label: 'Services',
       role: 'services',
       submenu: []
@@ -261,17 +261,6 @@ if (process.platform === 'darwin') {
   })
 
   addUpdateMenuItems(template[0].submenu, 1)
-} else {
-  // process.platform !== 'darwin'
-  // on windows and linux only
-  const aboutOrion = {
-    label: 'About Orion',
-    click () {
-      AboutWindow.create(app)
-    }
-  }
-
-  template[4].submenu.unshift(aboutOrion)
 }
 
 if (process.platform === 'win32') {
