@@ -23,7 +23,7 @@ function WelcomePage ({ onNext }) {
           <OrionLogo width='150px' height='150px' />
           <h1>Siderus Orion</h1>
           <h3>Welcome</h3>
-          <p>Siderus Orion is the easiest way to start using the decentralised web with IPFS and Siderus Network. It supports a larger number of dApps as wel as the IPFS Browser Companion, to speed up your connection when surfing the decentralised web.</p>
+          <p>Siderus Orion is the easiest way to start using the decentralised web with IPFS and Siderus Network. It supports a larger number of dApps as well as the IPFS Browser Companion, to speed up your connection when surfing the decentralised web.</p>
           <p>This wizard will help you with the initial requirements.</p>
           <Button text="Subscribe to Siderus Newsletter" ptStyle="positive" ptSize="large" onClick={handleSubscribe} />
         </Centered>
