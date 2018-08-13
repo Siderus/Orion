@@ -84,7 +84,7 @@
   "build": {
     "publish": [{
       "provider": "generic",
-      "url": "https://get.siderus.io"
+      "url": "https://get.siderus.io/orion"
     }],
     "appId": "io.siderus.orion",
     "files": [
