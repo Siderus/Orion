@@ -25,6 +25,7 @@ yarn:test:
   only:
     - master
     - /release.*/
+    - tags
 
 
 yarn:build:mac:
