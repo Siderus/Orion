@@ -149,7 +149,7 @@ function startOrion () {
       defaultId: 1
     })
     if (btnId === 1) {
-      shell.openExternal(`${pjson.repository}/releases/latest`)
+      shell.openExternal(pjson.releasePage)
     }
   })
   autoUpdater.on('update-downloaded', (info) => {
