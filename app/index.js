@@ -363,8 +363,22 @@ ipcMain.on('update-activities', () => {
 })
 
 ipcMain.on('clear-activities', () => {
-  activitiesById = []
-  activities = {}
+  console.log('before', activities, activitiesById)
+  const ongoingActivitiesById = []
+  const ongoingActivities = {}
+
+  activitiesById.forEach(uuid => {
+    const activity = activities[uuid]
+
+    if (!activity.finished) {
+      ongoingActivitiesById.push(activity.uuid)
+      ongoingActivities[activity.uuid] = activity
+    }
+  })
+
+  activitiesById = ongoingActivitiesById
+  activities = ongoingActivities
+  console.log('after', activities, activitiesById)
   updateActivitiesWindow()
 })
 
