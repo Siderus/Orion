@@ -363,7 +363,6 @@ ipcMain.on('update-activities', () => {
 })
 
 ipcMain.on('clear-activities', () => {
-  console.log('before', activities, activitiesById)
   const ongoingActivitiesById = []
   const ongoingActivities = {}
 
@@ -378,7 +377,6 @@ ipcMain.on('clear-activities', () => {
 
   activitiesById = ongoingActivitiesById
   activities = ongoingActivities
-  console.log('after', activities, activitiesById)
   updateActivitiesWindow()
 })
 
