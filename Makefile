@@ -46,6 +46,7 @@ clean:
 	rm -rf coverage
 	rm -rf node_modules
 	rm -rf repo
+	rm -rf fs-repo-migrations
 .PHONY: clean
 
 # Yarn packages, tests and linting
