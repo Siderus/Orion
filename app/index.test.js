@@ -41,7 +41,7 @@ describe('index.js', () => {
         }
       }
       // act
-      const result = AppIndex.handleClearActivities(activitiesById, activities)
+      const result = AppIndex.filterUnfinishedActivities(activitiesById, activities)
       // assert
       expect(result.activitiesById).toEqual([1])
       expect(result.activities).toEqual({

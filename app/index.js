@@ -362,7 +362,14 @@ ipcMain.on('update-activities', () => {
   updateActivitiesWindow()
 })
 
-export const handleClearActivities = (activitiesById, activities) => {
+/**
+ * This function filters the given activities and activitiesById,
+ * returning new objects with the unfinished activities only.
+ *
+ * @param {Array} activitiesById
+ * @param {Object} activities
+ */
+export const filterUnfinishedActivities = (activitiesById, activities) => {
   const ongoingActivitiesById = []
   const ongoingActivities = {}
 
@@ -382,7 +389,7 @@ export const handleClearActivities = (activitiesById, activities) => {
 }
 
 ipcMain.on('clear-activities', () => {
-  const ongoing = handleClearActivities(activitiesById, activities)
+  const ongoing = filterUnfinishedActivities(activitiesById, activities)
 
   activitiesById = ongoing.activitiesById
   activities = ongoing.activities
