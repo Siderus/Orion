@@ -39,8 +39,8 @@ app.mainWindow = null
 // activities window
 const activityLogPath = pathJoin(app.getPath('userData'), 'activity-log.json')
 let activitiesWindow = null
-let activitiesById = []
-let activities = {}
+export let activitiesById = []
+export let activities = {}
 
 // A little space for IPFS processes
 global.IPFS_PROCESS = null
@@ -362,7 +362,7 @@ ipcMain.on('update-activities', () => {
   updateActivitiesWindow()
 })
 
-ipcMain.on('clear-activities', () => {
+export const handleClearActivities = (activitiesById, activities) => {
   const ongoingActivitiesById = []
   const ongoingActivities = {}
 
@@ -375,8 +375,18 @@ ipcMain.on('clear-activities', () => {
     }
   })
 
-  activitiesById = ongoingActivitiesById
-  activities = ongoingActivities
+  return {
+    activitiesById: ongoingActivitiesById,
+    activities: ongoingActivities
+  }
+}
+
+ipcMain.on('clear-activities', () => {
+  const ongoing = handleClearActivities(activitiesById, activities)
+
+  activitiesById = ongoing.activitiesById
+  activities = ongoing.activities
+
   updateActivitiesWindow()
 })
 
