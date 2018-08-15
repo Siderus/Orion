@@ -12,6 +12,7 @@
     "lint": "eslint app/ --ext .jsx --ext .js",
     "start": "electron ."
   },
+  "releasePage": "https://orion.siderus.io",
   "repository": "https://github.com/siderus/Orion",
   "keywords": [
     "electron",
@@ -82,6 +83,10 @@
     "testURL": "http://localhost/"
   },
   "build": {
+    "publish": [{
+      "provider": "generic",
+      "url": "https://get.siderus.io/orion"
+    }],
     "appId": "io.siderus.orion",
     "files": [
       "app/**/*",

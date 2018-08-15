@@ -25,6 +25,7 @@ yarn:test:
   only:
     - master
     - /release.*/
+    - tags
 
 
 yarn:build:mac:
@@ -69,24 +70,36 @@ yarn:release:mac:
   retry: 2
   script:
     - docker run --rm -e GH_TOKEN="${GH_TOKEN}" -v ${PWD}:/project electronuserland/builder:wine /bin/bash -c "make release -e OS=Darwin -e UNAME_S=Darwin"
+  artifacts:
+    paths:
+    - build
+    expire_in: 3 months
   only:
-    - master
+    - tags
 
 yarn:release:win:
   stage: release
   retry: 2
   script:
     - docker run --rm -e GH_TOKEN="${GH_TOKEN}" -v ${PWD}:/project electronuserland/builder:wine /bin/bash -c "make release -e OS=Windows_NT"
+  artifacts:
+    paths:
+    - build
+    expire_in: 3 months
   only:
-    - master
+    - tags
 
 yarn:release:gnu:
   stage: release
   retry: 2
   script:
     - docker run --rm -e GH_TOKEN="${GH_TOKEN}" -v ${PWD}:/project electronuserland/builder:wine /bin/bash -c "make release -e OS=Linux -e UNAME_S=Linux"
+  artifacts:
+    paths:
+    - build
+    expire_in: 3 months
   only:
-    - master
+    - tags
 
 
 trigger_repository:
@@ -94,4 +107,4 @@ trigger_repository:
   script:
     - curl -X POST -F token=${TRIGGER_REPO_TOKEN} -F ref=master https://gitlab.com/api/v4/projects/7744513/trigger/pipeline
   only:
-    - master
+    - tags

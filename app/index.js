@@ -40,8 +40,8 @@ app.mainWindow = null
 // activities window
 const activityLogPath = pathJoin(app.getPath('userData'), 'activity-log.json')
 let activitiesWindow = null
-let activitiesById = []
-let activities = {}
+export let activitiesById = []
+export let activities = {}
 
 // A little space for IPFS processes
 global.IPFS_PROCESS = null
@@ -150,7 +150,7 @@ function startOrion () {
       defaultId: 1
     })
     if (btnId === 1) {
-      shell.openExternal(`${pjson.repository}/releases/latest`)
+      shell.openExternal(pjson.releasePage)
     }
   })
   autoUpdater.on('update-downloaded', (info) => {
@@ -364,9 +364,38 @@ ipcMain.on('update-activities', () => {
   updateActivitiesWindow()
 })
 
+/**
+ * This function filters the given activities and activitiesById,
+ * returning new objects with the unfinished activities only.
+ *
+ * @param {Array} activitiesById
+ * @param {Object} activities
+ */
+export const filterUnfinishedActivities = (activitiesById, activities) => {
+  const ongoingActivitiesById = []
+  const ongoingActivities = {}
+
+  activitiesById.forEach(uuid => {
+    const activity = activities[uuid]
+
+    if (!activity.finished) {
+      ongoingActivitiesById.push(activity.uuid)
+      ongoingActivities[activity.uuid] = activity
+    }
+  })
+
+  return {
+    activitiesById: ongoingActivitiesById,
+    activities: ongoingActivities
+  }
+}
+
 ipcMain.on('clear-activities', () => {
-  activitiesById = []
-  activities = {}
+  const ongoing = filterUnfinishedActivities(activitiesById, activities)
+
+  activitiesById = ongoing.activitiesById
+  activities = ongoing.activities
+
   updateActivitiesWindow()
 })
 

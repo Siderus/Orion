@@ -8,6 +8,7 @@ import ImportWindow from './windows/Import/window'
 import SettingsWindow from './windows/Settings/window'
 import ResolveIPNS from './windows/ResolveIPNS/window'
 import PublishToIPNS from './windows/PublishToIPNS/window'
+import AboutWindow from './windows/About/window'
 
 import { addFilesPaths } from './windows/Storage/fileIntegration'
 
@@ -206,14 +207,18 @@ function findReopenMenuItem () {
   return reopenMenuItem
 }
 
+const aboutOrion = {
+  label: 'About Orion',
+  click () {
+    AboutWindow.create(app)
+  }
+}
+
 if (process.platform === 'darwin') {
   const name = electron.app.getName()
   template.unshift({
     label: name,
-    submenu: [{
-      label: `About ${name}`,
-      role: 'about'
-    }, {
+    submenu: [aboutOrion, {
       type: 'separator'
     }, {
       label: 'Services',
@@ -260,6 +265,9 @@ if (process.platform === 'darwin') {
   })
 
   addUpdateMenuItems(template[0].submenu, 1)
+} else {
+  // on windows and linux this menu goes under Help
+  template[4].submenu.unshift(aboutOrion)
 }
 
 if (process.platform === 'win32') {
