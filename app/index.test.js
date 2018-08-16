@@ -2,6 +2,9 @@
 import * as AppIndex from './index'
 
 jest.mock('./lib/report/node', () => ({}))
+jest.mock('./lib/add-requests', () => ({
+  checkForAddRequests: jest.fn()
+}))
 jest.mock('./setup-tray-icon', () => ({}))
 jest.mock('./singleInstance', () => ({}))
 jest.mock('./stats', () => ({}))
