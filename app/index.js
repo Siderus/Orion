@@ -9,6 +9,7 @@ import rootDir from 'app-root-dir'
 import setupTrayIcon from './setup-tray-icon'
 import { report } from './lib/report/util'
 import { trackEvent } from './stats'
+import { checkForAddRequests } from './lib/add-requests'
 
 import {
   startIPFSDaemon,
@@ -32,6 +33,9 @@ import LoadingWindow from './windows/Loading/window'
 import StorageWindow from './windows/Storage/window'
 import WelcomeWindow from './windows/Welcome/window'
 import ActivitiesWindow from './windows/Activities/window'
+
+// we support adding files if you start the app with the `--add` param
+checkForAddRequests()
 
 // Let's create the main window
 app.mainWindow = null
@@ -283,6 +287,7 @@ function startOrion () {
       // Log that we are ready
       .then(() => {
         console.log('READY')
+        app.emit('orion-started')
         // On MacOS it's expected for the app not to close, and to re-open it from Launchpad
         if (process.platform !== 'darwin') {
           setupTrayIcon()
