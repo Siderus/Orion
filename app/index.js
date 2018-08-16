@@ -5,11 +5,11 @@ import { existsSync, writeFileSync, readFileSync } from 'fs'
 import pjson from '../package.json'
 import Settings from 'electron-settings'
 import './lib/report/node'
-import './lib/add-requests'
 import rootDir from 'app-root-dir'
 import setupTrayIcon from './setup-tray-icon'
 import { report } from './lib/report/util'
 import { trackEvent } from './stats'
+import { checkForAddRequests } from './lib/add-requests'
 
 import {
   startIPFSDaemon,
@@ -33,6 +33,9 @@ import LoadingWindow from './windows/Loading/window'
 import StorageWindow from './windows/Storage/window'
 import WelcomeWindow from './windows/Welcome/window'
 import ActivitiesWindow from './windows/Activities/window'
+
+// we support adding files if you start the app with the `--add` param
+checkForAddRequests()
 
 // Let's create the main window
 app.mainWindow = null
