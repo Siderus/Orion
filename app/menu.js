@@ -146,6 +146,11 @@ const template = [{
   label: 'Help',
   role: 'help',
   submenu: [{
+    label: 'Chat with us',
+    click () {
+      electron.shell.openExternal('https://riot.im/app/#/room/#orion:matrix.org')
+    }
+  }, {
     label: 'Suggest new feature',
     click () {
       electron.shell.openExternal('https://github.com/Siderus/Orion/issues/new?template=Feature_request.md')
