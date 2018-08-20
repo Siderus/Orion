@@ -1,5 +1,4 @@
 import { app, dialog, shell, ipcMain } from 'electron'
-import './prepare-app'
 import { autoUpdater } from 'electron-updater'
 import { join as pathJoin } from 'path'
 import { existsSync, writeFileSync, readFileSync } from 'fs'
