@@ -34,6 +34,8 @@ import StorageWindow from './windows/Storage/window'
 import WelcomeWindow from './windows/Welcome/window'
 import ActivitiesWindow from './windows/Activities/window'
 
+import * as WinShell from './util/win-shell'
+
 // we support adding files if you start the app with the `--add` param
 checkForAddRequests()
 
@@ -111,11 +113,26 @@ function startWelcome () {
     app.mainWindow = welcomeWindow
     welcomeWindow.on('closed', () => {
       if (Settings.get('welcomeVersion') === 1) {
+        enableContextMenu()
         return resolve()
       }
       app.quit()
     })
   })
+}
+
+/**
+ * This adds the option "Add to IPFS via Orion" to the context menu of the OS, for files 
+ * and directories. Currently only on windows.
+ */
+function enableContextMenu () {
+  const isWindows = process.platform === 'win32'
+
+  if (isWindows) {
+    WinShell.contextMenus.register().then(() => {
+      console.log('Successfully added Orion to the windows context menu!')
+    })
+  }
 }
 
 /**
