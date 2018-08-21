@@ -34,7 +34,7 @@ import StorageWindow from './windows/Storage/window'
 import WelcomeWindow from './windows/Welcome/window'
 import ActivitiesWindow from './windows/Activities/window'
 
-import { enableContextMenu } from './lib/os-context-menu'
+import { ensureContextMenuEnabled } from './lib/os-context-menu'
 
 // we support adding files if you start the app with the `--add` param
 checkForAddRequests()
@@ -113,9 +113,6 @@ function startWelcome () {
     app.mainWindow = welcomeWindow
     welcomeWindow.on('closed', () => {
       if (Settings.get('welcomeVersion') === 1) {
-        // now that the user went through the welcome window
-        // enable the "Add to IPFS via Orion" option
-        enableContextMenu()
         return resolve()
       }
       app.quit()
@@ -135,6 +132,8 @@ function startWelcome () {
  *  8. show storage window
  */
 function startOrion () {
+  // ensure the "Add to IPFS via Orion" option is enabled
+  ensureContextMenuEnabled()
   // retrieve the activity log from file
   if (existsSync(activityLogPath)) {
     const activityLog = JSON.parse(readFileSync(activityLogPath))
