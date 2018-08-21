@@ -5,7 +5,7 @@ import { trackEvent } from '../../../stats'
 
 import { Pane, Button, CheckBox } from 'react-photonkit'
 import Input from '../../../components/Input'
-import * as WinShell from '../../../util/win-shell'
+import * as WinShell from '../../../lib/os-context-menu/win-shell'
 
 const GatewayEnum = {
   SIDERUS: 'https://siderus.io',
