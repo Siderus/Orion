@@ -5,7 +5,6 @@ import { trackEvent } from '../../../stats'
 
 import { Pane, Button, CheckBox } from 'react-photonkit'
 import Input from '../../../components/Input'
-import * as WinShell from '../../../util/win-shell'
 
 const GatewayEnum = {
   SIDERUS: 'https://siderus.io',
@@ -13,7 +12,6 @@ const GatewayEnum = {
 }
 
 const isMac = process.platform === 'darwin'
-const isWindows = process.platform === 'win32'
 
 /**
  * Connectivity Panel
@@ -25,8 +23,7 @@ class ConnectivityPanel extends React.Component {
     skipGatewayQuery: true,
     runInBackground: true,
     disablePubSubIPNS: false,
-    allowUserTracking: false,
-    contextMenu: false
+    allowUserTracking: false
   }
 
   componentDidMount () {
@@ -49,14 +46,6 @@ class ConnectivityPanel extends React.Component {
         disablePubSubIPNS: values[3] || false,
         allowUserTracking: values[4] || false
       }))
-    /**
-     * Retrieve settings from Windows Registry
-     */
-    if (isWindows) {
-      WinShell.contextMenus.isRegistered().then(status => {
-        this.setState({ contextMenu: status })
-      })
-    }
   }
 
   _handleSkipGatewayQueryChange = (event) => {
@@ -139,24 +128,6 @@ class ConnectivityPanel extends React.Component {
     document.execCommand('copy')
   }
 
-  /**
-   * If the user wants to have "Add to IPFS via Orion" option in the context menu
-   * we need to register this change in the windows registry. For removal we need to deregister.
-   */
-  _handleContextMenuChange = () => {
-    if (isWindows) {
-      if (this.state.contextMenu) {
-        WinShell.contextMenus.deregister().then(() => {
-          this.setState({ contextMenu: false })
-        })
-      } else {
-        WinShell.contextMenus.register().then(() => {
-          this.setState({ contextMenu: true })
-        })
-      }
-    }
-  }
-
   render () {
     if (this.props.navigationStore.selected !== 0) return null
     if (!this.props.informationStore) return null
@@ -227,14 +198,6 @@ class ConnectivityPanel extends React.Component {
           onChange={this._handleUserTrackingChange}
         />
 
-        {
-          isWindows &&
-          <CheckBox
-            label='Enable "Add to IPFS" option to files and folders'
-            checked={this.state.contextMenu}
-            onChange={this._handleContextMenuChange}
-          />
-        }
       </Pane>
     )
   }
