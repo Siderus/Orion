@@ -6,8 +6,10 @@ import { Icon } from 'react-photonkit'
 import { saveFileToPath, publishToIPNS } from '../../../api'
 
 import {
-  proptAndRemoveObjects, openInBrowser
+  proptAndRemoveObjects,
+  openInBrowser
 } from '../fileIntegration'
+import shareMenuTemplate from '../../../util/shareMenuTemplate'
 
 import DetailsWindow from '../../Details/window'
 import formatElement from '../../../util/format-element'
@@ -24,6 +26,10 @@ class StorageElement extends React.Component {
         click: (item) => {
           openInBrowser([this.props.element.hash])
         }
+      },
+      {
+        label: 'Share',
+        submenu: shareMenuTemplate(this.props.element.hash)
       },
       {
         type: 'separator'
@@ -145,20 +151,20 @@ class StorageElement extends React.Component {
 
     return (
       <tr
-        className={ selected ? 'active' : ''}
+        className={selected ? 'active' : ''}
         onClick={(event) => { this._handleRowSelection(event, el) }}
         key={el.hash}
         onContextMenu={this._handleContextMenu.bind(this)}
       >
 
-        { this.props.storageStore
+        {this.props.storageStore
           ? <td>
             <input
               checked={selected}
               type='checkbox'
             />
           </td>
-          : <td></td> }
+          : <td></td>}
 
         <td>
           {

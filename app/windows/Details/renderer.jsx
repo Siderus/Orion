@@ -18,6 +18,7 @@ import cx from 'classnames'
 import { Window, Toolbar, Actionbar, ButtonGroup } from 'react-photonkit'
 import Button from '../../components/Button'
 import { trackEvent } from '../../stats'
+import shareMenuTemplate from '../../util/shareMenuTemplate'
 
 // Load Components
 import InformationTab from './Components/InformationTab'
@@ -37,6 +38,8 @@ class DetailsWindow extends React.Component {
   componentDidMount () {
     trackEvent('DetailsWindowOpen', {})
     promiseIPFSReady().then(this.fetchData)
+
+    this.shareMenu = remote.Menu.buildFromTemplate(shareMenuTemplate(hash))
   }
 
   fetchData = () => {
@@ -76,6 +79,10 @@ class DetailsWindow extends React.Component {
 
   handleOpenInBrowser = () => {
     openInBrowser([hash])
+  }
+
+  handleShare = () => {
+    this.shareMenu.popup({})
   }
 
   handlePin = () => {
@@ -135,6 +142,12 @@ class DetailsWindow extends React.Component {
               text="Open in Browser"
               glyph='publish'
               onClick={this.handleOpenInBrowser}
+              pullRight
+            />
+            <Button
+              text="Share"
+              glyph='share'
+              onClick={this.handleShare}
               pullRight
             />
           </Actionbar>
