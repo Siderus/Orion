@@ -113,6 +113,8 @@ function startWelcome () {
     app.mainWindow = welcomeWindow
     welcomeWindow.on('closed', () => {
       if (Settings.get('welcomeVersion') === 1) {
+        // now that the user went through the welcome window
+        // enable the "Add to IPFS via Orion" option
         enableContextMenu()
         return resolve()
       }
