@@ -20,6 +20,7 @@ class Sidebar extends React.Component {
           <NavTitle key='title'>Settings and Info</NavTitle>
           <NavGroupItem key='con' glyph="rss" text="Connectivity" eventKey={0} />
           <NavGroupItem key= 'rep' glyph="database" text="Repository" eventKey={1} />
+          <NavGroupItem key= 'peers' glyph="users" text="Peers" eventKey={2} />
         </NavGroup>
       </Pane>
     )
