@@ -1,6 +1,5 @@
 import * as api from './api'
 import ipfsApi from 'ipfs-api'
-import multiaddr from 'multiaddr'
 import request from 'request-promise-native'
 import pjson from '../package'
 
@@ -174,7 +173,7 @@ describe('api.js', () => {
         })
     })
 
-    it('should connect to a node given a multiaddr', () => {
+    it('should connect to a node given a string multiaddr', () => {
       const address = '/ip4/0.0.0.0/tcp/4001/ipfs/QmXbUn6BD4'
 
       // mock
@@ -187,7 +186,34 @@ describe('api.js', () => {
 
       // run
       return api.connectTo(address).then(() => {
-        expect(connect).toHaveBeenCalledWith(multiaddr(address))
+        expect(connect).toHaveBeenCalledWith(address)
+      })
+    })
+  })
+
+  describe('addBootstrapAddr', () => {
+    it('should reject when IPFS is not started', () => {
+      api.setClientInstance(null)
+      return api.addBootstrapAddr('/ip4/0.0.0.0/tcp/4001/')
+        .catch(err => {
+          expect(err).toBe(ERROR_IPFS_UNAVAILABLE)
+        })
+    })
+
+    it('should add the node to the bootstrap list', () => {
+      const address = '/ip4/0.0.0.0/tcp/4001/ipfs/QmXbUn6BD4'
+
+      // mock
+      const add = jest.fn().mockReturnValue(Promise.resolve())
+      api.setClientInstance({
+        bootstrap: {
+          add
+        }
+      })
+
+      // run
+      return api.addBootstrapAddr(address).then(() => {
+        expect(add).toHaveBeenCalledWith(address)
       })
     })
   })

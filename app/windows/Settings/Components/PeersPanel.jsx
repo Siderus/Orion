@@ -45,9 +45,12 @@ class PeersPanel extends React.Component {
     if (!this.props.informationStore.loaded) return null
 
     const { addresses } = this.props.informationStore.peer
-    const nonLocalHostAdresses = addresses.filter(addr =>
+    let nonLocalHostAdresses = addresses.filter(addr =>
       !addr.includes('::1') && !addr.includes('127.0.0.1')
     )
+
+    // reverse the array to show the public ip first
+    nonLocalHostAdresses = nonLocalHostAdresses.reverse()
 
     const { nodeToConnect, addToBootstrap } = this.state
 
