@@ -17,6 +17,7 @@ import { initIPFSClient, promiseIPFSReady } from '../../api'
 import Sidebar from './Components/Sidebar'
 import RepositoryPanel from './Components/RepositoryPanel'
 import ConnectivityPanel from './Components/ConnectivityPanel'
+import PeersPanel from './Components/PeersPanel'
 
 // Load MobX Stores
 import NavigationStore from './Stores/Navigation'
@@ -43,6 +44,11 @@ class SettingsWindow extends React.Component {
             />
 
             <RepositoryPanel
+              informationStore={InformationStore}
+              navigationStore={NavigationStore}
+            />
+
+            <PeersPanel
               informationStore={InformationStore}
               navigationStore={NavigationStore}
             />

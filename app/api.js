@@ -526,8 +526,18 @@ export function publishToIPNS (hash) {
  */
 export function connectTo (strMultiddr) {
   if (!IPFS_CLIENT) return Promise.reject(ERROR_IPFS_UNAVAILABLE)
-  const addr = multiaddr(strMultiddr)
-  return IPFS_CLIENT.swarm.connect(addr)
+  return IPFS_CLIENT.swarm.connect(strMultiddr)
+    .catch(reportAndReject)
+}
+
+/**
+ * add a node to the bootstrap list by specifying a str multiaddress,
+ * to easily connect to it everytime the daemon starts
+ * example: addBootstrapAddr("/ip4/192.168.0.22/tcp/4001/ipfs/Qm...")
+ */
+export function addBootstrapAddr (strMultiddr) {
+  if (!IPFS_CLIENT) return Promise.reject(ERROR_IPFS_UNAVAILABLE)
+  return IPFS_CLIENT.bootstrap.add(strMultiddr)
     .catch(reportAndReject)
 }
 
