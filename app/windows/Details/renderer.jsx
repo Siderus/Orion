@@ -11,13 +11,13 @@ import {
   promiseIPFSReady,
   unpinObject
 } from '../../api'
-import { openInBrowser } from '../Storage/fileIntegration'
 import { remote } from 'electron'
 import queryString from 'query-string'
 import cx from 'classnames'
 import { Window, Toolbar, Actionbar, ButtonGroup } from 'react-photonkit'
 import Button from '../../components/Button'
 import { trackEvent } from '../../stats'
+import { shareMenuTemplate, openInBrowser } from '../../lib/sharing'
 
 // Load Components
 import InformationTab from './Components/InformationTab'
@@ -37,6 +37,8 @@ class DetailsWindow extends React.Component {
   componentDidMount () {
     trackEvent('DetailsWindowOpen', {})
     promiseIPFSReady().then(this.fetchData)
+
+    this.shareMenu = remote.Menu.buildFromTemplate(shareMenuTemplate(hash))
   }
 
   fetchData = () => {
@@ -76,6 +78,10 @@ class DetailsWindow extends React.Component {
 
   handleOpenInBrowser = () => {
     openInBrowser([hash])
+  }
+
+  handleShare = () => {
+    this.shareMenu.popup({})
   }
 
   handlePin = () => {
@@ -135,6 +141,12 @@ class DetailsWindow extends React.Component {
               text="Open in Browser"
               glyph='publish'
               onClick={this.handleOpenInBrowser}
+              pullRight
+            />
+            <Button
+              text="Share"
+              glyph='share'
+              onClick={this.handleShare}
               pullRight
             />
           </Actionbar>

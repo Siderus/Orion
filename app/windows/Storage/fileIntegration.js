@@ -1,10 +1,9 @@
-import Settings from 'electron-settings'
 import { addFilesFromFSPath, unpinObject, getObjectStat, getObjectDag } from '../../api'
 import DetailsWindow from '../Details/window'
 import formatElement from '../../util/format-element'
+import { openInBrowser } from '../../lib/sharing'
 
 const electron = require('electron')
-const { shell } = electron
 const dialog = electron.dialog || electron.remote.dialog
 const app = electron.app || electron.remote.app
 
@@ -162,15 +161,4 @@ export function proptAndRemoveObjects (elements) {
     return Promise.all(promises)
   }
   return Promise.resolve()
-}
-
-/**
- * Open hashes in a browser
- */
-export function openInBrowser (hashes) {
-  const gatewayURL = Settings.get('gatewayURL') || 'https://siderus.io'
-  hashes.forEach(hash => {
-    shell.openExternal(`${gatewayURL}/ipfs/${hash}`)
-  })
-  return Promise.resolve(hashes)
 }
