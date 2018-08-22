@@ -1,6 +1,7 @@
 import { addFilesFromFSPath, unpinObject, getObjectStat, getObjectDag } from '../../api'
 import DetailsWindow from '../Details/window'
 import formatElement from '../../util/format-element'
+import { openInBrowser } from '../../lib/sharing'
 
 const electron = require('electron')
 const dialog = electron.dialog || electron.remote.dialog
