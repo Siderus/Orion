@@ -5,11 +5,8 @@ import { Icon } from 'react-photonkit'
 
 import { saveFileToPath, publishToIPNS } from '../../../api'
 
-import {
-  proptAndRemoveObjects,
-  openInBrowser
-} from '../fileIntegration'
-import shareMenuTemplate from '../../../util/shareMenuTemplate'
+import { proptAndRemoveObjects } from '../fileIntegration'
+import { shareMenuTemplate, openInBrowser } from '../../../lib/sharing'
 
 import DetailsWindow from '../../Details/window'
 import formatElement from '../../../util/format-element'

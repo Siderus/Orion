@@ -1,10 +1,8 @@
-import Settings from 'electron-settings'
 import { addFilesFromFSPath, unpinObject, getObjectStat, getObjectDag } from '../../api'
 import DetailsWindow from '../Details/window'
 import formatElement from '../../util/format-element'
 
 const electron = require('electron')
-const { shell } = electron
 const dialog = electron.dialog || electron.remote.dialog
 const app = electron.app || electron.remote.app
 
@@ -162,38 +160,4 @@ export function proptAndRemoveObjects (elements) {
     return Promise.all(promises)
   }
   return Promise.resolve()
-}
-
-/**
- * Open hashes in a browser
- * @param {string[]} hashes
- */
-export function openInBrowser (hashes) {
-  hashes.forEach(hash => {
-    shell.openExternal(getURLFromHash(hash))
-  })
-  return Promise.resolve(hashes)
-}
-
-/**
- * Constructs a shareable url with the gateway from settings or the default one
- *
- * @param {string} hash
- * @returns {string}
- */
-export function getURLFromHash (hash) {
-  const gatewayURL = Settings.get('gatewayURL') || 'https://siderus.io'
-  return `${gatewayURL}/ipfs/${hash}`
-}
-
-export function shareViaFacebook (hash) {
-  return shell.openExternal(`https://www.facebook.com/sharer.php?u=${getURLFromHash(hash)}`)
-}
-
-export function shareViaTwitter (hash) {
-  return shell.openExternal(`https://twitter.com/intent/tweet?text=${getURLFromHash(hash)}`)
-}
-
-export function shareViaEmail (hash) {
-  return shell.openExternal(`mailto:?body=${getURLFromHash(hash)}`)
 }

@@ -11,14 +11,13 @@ import {
   promiseIPFSReady,
   unpinObject
 } from '../../api'
-import { openInBrowser } from '../Storage/fileIntegration'
 import { remote } from 'electron'
 import queryString from 'query-string'
 import cx from 'classnames'
 import { Window, Toolbar, Actionbar, ButtonGroup } from 'react-photonkit'
 import Button from '../../components/Button'
 import { trackEvent } from '../../stats'
-import shareMenuTemplate from '../../util/shareMenuTemplate'
+import { shareMenuTemplate, openInBrowser } from '../../lib/sharing'
 
 // Load Components
 import InformationTab from './Components/InformationTab'
