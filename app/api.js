@@ -565,3 +565,54 @@ export function promiseIPFSReady (timeout, ipfsApiInstance) {
     }, 1000) // every second
   })
 }
+
+/**
+ * getSiderusPeers returns a Promise that will download and return a list of
+ * multiaddress (as str) of IPFS nodes from Siderus Network.
+ */
+export function getSiderusPeers () {
+  return request({
+    uri: 'https://meta.siderus.io/ipfs/peers.txt',
+    headers: { 'User-Agent': `Orion/${pjson.version}` }
+  }).then(res => {
+    let peers
+    // split the file by endlines
+    peers = res.split(/\r?\n/)
+    // remove empty lines
+    peers = peers.filter(el => el.length > 0)
+    return Promise.resolve(peers)
+  })
+}
+
+/**
+ *
+ * Returns the version of the currently running API.
+ * If no API is available returns `null`.
+ *
+ * Example: 'v0.4.14'
+ * @returns Promise<string>
+ */
+export function getAPIVersion () {
+  return request({
+    // what if it's running on a different port?
+    uri: 'http://localhost:5001/api/v0/version',
+    headers: { 'User-Agent': `Orion/${pjson.version}` }
+  })
+    .then(res => {
+      /**
+       * ApiVersionResult {
+       *   Version: '0.4.14',
+       *   Commit: ',
+       *   Repo: '6',
+       *   System: 'amd64/linux',
+       *   Golang: 'go1.10'
+       * }
+       */
+      res = JSON.parse(res)
+      return Promise.resolve(`v${res.Version}`)
+    })
+    .catch(err => {
+      console.error('API not available', err.message)
+      return Promise.resolve(null)
+    })
+}

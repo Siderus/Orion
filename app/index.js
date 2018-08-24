@@ -16,17 +16,17 @@ import {
   ensuresIPFSInitialised,
   ensureDaemonConfigured,
   ensureRepoMigrated,
-  getSiderusPeers,
-  connectToCMD,
-  addBootstrapAddr,
-  promiseRepoUnlocked,
-  getAPIVersion
+  promiseRepoUnlocked
 } from './daemon'
 
 import {
+  getSiderusPeers,
+  getAPIVersion,
   promiseIPFSReady,
   initIPFSClient,
-  importObjectByHash
+  importObjectByHash,
+  connectTo,
+  addBootstrapAddr
 } from './api'
 
 import LoadingWindow from './windows/Loading/window'
@@ -279,8 +279,9 @@ function startOrion () {
           text: 'Connecting to Siderus Network...',
           percentage: 80
         })
+        console.log('siderus peers', peers)
         // Using the CMD to connect, as the API seems not to work
-        let connectPromises = peers.map(addr => { return connectToCMD(addr) })
+        let connectPromises = peers.map(addr => { return connectTo(addr) })
         let bootstrapPromises = peers.map(addr => { return addBootstrapAddr(addr) })
         return Promise.all(connectPromises.concat(bootstrapPromises))
           .catch(err => {
