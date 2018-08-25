@@ -44,7 +44,7 @@ yarn:build:win:
   stage: pre-release
   retry: 2
   script:
-    -  
+    - docker run --rm -e GH_TOKEN="${GH_TOKEN}" -v ${PWD}:/project electronuserland/builder:wine /bin/bash -c "make -e OS="Windows_NT""
   artifacts:
     paths:
     - build
