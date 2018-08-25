@@ -116,12 +116,10 @@ build_all: clean
 .PHONY: build_all
 
 release: _test_variables prepare_binaries _prepkg
-	@test -n "$(GH_TOKEN)" || (echo "Variable GH_TOKEN not set"; exit 1)
-	./node_modules/.bin/build ${BUILD_ARGS} --publish onTagOrDraft
+	./node_modules/.bin/build ${BUILD_ARGS} --publish always
 .PHONY: release
 
 release_all: clean
-	@test -n "$(GH_TOKEN)" || (echo "Variable GH_TOKEN not set"; exit 1)
 	$(MAKE) release -e OS="Darwin" -e UNAME_S="Darwin"
 	$(MAKE) release -e OS="Linux" -e UNAME_S="Linux"
 	$(MAKE) release -e OS="Windows_NT"
