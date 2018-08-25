@@ -58,6 +58,20 @@ files/directory, not just CID)
 - [x] Allows to maintain a daemon from the interface
 - [ ] Integration external services/tools for encryption and content distribution
 
+## Custom integrations via the CLI
+You can also use Orion via the CLI. This is useful if you want to write an automated script, an integration 
+with a native file manager like Nautilus or anything that can be programmed.
+Currently it's only possible to add files, but most Orion features can be added to the CLI with little
+to no effort so feel free to request your favorite by opening an issue.
+
+#### Adding a file
+In your terminal run:
+```
+orion --add ./path/to/myfile.txt ~/second-file.txt
+```
+
+This assumes the `orion` binary to be in the `$PATH` variable or in the local directory.
+
 ## Learn more
 You can find more documentation in the following pages:
 
