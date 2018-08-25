@@ -445,4 +445,12 @@ describe('api.js', () => {
         })
     })
   })
+
+  describe('getSiderusPeers', () => {
+    it('should download list of peers, not empty', () => {
+      const prom = api.getSiderusPeers()
+
+      expect(prom).resolves.not.toContain('')// removes empty lines
+    })
+  })
 })
