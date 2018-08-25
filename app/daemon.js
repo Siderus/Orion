@@ -9,9 +9,7 @@ import {
 
 import { join as pathJoin } from 'path'
 import { fileSync as tmpFileSync } from 'tmp'
-import request from 'request-promise-native'
 import { app, dialog } from 'electron'
-import pjson from '../package.json'
 import Settings from 'electron-settings'
 
 /**
@@ -71,39 +69,6 @@ export function spawnIPFSCommand (...args) {
   }
   console.log('Running', global.IPFS_BINARY_PATH, args, options)
   return spawn(global.IPFS_BINARY_PATH, args, options)
-}
-
-/**
- *
- * Returns the version of the currently running API.
- * If no API is available returns `null`.
- *
- * Example: 'v0.4.14'
- * @returns Promise<string>
- */
-export function getAPIVersion () {
-  return request({
-    // what if it's running on a different port?
-    uri: 'http://localhost:5001/api/v0/version',
-    headers: { 'User-Agent': `Orion/${pjson.version}` }
-  })
-    .then(res => {
-      /**
-       * ApiVersionResult {
-       *   Version: '0.4.14',
-       *   Commit: ',
-       *   Repo: '6',
-       *   System: 'amd64/linux',
-       *   Golang: 'go1.10'
-       * }
-       */
-      res = JSON.parse(res)
-      return Promise.resolve(`v${res.Version}`)
-    })
-    .catch(err => {
-      console.error('API not available', err.message)
-      return Promise.resolve(null)
-    })
 }
 
 /**
@@ -256,42 +221,6 @@ export function ensureRepoMigrated () {
  */
 export function getApiMultiAddress () {
   return executeIPFSCommand('config', 'Addresses.API')
-}
-
-/**
- * connectToCMD allows easily to connect to a node by specifying a str
- * multiaddress. example: connectToCMD('/ip4/192.168.0.22/tcp/4001/ipfs/Qm...')
- * returns a promise
- */
-export function connectToCMD (strMultiddr) {
-  return executeIPFSCommand('swarm', 'connect', `${strMultiddr}`)
-}
-
-/**
- * addBootstrapAddr allows easily to add a node multiaddr as a bootstrap nodes
- * example: addBootstrapAddr('/ip4/192.168.0.22/tcp/4001/ipfs/Qm...')
- * returns a promise
- */
-export function addBootstrapAddr (strMultiddr) {
-  return executeIPFSCommand('bootstrap', 'add', `${strMultiddr}`)
-}
-
-/**
- * getSiderusPeers returns a Promise that will download and return a list of
- * multiaddress (as str) of IPFS nodes from Siderus Network.
- */
-export function getSiderusPeers () {
-  return request({
-    uri: 'https://meta.siderus.io/ipfs/peers.txt',
-    headers: { 'User-Agent': `Orion/${pjson.version}` }
-  }).then(res => {
-    let peers
-    // split the file by endlines
-    peers = res.split(/\r?\n/)
-    // remove empty lines
-    peers = peers.filter(el => el.length > 0)
-    return Promise.resolve(peers)
-  })
 }
 
 /**
