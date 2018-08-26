@@ -60,7 +60,6 @@ yarn:release:master:
   stage: release
   retry: 2
   script:
-    - make prepare_release
     - docker run --rm -v ${PWD}:/project electronuserland/builder:wine /bin/bash -c "make release_all"
   artifacts:
     paths:
