@@ -3,6 +3,12 @@ image: registry.gitlab.com/siderus/toolchain
 services:
   - docker:dind
 
+cache:
+  # Enables cache on Node Modules on the same branch
+  key: ${CI_COMMIT_REF_SLUG}
+  paths:
+    - node_modules/
+
 stages:
   - test
   - pre-release
@@ -62,6 +68,7 @@ yarn:release:master:
   script:
     - make prepare_release
     - docker run --rm -v ${PWD}:/project electronuserland/builder:wine /bin/bash -c "make release_all"
+  cache: {} # Disable cache
   artifacts:
     paths:
     - build
