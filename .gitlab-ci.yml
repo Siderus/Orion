@@ -9,15 +9,6 @@ stages:
   - release
   - post-release
 
-before_script:
-  - mv package.json package.json.old
-  - cat package.json.old | jq 'to_entries | map(if .key == "env" then .value = "release" else . end) | from_entries' > package.json
-  - rm -f package.json.old
-  - mv package.json package.json.old
-  - cat package.json.old | jq 'to_entries | map(if .key == "statsToken" then .value = "bcd802fa2e699f85cc19e1ff6079e3c7" else . end) | from_entries' > package.json
-  - rm -f package.json.old
-
-
 yarn:test:
   stage: test
   script:
@@ -65,17 +56,31 @@ yarn:build:gnu:
     - /release.*/
 
 
-yarn:release:all:
+yarn:release:master:
   stage: release
   retry: 2
   script:
+    - make prepare_release
+    - docker run --rm -v ${PWD}:/project electronuserland/builder:wine /bin/bash -c "make release_all"
+  artifacts:
+    paths:
+    - build
+    expire_in: 1 week
+  only:
+    - master
+
+yarn:release:tag:
+  stage: release
+  retry: 2
+  script:
+    - make prepare_release
     - docker run --rm -v ${PWD}:/project electronuserland/builder:wine /bin/bash -c "make release_all"
   artifacts:
     paths:
     - build
     expire_in: 3 months
   only:
-    - master
+    - tag
 
 
 trigger_repository:
