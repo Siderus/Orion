@@ -84,7 +84,7 @@ _prepkg: dep _test_variables
 
 # This endpoints updatse package.json in order to make them realease ready!
 prepare_release:
-	cat package.json | sed "s/-nightly\",$$/\",/g" >> package.new.json
+	cat package.json | sed "s/-master\",$$/\",/g" >> package.new.json
 	mv package.new.json package.json
 	cat package.json | sed "s/\"development\",$$/\"release\",/g" >> package.new.json
 	mv package.new.json package.json
