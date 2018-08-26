@@ -69,7 +69,7 @@ yarn:release:all:
   stage: release
   retry: 2
   script:
-    - docker run --rm -e GH_TOKEN="${GH_TOKEN}" -v ${PWD}:/project electronuserland/builder:wine /bin/bash -c "make release_all"
+    - docker run --rm -v ${PWD}:/project electronuserland/builder:wine /bin/bash -c "make release_all"
   artifacts:
     paths:
     - build
