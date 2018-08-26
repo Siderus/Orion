@@ -19,10 +19,6 @@ yarn:test:
   stage: test
   script:
     - docker run --rm -v ${PWD}:/project electronuserland/builder:wine /bin/bash -c "make lint test"
-  only:
-    - master
-    - /release.*/
-    - tags
 
 
 yarn:build:mac:
