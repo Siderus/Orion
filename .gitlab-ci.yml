@@ -70,7 +70,7 @@ yarn:release:master:
     - build
     expire_in: 3 months
   only:
-    - master
+    - tags
 
 
 trigger_upload:
