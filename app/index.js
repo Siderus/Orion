@@ -133,7 +133,9 @@ function startWelcome () {
  */
 function startOrion () {
   // ensure the "Add to IPFS via Orion" option is enabled
-  ensureContextMenuEnabled()
+  if (Settings.get('disableContextMenu')) {
+    ensureContextMenuEnabled()
+  }
   // retrieve the activity log from file
   if (existsSync(activityLogPath)) {
     const activityLog = JSON.parse(readFileSync(activityLogPath))
