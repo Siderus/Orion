@@ -40,7 +40,7 @@ class PeersPanel extends React.Component {
   }
 
   render () {
-    if (this.props.navigationStore.selected !== 3) return null
+    if (this.props.navigationStore.selected !== 2) return null
     if (!this.props.informationStore) return null
     if (!this.props.informationStore.loaded) return null
 

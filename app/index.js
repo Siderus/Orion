@@ -133,7 +133,7 @@ function startWelcome () {
  */
 function startOrion () {
   // ensure the "Add to IPFS via Orion" option is enabled
-  if (Settings.get('disableContextMenu')) {
+  if (!Settings.get('disableContextMenu')) {
     ensureContextMenuEnabled()
   }
   // retrieve the activity log from file
