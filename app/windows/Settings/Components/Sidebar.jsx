@@ -15,16 +15,24 @@ class Sidebar extends React.Component {
   }
 
   render () {
+    const menus = [
+      <NavTitle key='title'>Settings and Info</NavTitle>,
+      <NavGroupItem key='con' glyph="rss" text="Connectivity" eventKey={0} />,
+      <NavGroupItem key='rep' glyph="database" text="Repository" eventKey={1} />,
+      <NavGroupItem key='peers' glyph="users" text="Peers" eventKey={2} />
+    ]
+
+    if (isWindows) {
+      menus.push(
+        <NavGroupItem key='integrations' glyph="tools" text="Integrations" eventKey={3} />
+      )
+    }
+
     return (
       <Pane sidebar ptSize="sm">
         <NavGroup onSelect={this._handleSelect}>
-          <NavTitle key='title'>Settings and Info</NavTitle>
-          <NavGroupItem key='con' glyph="rss" text="Connectivity" eventKey={0} />
-          <NavGroupItem key='rep' glyph="database" text="Repository" eventKey={1} />
-          <NavGroupItem key='peers' glyph="users" text="Peers" eventKey={2} />
           {
-            isWindows &&
-            <NavGroupItem key='peers' glyph="tools" text="Integrations" eventKey={3} />
+            menus
           }
         </NavGroup>
       </Pane>

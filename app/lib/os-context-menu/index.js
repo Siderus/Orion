@@ -27,6 +27,8 @@ export function isRegistered () {
   if (isWindows) {
     return WinShell.contextMenus.isRegistered()
   }
+
+  return Promise.resolve(false)
 }
 
 /**
@@ -38,6 +40,8 @@ export function register () {
   if (isWindows) {
     return WinShell.contextMenus.register()
   }
+
+  return Promise.resolve(false)
 }
 
 /**
@@ -49,4 +53,6 @@ export function deregister () {
   if (isWindows) {
     return WinShell.contextMenus.deregister()
   }
+
+  return Promise.resolve(false)
 }
