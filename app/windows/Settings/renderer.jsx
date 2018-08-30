@@ -18,6 +18,7 @@ import Sidebar from './Components/Sidebar'
 import RepositoryPanel from './Components/RepositoryPanel'
 import ConnectivityPanel from './Components/ConnectivityPanel'
 import PeersPanel from './Components/PeersPanel'
+import IntegrationsPanel from './Components/IntegrationsPanel'
 
 // Load MobX Stores
 import NavigationStore from './Stores/Navigation'
@@ -49,6 +50,11 @@ class SettingsWindow extends React.Component {
             />
 
             <PeersPanel
+              informationStore={InformationStore}
+              navigationStore={NavigationStore}
+            />
+
+            <IntegrationsPanel
               informationStore={InformationStore}
               navigationStore={NavigationStore}
             />

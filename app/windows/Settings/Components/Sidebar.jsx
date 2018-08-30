@@ -3,10 +3,11 @@ import { observer } from 'mobx-react'
 
 import { Pane, NavGroup, NavTitle, NavGroupItem } from 'react-photonkit'
 
+const isWindows = process.platform === 'win32'
+
 /**
  * Render the Sidebar, uses NavigatorStore
  */
-
 @observer
 class Sidebar extends React.Component {
   _handleSelect = (selected) => {
@@ -14,13 +15,25 @@ class Sidebar extends React.Component {
   }
 
   render () {
+    const menus = [
+      <NavTitle key='title'>Settings and Info</NavTitle>,
+      <NavGroupItem key='con' glyph="rss" text="Connectivity" eventKey={0} />,
+      <NavGroupItem key='rep' glyph="database" text="Repository" eventKey={1} />,
+      <NavGroupItem key='peers' glyph="users" text="Peers" eventKey={2} />
+    ]
+
+    if (isWindows) {
+      menus.push(
+        <NavGroupItem key='integrations' glyph="tools" text="Integrations" eventKey={3} />
+      )
+    }
+
     return (
       <Pane sidebar ptSize="sm">
         <NavGroup onSelect={this._handleSelect}>
-          <NavTitle key='title'>Settings and Info</NavTitle>
-          <NavGroupItem key='con' glyph="rss" text="Connectivity" eventKey={0} />
-          <NavGroupItem key= 'rep' glyph="database" text="Repository" eventKey={1} />
-          <NavGroupItem key= 'peers' glyph="users" text="Peers" eventKey={2} />
+          {
+            menus
+          }
         </NavGroup>
       </Pane>
     )

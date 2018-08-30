@@ -1,12 +1,11 @@
 import * as WinShell from './win-shell'
 
+const isWindows = process.platform === 'win32'
 /**
  * This adds the option "Add to IPFS via Orion" to the context menu of the OS, for files
  * and directories. Currently only on windows.
  */
 export function ensureContextMenuEnabled () {
-  const isWindows = process.platform === 'win32'
-
   if (isWindows) {
     WinShell.contextMenus.isRegistered().then(status => {
       // if it's not enabled, do it
@@ -17,4 +16,43 @@ export function ensureContextMenuEnabled () {
       }
     })
   }
+}
+
+/**
+ * Returns true if the context menu is registered, false otherwise
+ *
+ * @returns {Promise<boolean>}
+ */
+export function isRegistered () {
+  if (isWindows) {
+    return WinShell.contextMenus.isRegistered()
+  }
+
+  return Promise.resolve(false)
+}
+
+/**
+ * Registers the context menu
+ *
+ * @returns {Promise<boolean>}
+ */
+export function register () {
+  if (isWindows) {
+    return WinShell.contextMenus.register()
+  }
+
+  return Promise.resolve(false)
+}
+
+/**
+ * Deregisters the context menu
+ *
+ * @returns {Promise<boolean>}
+ */
+export function deregister () {
+  if (isWindows) {
+    return WinShell.contextMenus.deregister()
+  }
+
+  return Promise.resolve(false)
 }
