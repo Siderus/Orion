@@ -498,8 +498,8 @@ export function runGarbageCollector () {
  */
 export function resolveName (name) {
   if (!IPFS_CLIENT) return Promise.reject(ERROR_IPFS_UNAVAILABLE)
-
-  return IPFS_CLIENT.name.resolve(name)
+  const options = { recursive: true }
+  return IPFS_CLIENT.name.resolve(name, options)
     .catch(reportAndReject)
 }
 
