@@ -1,6 +1,6 @@
 {
   "name": "Orion",
-  "version": "0.8.0-master",
+  "version": "0.9.0-master",
   "env": "development",
   "ipfsVersion": "v0.4.17",
   "ipfsRepoMigrationsVersion": "v1.4.0",
@@ -83,10 +83,13 @@
     "testURL": "http://localhost/"
   },
   "build": {
-    "publish": [{
-      "provider": "generic",
-      "url": "https://get.siderus.io/orion"
-    }],
+    "electronVersion": "2.0.8",
+    "publish": [
+      {
+        "provider": "generic",
+        "url": "https://get.siderus.io/orion"
+      }
+    ],
     "appId": "io.siderus.orion",
     "files": [
       "app/**/*",
