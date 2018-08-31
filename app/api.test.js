@@ -99,7 +99,7 @@ describe('api.js', () => {
         .then(result => {
           // assert
           expect(result).toBe('ipfs-hash')
-          expect(resolveNameMock).toHaveBeenCalledWith('fake-name')
+          expect(resolveNameMock).toHaveBeenCalledWith('fake-name', { recursive: true })
         })
     })
   })
