@@ -165,7 +165,6 @@ export function addFilesFromFSPath (filePaths, _queryGateways = queryGateways) {
       timestamp: new Date()
     })
 
-    console.log('path for adding', path)
     return IPFS_CLIENT.util.addFromFs(path, options)
   })
 
@@ -174,7 +173,6 @@ export function addFilesFromFSPath (filePaths, _queryGateways = queryGateways) {
       // IPFS_CLIENT.util.addFromFs always returns an array
       // (because it can upload an dir recursively),
       // which is why we expect an array of arrays
-      console.log('fileUploadResults', fileUploadResults)
       const rootFiles = fileUploadResults.map(result => {
         /**
          * If it was a directory it will be last
@@ -225,7 +223,6 @@ export function addFilesFromFSPath (filePaths, _queryGateways = queryGateways) {
             }
           }
 
-          console.log('rootFiles', rootFiles)
           // Return the wrapper if it exists, otherwise the rootFiles last item
           return Promise.resolve(wrapper || rootFiles[rootFiles.length - 1])
         })

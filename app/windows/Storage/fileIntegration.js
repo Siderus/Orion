@@ -50,7 +50,6 @@ export function addFilesPaths (paths) {
 
   return Promise.all(promises)
     .then(results => {
-      console.log('results11111111', results)
       // Array of wrappers expected
       // If the user upload only one file (or wrapped everything), open the Property Window (Details)
       if (results.length === 1) {
