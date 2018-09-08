@@ -109,9 +109,10 @@ export function wrapFiles (links) {
  * ```
  *
  * @param {string[]} filePaths
+ * @param {boolean} forceWrapping - if true it will wrap the files regardless of the user settings
  * @returns {Promise<Result>} promise resolving with the wrapper or the file
  */
-export function addFilesFromFSPath (filePaths, _queryGateways = queryGateways) {
+export function addFilesFromFSPath (filePaths, forceWrapping = false, _queryGateways = queryGateways) {
   if (!IPFS_CLIENT) return Promise.reject(ERROR_IPFS_UNAVAILABLE)
   trackEvent('addFilesFromFSPath', { count: filePaths.length })
 
@@ -191,7 +192,7 @@ export function addFilesFromFSPath (filePaths, _queryGateways = queryGateways) {
         return result[result.length - 1]
       })
 
-      return Promise.resolve(Settings.get('disableWrapping'))
+      return Promise.resolve(forceWrapping ? false : Settings.get('disableWrapping'))
         .then(disableWrapping => {
           /**
            * Skip wrapping the files if the user disable this feature

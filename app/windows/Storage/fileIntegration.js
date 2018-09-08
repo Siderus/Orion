@@ -2,7 +2,6 @@ import { addFilesFromFSPath, unpinObject, getObjectStat, getObjectDag } from '..
 import DetailsWindow from '../Details/window'
 import formatElement from '../../util/format-element'
 import { openInBrowser } from '../../lib/sharing'
-import Settings from 'electron-settings'
 
 const electron = require('electron')
 const dialog = electron.dialog || electron.remote.dialog
@@ -40,9 +39,9 @@ export function addFilesPaths (paths) {
   if (!paths) return
 
   let promises
-  if (paths.length > 1 && !Settings.get('disableWrapping') && askWhetherToWrapAllFiles()) {
+  if (paths.length > 1 && askWhetherToWrapAllFiles()) {
     // If the user says yes to wrapping all files, simply pass the paths array
-    promises = [addFilesFromFSPath(paths)]
+    promises = [addFilesFromFSPath(paths, true)]
   } else {
     // User wants to wrap each file (this method expects an array)
     promises = paths.map(path => addFilesFromFSPath([path]))

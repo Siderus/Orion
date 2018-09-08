@@ -37,8 +37,13 @@ jest.mock('request-promise-native', () => {
 
 jest.mock('electron-settings', () => {
   const getMock = jest.fn()
+    // get('disableWrapping')
+    .mockReturnValueOnce(false)
     // get('skipGatewayQuery')
     .mockReturnValueOnce(true)
+    // get('disableWrapping')
+    .mockReturnValueOnce(true)
+    // get('skipGatewayQuery')
     .mockReturnValueOnce(false)
   return {
     get: getMock
@@ -272,7 +277,7 @@ describe('api.js', () => {
       })
       const queryGatewaysMock = jest.fn()
       // act
-      return api.addFilesFromFSPath(['./textfiles'], queryGatewaysMock)
+      return api.addFilesFromFSPath(['./textfiles'], false, queryGatewaysMock)
         .then(result => {
           // assert
           expect(addFromFsMock).toHaveBeenCalledWith('./textfiles', {
@@ -298,7 +303,7 @@ describe('api.js', () => {
         })
     })
 
-    it('should add the file/dir recursively and query the gateways', () => {
+    it('should add the file/dir recursively without wrapper and query the gateways', () => {
       // arrange
       // arrange
       const addFromFsMock = jest.fn()
@@ -315,17 +320,6 @@ describe('api.js', () => {
         ]))
 
       const objectPutMock = jest.fn()
-        .mockReturnValue(Promise.resolve({
-          toJSON: () => {
-            return {
-              multihash: 'QmRgutAxd8t7oGkSm4wmeuByG6M51wcTso6cubDdQtu003',
-              size: 60
-            }
-          }
-        }))
-
-      const pinAddMock = jest.fn().mockReturnValue(Promise.resolve())
-      const pinRmMock = jest.fn().mockReturnValue(Promise.resolve())
 
       api.setClientInstance({
         util: {
@@ -333,21 +327,18 @@ describe('api.js', () => {
         },
         object: {
           put: objectPutMock
-        },
-        pin: {
-          add: pinAddMock,
-          rm: pinRmMock
         }
       })
       const queryGatewaysMock = jest.fn()
       // act
-      return api.addFilesFromFSPath(['./textfiles'], queryGatewaysMock)
+      return api.addFilesFromFSPath(['./textfiles'], false, queryGatewaysMock)
         .then(result => {
           // assert
+          expect(result.hash).toEqual('QmRgutAxd8t7oGkSm4wmeuByG6M51wcTso6cubDdQtu002')
+          expect(objectPutMock).not.toHaveBeenCalled()
           expect(queryGatewaysMock).toHaveBeenCalledWith('QmRgutAxd8t7oGkSm4wmeuByG6M51wcTso6cubDdQtu001')
           expect(queryGatewaysMock).toHaveBeenCalledWith('QmRgutAxd8t7oGkSm4wmeuByG6M51wcTso6cubDdQtu002')
-          expect(queryGatewaysMock).toHaveBeenCalledWith('QmRgutAxd8t7oGkSm4wmeuByG6M51wcTso6cubDdQtu003')
-          expect(queryGatewaysMock).toHaveBeenCalledTimes(3)
+          expect(queryGatewaysMock).toHaveBeenCalledTimes(2)
         })
     })
   })
