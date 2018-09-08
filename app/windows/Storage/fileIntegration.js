@@ -41,7 +41,7 @@ export function addFilesPaths (paths) {
   let promises
   if (paths.length > 1 && askWhetherToWrapAllFiles()) {
     // If the user says yes to wrapping all files, simply pass the paths array
-    promises = [addFilesFromFSPath(paths)]
+    promises = [addFilesFromFSPath(paths, true)]
   } else {
     // User wants to wrap each file (this method expects an array)
     promises = paths.map(path => addFilesFromFSPath([path]))

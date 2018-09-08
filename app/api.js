@@ -98,10 +98,10 @@ export function wrapFiles (links) {
 /**
  * This function will allow the user to add a file or multiple files to the IPFS repo.
  * Accepts a string or a string array.
- * Wraps the files in a directory.
+ * Wraps the files in a directory (if it's not disabled in the settings).
  *
  * ```
- * Wrapper {
+ * Result {
  *  hash: string;
  *  path: string;
  *  size: number;
@@ -109,9 +109,10 @@ export function wrapFiles (links) {
  * ```
  *
  * @param {string[]} filePaths
- * @returns {Promise<Wrapper>} promise resolving with the wrapper
+ * @param {boolean} forceWrapping - if true it will wrap the files regardless of the user settings
+ * @returns {Promise<Result>} promise resolving with the wrapper or the file
  */
-export function addFilesFromFSPath (filePaths, _queryGateways = queryGateways) {
+export function addFilesFromFSPath (filePaths, forceWrapping = false, _queryGateways = queryGateways) {
   if (!IPFS_CLIENT) return Promise.reject(ERROR_IPFS_UNAVAILABLE)
   trackEvent('addFilesFromFSPath', { count: filePaths.length })
 
@@ -173,7 +174,6 @@ export function addFilesFromFSPath (filePaths, _queryGateways = queryGateways) {
       // IPFS_CLIENT.util.addFromFs always returns an array
       // (because it can upload an dir recursively),
       // which is why we expect an array of arrays
-
       const rootFiles = fileUploadResults.map(result => {
         /**
          * If it was a directory it will be last
@@ -192,29 +192,40 @@ export function addFilesFromFSPath (filePaths, _queryGateways = queryGateways) {
         return result[result.length - 1]
       })
 
-      return wrapFiles(rootFiles)
-        .then(wrapper => Promise.all([
-          // This value is needed further in the chain
-          wrapper,
-          // Pin the wrapper directory
-          IPFS_CLIENT.pin.add(wrapper.hash),
-          // Unpin the initial uploads
-          ...rootFiles.map(rootFile => IPFS_CLIENT.pin.rm(rootFile.hash))
-        ]))
+      return Promise.resolve(forceWrapping ? false : Settings.get('disableWrapping'))
+        .then(disableWrapping => {
+          /**
+           * Skip wrapping the files if the user disable this feature
+           */
+          if (disableWrapping) return Promise.resolve()
+
+          return wrapFiles(rootFiles)
+            .then(wrapper => Promise.all([
+              // This value is needed further in the chain
+              wrapper,
+              // Pin the wrapper directory
+              IPFS_CLIENT.pin.add(wrapper.hash),
+              // Unpin the initial uploads
+              ...rootFiles.map(rootFile => IPFS_CLIENT.pin.rm(rootFile.hash))
+            ]))
+        })
         /**
-         * Query the gateways and return the wrapper dir
+         * Query the gateways and return the wrapper dir or the rootFiles
          */
         .then(results => {
-          const wrapper = results[0]
+          const wrapper = results ? results[0] : null
 
           if (!Settings.get('skipGatewayQuery')) {
             // Query all the uploaded files
             fileUploadResults.forEach(files => files.forEach(file => _queryGateways(file.hash)))
-            // Query the wrapper
-            _queryGateways(wrapper.hash)
+            // Query the wrapper if it exists
+            if (wrapper) {
+              _queryGateways(wrapper.hash)
+            }
           }
 
-          return Promise.resolve(wrapper)
+          // Return the wrapper if it exists, otherwise the rootFiles last item
+          return Promise.resolve(wrapper || rootFiles[rootFiles.length - 1])
         })
     })
     .catch(reportAndReject)
