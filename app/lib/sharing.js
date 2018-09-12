@@ -1,6 +1,8 @@
 import Settings from 'electron-settings'
 import { shell, remote } from 'electron'
 
+const SHARE_TEXT = 'Shared on IPFS with Siderus Orion. Read More: https://orion.siderus.io'
+
 /**
  * Open hashes in a browser
  * @param {string[]} hashes
@@ -35,6 +37,10 @@ export function shareViaEmail (hash) {
   return shell.openExternal(`mailto:?body=${getURLFromHash(hash)}`)
 }
 
+export function shareViaTelegram (hash) {
+  return shell.openExternal(`https://telegram.me/share/url?url=${getURLFromHash(hash)}&text=${SHARE_TEXT}`)
+}
+
 export const shareMenuTemplate = (hash) => ([{
   label: 'Copy URL',
   click: () => {
@@ -54,5 +60,10 @@ export const shareMenuTemplate = (hash) => ([{
   label: 'via Twitter',
   click: () => {
     shareViaTwitter(hash)
+  }
+}, {
+  label: 'via Telegram',
+  click: () => {
+    shareViaTelegram(hash)
   }
 }])
