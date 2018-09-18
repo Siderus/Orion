@@ -106,8 +106,7 @@
       "target": [
         "deb",
         "rpm",
-        "pacman",
-        "apk"
+        "snap"
       ]
     },
     "mac": {
