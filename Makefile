@@ -7,7 +7,10 @@ REPO_MIGRATIONS_VERSION := $(shell node -p "require('./package.json').ipfsRepoMi
 REPO_MIGRATIONS_BINARY_NAME ?= fs-repo-migrations_${REPO_MIGRATIONS_VERSION}_${TARGET}-amd64${BINARY_EXT}
 REPO_MIGRATIONS_BINARY_URL ?= https://dist.ipfs.io/fs-repo-migrations/${REPO_MIGRATIONS_VERSION}/${REPO_MIGRATIONS_BINARY_NAME}
 NODE_ENV ?= development
+TMP_DIR := $(shell mktemp -d)
+
 GH_TOKEN ?=
+SNAPCRAFT_TOKEN ?= 
 
 ifeq ($(OS),Windows_NT)
 	BINARY_EXT := .zip
@@ -125,7 +128,7 @@ build_all: clean
 	$(MAKE) build -e OS="Windows_NT"
 .PHONY: build_all
 
-release: _test_variables prepare_binaries _prepkg
+release: _test_variables prepare_release prepare_binaries _prepkg
 	./node_modules/.bin/build ${BUILD_ARGS} --publish always
 .PHONY: release
 
@@ -134,3 +137,11 @@ release_all: clean
 	$(MAKE) release -e OS="Linux" -e UNAME_S="Linux"
 	$(MAKE) release -e OS="Windows_NT"
 .PHONY: release_all
+
+# Snapcraft publishing
+snap_publish:
+	@echo "$${SNAPCRAFT_TOKEN}" >> ${TMP_DIR}/snap.txt
+	snapcraft login --with ${TMP_DIR}/snap.txt
+	snapcraft push --release=stable ./build/Orion_*.snap
+	rm ${TMP_DIR}/snap.txt
+.PHONEY: snap_publish
