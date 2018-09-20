@@ -55,22 +55,25 @@ describe('index.js', () => {
         }
       })
     })
-    it('should  clear interrupted activities', () => {
+    it('should clear interrupted activities', () => {
       // arrange
       const activitiesById = [1, 2, 3]
       const activities = {
+        // Going on activity:
         '1': {
           uuid: 1,
           finished: false,
           interrupted: false,
           foo: 'b'
         },
+        // Finished activity
         '2': {
           uuid: 2,
           finished: true,
           interrupted: false,
           foo: 'a'
         },
+        // Interrupted activity
         '3': {
           uuid: 3,
           finished: false,
