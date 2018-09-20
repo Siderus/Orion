@@ -381,16 +381,16 @@ ipcMain.on('update-activities', () => {
  * @param {Object} activities
  */
 export const filterUnfinishedActivities = (activitiesById, activities) => {
-  const ongoingActivitiesById = []
-  const ongoingActivities = {}
+  let ongoingActivitiesById = []
+  let ongoingActivities = {}
 
-  activitiesById.forEach(uuid => {
+  ongoingActivitiesById = activitiesById.filter(id => {
     const activity = activities[uuid]
+    return (!activity.finished && !activity.interrupted) || (!activity.finished)
+  })
 
-    if (!activity.finished) {
-      ongoingActivitiesById.push(activity.uuid)
-      ongoingActivities[activity.uuid] = activity
-    }
+  ongoingActivities = ongoingActivitiesById.map(id => {
+    return activities[id]
   })
 
   return {
