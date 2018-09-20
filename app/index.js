@@ -384,14 +384,10 @@ export const filterUnfinishedActivities = (activitiesById, activities) => {
   let ongoingActivitiesById = []
   let ongoingActivities = {}
 
-  ongoingActivitiesById = activitiesById.filter(id => {
-    const activity = activities[uuid]
-    return (!activity.finished && !activity.interrupted) || (!activity.finished)
-  })
-
-  ongoingActivities = ongoingActivitiesById.map(id => {
-    return activities[id]
-  })
+  ongoingActivitiesById = activitiesById.filter(
+    id => (!activities[id].finished && !activities[id].interrupted) || (!activities[id].finished) 
+  )
+  ongoingActivities = ongoingActivitiesById.map(id => activities[id])
 
   return {
     activitiesById: ongoingActivitiesById,
