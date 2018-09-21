@@ -220,7 +220,11 @@ const aboutOrion = {
 }
 
 if (process.platform === 'darwin') {
-  const name = electron.app.getName()
+  let name = 'Orion'
+  if (electron.app.getName) {
+    name = electron.app.getName()
+  }
+
   template.unshift({
     label: name,
     submenu: [aboutOrion, {
