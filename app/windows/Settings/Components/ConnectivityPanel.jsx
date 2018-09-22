@@ -8,6 +8,8 @@ import Input from '../../../components/Input'
 
 const GatewayEnum = {
   SIDERUS: 'https://siderus.io',
+  PROTOCOLLABS: 'https://ipfs.io',
+  CLOUDFLARE: 'https://cloudflare-ipfs.com',
   LOCAL: 'http://localhost:8080'
 }
 
