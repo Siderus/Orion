@@ -31,7 +31,7 @@ export function executeIPFSCommand (...args) {
 
     console.log('Running', global.IPFS_BINARY_PATH, args)
     // Build the cmd
-    const cmd = global.IPFS_BINARY_PATH + ' ' + args.join(' ')
+    const cmd = `"${global.IPFS_BINARY_PATH}" ${args.join(' ')}`
     const child = exec(cmd, options)
 
     let output = ''
@@ -206,7 +206,7 @@ export function ensureRepoMigrated () {
       options = { env: { IPFS_PATH: global.IPFS_REPO_PATH } }
     }
     // yes to all
-    const cmd = `${global.REPO_MIGRATIONS_BINARY_PATH} -y`
+    const cmd = `"${global.REPO_MIGRATIONS_BINARY_PATH}" -y`
 
     console.log('Running', cmd, options)
     const result = execSync(cmd, options).toString('utf8')
