@@ -1,6 +1,6 @@
 {
   "name": "Orion",
-  "version": "0.9.0-master",
+  "version": "0.9.1-master",
   "env": "development",
   "ipfsVersion": "v0.4.17",
   "ipfsRepoMigrationsVersion": "v1.4.0",
