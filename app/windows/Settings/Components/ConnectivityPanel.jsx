@@ -169,6 +169,8 @@ class ConnectivityPanel extends React.Component {
             value={this.state.gateway}
           >
             <option value={GatewayEnum.SIDERUS}>Siderus.io</option>
+            <option value={GatewayEnum.CLOUDFLARE}>CloudFlare</option>
+            <option value={GatewayEnum.PROTOCOLLABS}>Protocol Labs</option>
             <option value={GatewayEnum.LOCAL}>Local HTTP Gateway</option>
           </select>
         </div>
