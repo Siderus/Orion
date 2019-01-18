@@ -3,7 +3,7 @@
 # Siderus Orion: Easy to use IPFS Desktop client
 
 Siderus Orion is an easy to use [inter planetary file system](http://ipfs.io)
-(aka IPFS) desktop client. It helps sharing content on the public peer to peer
+(aka IPFS) Desktop client. It helps sharing content on the public peer to peer
 network without any command line or technical knowlede.
 The app includes everything is needed to start your own personal IPFS node.
 
@@ -11,8 +11,9 @@ The app includes everything is needed to start your own personal IPFS node.
 
 Useful Links:
 
+- IPFS Website: [https://ipfs.io](https://ipfs.io/)
+- Orion Repositories: [https://gitlab.com/siderus/orion](https://gitlab.com/siderus/orion)
 - Chat Room: [https://matrix.to/#/#siderus-orion:matrix.org](https://matrix.to/#/!NsSfDPEJrJyBUKogDd:matrix.org?via=matrix.org&via=swedneck.xyz&via=matrix.ordoevangelistarum.com&via=linuxgaming.life)
-- GitLab: [https://gitlab.com/siderus/orion](https://gitlab.com/siderus/orion)
 - Official Website: [https://orion.siderus.io/](https://orion.siderus.io/)
 
 [![Screenshots](./screenshot.png)](https://orion.siderus.io/)
