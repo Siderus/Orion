@@ -7,14 +7,17 @@ Siderus Orion is an easy to use [inter planetary file system](http://ipfs.io)
 network without any command line or technical knowlede.
 The app includes everything is needed to start your own personal IPFS node.
 
-**Note**: This repository is used only to collect public user feedback, bug reports and feature requests as issues. If you are looking for the source code, head over our [GitLab repositories](https://gitlab.com/siderus/orion)!
+**Note**: This repository is used only to collect public user feedback, bug
+reports and feature requests as [issues](https://github.com/siderus/orion/issues).
+If you are looking for the source  code head over our
+[GitLab repositories](https://gitlab.com/siderus/orion)!
 
 Useful Links:
 
-- IPFS Website: [https://ipfs.io](https://ipfs.io/)
 - Orion Repositories: [https://gitlab.com/siderus/orion](https://gitlab.com/siderus/orion)
+- Orion Website: [https://orion.siderus.io/](https://orion.siderus.io/)
 - Chat Room: [https://matrix.to/#/#siderus-orion:matrix.org](https://matrix.to/#/!NsSfDPEJrJyBUKogDd:matrix.org?via=matrix.org&via=swedneck.xyz&via=matrix.ordoevangelistarum.com&via=linuxgaming.life)
-- Official Website: [https://orion.siderus.io/](https://orion.siderus.io/)
+- What is IPFS: [https://ipfs.io](https://ipfs.io/) [video](https://www.youtube.com/watch?v=5Uj6uR3fp-U&utm_source=siderus)
 
 [![Screenshots](./screenshot.png)](https://orion.siderus.io/)
 
@@ -30,7 +33,7 @@ We support the following operative systems, but feel free to try it on different
 - Fedora, RedHat
 - Other GNU/Linux (AppImage)
 
-## Join the community!
+## Join the community
 
 This repository is used to collect Bug reports, feature requests and to provide basic support.
 
