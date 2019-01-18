@@ -14,6 +14,7 @@ If you are looking for the source  code head over our
 
 Useful Links:
 
+- Download: [https://orion.siderus.io/#/download](https://orion.siderus.io/#/download)
 - Orion Repositories: [https://gitlab.com/siderus/orion](https://gitlab.com/siderus/orion)
 - Orion Website: [https://orion.siderus.io/](https://orion.siderus.io/)
 - Chat Room: [https://matrix.to/#/#siderus-orion:matrix.org](https://matrix.to/#/!NsSfDPEJrJyBUKogDd:matrix.org?via=matrix.org&via=swedneck.xyz&via=matrix.ordoevangelistarum.com&via=linuxgaming.life)
