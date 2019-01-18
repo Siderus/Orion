@@ -11,9 +11,9 @@ The app includes everything is needed to start your own personal IPFS node. It i
 
 Useful Links:
 
+- Chat Room: [https://matrix.to/#/#siderus-orion:matrix.org](https://matrix.to/#/!NsSfDPEJrJyBUKogDd:matrix.org?via=matrix.org&via=swedneck.xyz&via=matrix.ordoevangelistarum.com&via=linuxgaming.life)
 - GitLab: [https://gitlab.com/siderus/orion](https://gitlab.com/siderus/orion)
-- Website: [https://orion.siderus.io/](https://orion.siderus.io/)
-- Chat room: [https://matrix.to/#/#siderus-orion:matrix.org](https://matrix.to/#/!NsSfDPEJrJyBUKogDd:matrix.org?via=matrix.org&via=swedneck.xyz&via=matrix.ordoevangelistarum.com&via=linuxgaming.life)
+- Official Website: [https://orion.siderus.io/](https://orion.siderus.io/)
 
 [![Screenshots](./screenshot.png)](https://orion.siderus.io/)
 
@@ -34,4 +34,4 @@ We support the following operative systems, but feel free to try it on different
 This repository is used to collect Bug reports, feature requests and to provide basic support.
 
 If you need to report something that can't be reported, please send an email to [hello@siderus.io](mailto:hello@siderus.io) or
-contact us directly in the [decentralised chatroom](https://riot.im/app/#/room/#orion:matrix.org)!
+contact us directly in the [decentralised chatroom](https://matrix.to/#/!NsSfDPEJrJyBUKogDd:matrix.org?via=matrix.org&via=swedneck.xyz&via=matrix.ordoevangelistarum.com&via=linuxgaming.life)!
