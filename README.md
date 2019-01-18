@@ -5,7 +5,7 @@
 Siderus Orion is an easy to use [inter planetary file system](http://ipfs.io)
 (aka IPFS) desktop client. It helps sharing content on the public peer to peer
 network without any command line or technical knowlede.
-The app includes everything is needed to start your own personal IPFS node. It is developed and maintained by [Siderus](https://siderus.io).
+The app includes everything is needed to start your own personal IPFS node.
 
 **Note**: This repository is used only to collect public user feedback, bug reports and feature requests as issues. If you are looking for the source code, head over our [GitLab repositories](https://gitlab.com/siderus/orion)!
 
@@ -35,3 +35,10 @@ This repository is used to collect Bug reports, feature requests and to provide 
 
 If you need to report something that can't be reported, please send an email to [hello@siderus.io](mailto:hello@siderus.io) or
 contact us directly in the [decentralised chatroom](https://matrix.to/#/!NsSfDPEJrJyBUKogDd:matrix.org?via=matrix.org&via=swedneck.xyz&via=matrix.ordoevangelistarum.com&via=linuxgaming.life)!
+
+## About Siderus
+
+Orion is developed and maintained by [Siderus](https://siderus.io).
+Subscribe to [our newsletter](http://eepurl.com/dfB6q5) to stay updated, or visit our [blog](https://blog.siderus.io) to know more.
+
+[![Siderus Logo](./siderus-logo.png)](https://siderus.io/)
